@@ -61,6 +61,3 @@ class PartitionSet:
         corrected_states = h.reassign_dest_edges(h.states)
         h.states = corrected_states
         return h
-                        
-                        
-        

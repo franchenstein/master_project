@@ -62,6 +62,20 @@ class Graph:
         for x in savedstates:
             s = st.State(x[0], tuple(x[1]))
             states.append(s)
+        states = self.reassign_dest_edges(states)
+        self.states = states
+        return
+        
+    '''
+    Name: reassign_dest_edges
+    Input:
+        *states: list of states with their outedges pointing only to a 
+        destination state name, but not the whole state
+    Output:
+        *states: the corrected list, with the outedges correctly pointing to 
+        the destination state.
+    '''
+    def reassign_dest_edges(self, states):
         for s in states:
             new_outedges = []
             for e in s.outedges:
@@ -77,8 +91,7 @@ class Graph:
                 new_e = tuple(new_e)
                 new_outedges.append(new_e)
             s.outedges = new_outedges
-        self.states = states
-        return
+        return states
     
     '''
     Name: root

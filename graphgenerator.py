@@ -31,7 +31,7 @@ class GraphGenerator():
     
     #Initialization:
     def __init__(self, original_path, synch_words, save_path):
-        self.original_graph.parse_graph_file(original_path)
+        self.original_graph.open_graph_file(original_path)
         self.synch_words = synch_words
         self.save_path = save_path
         
@@ -93,8 +93,7 @@ class GraphGenerator():
                 new_state = pst.ProbabilisticState(aux.name, new_outedges)
                 newstates.append(new_state)
                 states_names = [x.name for x in newstates]
-                new_children = [x[1] for x in new_state.outedges 
-                                if x[1].name not in states_names]
+                new_children = new_state.obtain_children()
                 s.extend(new_children)
         new_graph = pg.ProbabilisticGraph(newstates, 
                                           self.original_graph.alphabet)
