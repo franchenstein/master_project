@@ -22,17 +22,13 @@ test.
 III - A D-Markov termination.
 '''
 class GraphGenerator():
-    #Class attributes:
-    self.original_graph = pg.ProbabilisticGraph([],[])
-    self.synch_words = []
-    self.save_path = ''
-    
-    #Class methods:
-    
     #Initialization:
     def __init__(self, original_path, synch_words, save_path):
+        self.original_graph = pg.ProbabilisticGraph([],[])
         self.original_graph.open_graph_file(original_path)
-        self.synch_words = synch_words
+        self.synch_words = []
+        for w in synch_words:
+            self.synch_words.append(self.original_graph.state_named(w))
         self.save_path = save_path
         
     
@@ -115,15 +111,16 @@ class GraphGenerator():
     ''' 
     def create_initial_partition(self, init_state, alpha, test):
          partition_0 = pt.Partition(init_state)
-         children = self.original_graph.extend(init_state)
-         partitions = [Q]
+         children = init_state.obtain_children()
+         partitions = [partition_0]
          while True:
             if children:
                 c = children.pop(0)
                 fail_count = 0
                 for p in partitions:
-                    result = self.original_graph.compare_morphs(p.outedges[0], 
-                                                                c.outedges,
+                    pmorph = (p.outedges[0][0][0], p.outedges[0][0][2])
+                    result = self.original_graph.compare_morphs(pmorph, 
+                                                                c.morph(),
                                                                 alpha, test)
                     if result:
                         p.add_to_partition(c)
@@ -134,7 +131,7 @@ class GraphGenerator():
                         else:
                             new_partition = pt.Partition(c)
                             partitions.append(new_partition)
-                new_states = self.original_graph_extend(c)
+                new_states = c.obtain_children()
                 for n in new_states:
                     not_in_partitions = True
                     for p in partitions:
