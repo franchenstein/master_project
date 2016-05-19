@@ -30,15 +30,20 @@ class Graph:
     def save_graph_file(self, path):
         savestates = []
         for s in self.states:
-            i = 0
             saveedges = []
             for e in s.outedges:
-                if i == 1:
-                    saveedges.append(e.name)
-                else:
-                    saveedges.append(e)
-                i+=1
-            saveedges = tuple(saveedges)
+                i = 0
+                s_edge = []
+                for element in e:
+                    if i == 1:
+                        if element:
+                            s_edge.append(element.name)
+                        else:
+                            s_edge.append('')
+                    else:
+                        s_edge.append(element)
+                    i+=1
+                saveedges.append(tuple(s_edge))
             savestates.append((s.name, saveedges))            
         with open(path, 'w') as file_:
             json.dump([savestates, self.alphabet], file_)
@@ -79,7 +84,11 @@ class Graph:
         for s in states:
             new_outedges = []
             for e in s.outedges:
-                e_dest = [x for x in states if x.name == e[1]][0]
+                e_dest = [x for x in states if x.name == e[1]]
+                if e_dest:
+                    e_dest = e_dest[0]
+                else:
+                    e_dest = None
                 new_e = []
                 i = 0
                 for element in e:
@@ -104,7 +113,7 @@ class Graph:
     '''        
     def root(self):
         for s in self.states:
-            if s.name_length == 0:
+            if s.name == 'e':
                 return s
             else:
                 return st.State("", [])

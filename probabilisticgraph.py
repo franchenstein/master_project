@@ -38,7 +38,7 @@ class ProbabilisticGraph(graph.Graph):
         for a in [x[0] for x in morph1]:
             for b in morph2:
                 if b[0] == a:
-                    probs2.append(float(b[2])) 
+                    probs2.append(float(b[1])) 
         if probs1 == probs2:
             return [True, 1.0]
         else: 
@@ -99,7 +99,7 @@ class ProbabilisticGraph(graph.Graph):
             *New: Similar to the old method, but checks only if the suffixes 
              pass the statistical test and return the one with the longest label 
     '''            
-    def expand_last_level(self, L, method, alpha, test):
+    def expand_last_level(self, L, method, alpha = 0.95, test = 'chi-squared'):
         if method == "dmark":
             h = self.dmark_expansion(L)
         else:
@@ -134,8 +134,8 @@ class ProbabilisticGraph(graph.Graph):
                 for i in range(1, len(next)+1):
                     if i < L:
                         next_state = self.state_named(next)
-                        if next_state:
-                            new_outedges.append((e[0], next_state, e[2])
+                        if next_state or (e[2] == 0.0):
+                            new_outedges.append((e[0], next_state, e[2]))
                             break
                     else:
                         new_outedges.append((e[0], self.root(), e[2]))
@@ -166,7 +166,7 @@ class ProbabilisticGraph(graph.Graph):
     def expansion(self, L, alpha, test, method):
         last_level = [x for x in self.states if x.name_length() == L]
         new_last_level = []
-        for x in last_level:
+        for s in last_level:
             new_outedges = []
             for edge in x.outedges:
                 a = edge[0]
@@ -181,15 +181,15 @@ class ProbabilisticGraph(graph.Graph):
                         else:
                             candidate = self.root()
                         if candidate:
-                            r = self.compare_morphs(x.morph(), candidate.morph,
+                            r = self.compare_morphs(s.morph(),candidate.morph(),
                                                     alpha, test)
                         else:
                             r = [False, 0.0]
                         results.append([r, candidate])
-                    if method == old:
-                        new_next = self.old_method(results, total_next[1:])
+                    if method == 'old':
+                        new_next = self.old_method(results)
                     else:
-                        new_next = self.new_method(results)
+                        new_next = self.new_method(results, total_next[1:])
                     new_outedge = (a, new_next, edge[2])
                     new_outedges.append(new_outedge)                     
                 else:
@@ -236,4 +236,32 @@ class ProbabilisticGraph(graph.Graph):
             arg = lens.index(max(lens))
             return w[arg]
         else:
-            return [x[1] for x in results if x[1].name == default_name]
+            return [x[1] for x in results if x[1].name == default_name][0]
+    
+    '''
+    Name: open_graph_file
+    Input:
+        *path: file path where the graph file is saved.
+    Description:
+        Adapts super's open_graph_file in order to convert all states to prob
+        states.
+    '''             
+    def open_graph_file(self, path):
+        aux = graph.Graph([],[])
+        aux.open_graph_file(path)
+        states = []
+        for s in aux.states:
+            states.append(pst.ProbabilisticState(s.name, s.outedges))
+        for ns in states:
+            newedges = []
+            for edge in ns.outedges:
+                if edge[1]:
+                    destname = edge[1].name
+                    newdest = [x for x in states if x.name == destname][0]
+                else:
+                    newdest = None
+                newedge = (edge[0], newdest, edge[2])
+                newedges.append(newedge)
+            ns.outedges = newedges
+        self.states = states
+        self.alphabet = aux.alphabet

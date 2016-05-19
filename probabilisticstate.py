@@ -61,7 +61,7 @@ class ProbabilisticState(state.State):
     def randomstep(self):
         r = rnd.random()
         acc = 0
-        for e in outedges:
+        for e in self.outedges:
             if acc <= r < (acc + float(e[2])):
                 return e[:2]
             else:
