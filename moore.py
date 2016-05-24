@@ -51,13 +51,7 @@ def moore(initial_partition, graph):
     current_partition = initial_partition
     while True:
         new_partition = moore_iteration(graph, current_partition.partitions)
-        oldnames = []
-        for c in current_partition.partitions:
-            oldnames.extend(c.name)
-        newnames = []
-        for n in new_partition:
-            newnames.extend(n.name)
-        if set(oldnames) == set(newnames):
+        if len(current_partition.partitions) == len(new_partition):
             return ps.PartitionSet(new_partition)
         else:
             current_partition = ps.PartitionSet(new_partition)
