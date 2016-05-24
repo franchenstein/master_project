@@ -15,7 +15,7 @@ class Partition(State):
         self.outedges = [] if not state.outedges else [state.outedges]
         self.size = 0 if not state.name else 1
         
-    def addToPartition(self, state):
+    def add_to_partition(self, state):
         '''
         Input: state to be added to the partition
         Output: the current partition will now have a new state

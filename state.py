@@ -39,7 +39,7 @@ class State:
     Output: Returns all the destinations from all outgoing edges.
     '''      
     def obtain_children(self):
-        children = [x[1] for x in self.outedges]
+        children = [x[1] for x in self.outedges if x[1]]
         return children
    
     '''

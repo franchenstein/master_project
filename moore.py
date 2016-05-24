@@ -47,20 +47,20 @@ Description: This function will call the moore_iterations while the current
 partition is different from the partition obtained after a iteration. Once
 they are equal, the reduced partitions are returned.
 '''           
-def moore(graph, initial_partition):
+def moore(initial_partition, graph):
     current_partition = initial_partition
     while True:
-        new_partition = moore_iteration(graph, current_partition)
+        new_partition = moore_iteration(graph, current_partition.partitions)
         oldnames = []
-        for c in current_partition:
+        for c in current_partition.partitions:
             oldnames.extend(c.name)
         newnames = []
         for n in new_partition:
             newnames.extend(n.name)
         if set(oldnames) == set(newnames):
-            return new_partition
+            return ps.PartitionSet(new_partition)
         else:
-            current_partition = new_partition
+            current_partition = ps.PartitionSet(new_partition)
 
 '''
 Name: moore_by_parts
@@ -96,19 +96,20 @@ Description: This method will apply only one iteration of the Moore
 algorithm. An explanation for the algorithm can be found at: 
 http://arxiv.org/abs/1010.5318
 '''                 
-def __moore_iteration(graph, current_partition):
+def moore_iteration(graph, current_partition):
     partition_for_alphabet = []
+    print "***"
     for a in graph.alphabet:
         splits = []
         for p in current_partition:
-            new_splits = splitting(p, a, g.states)
+            new_splits = splitting(p, a, graph.states)
             valid_splits = [sp for sp in new_splits if sp.name]
-            splits.append(valid_splits)        
+            splits.append(valid_splits)      
         partition_for_letter = splits[0]
         for split in splits[1:]:
             partition_for_letter = coarsest_partition(partition_for_letter, 
                                                       split)
-        partition_for_alphabet.append(partition_for_letter)            
+        partition_for_alphabet.append(partition_for_letter)        
     final_partition = partition_for_alphabet[0]
     for pb in partition_for_alphabet:
         final_partition = coarsest_partition(final_partition, pb)
@@ -131,17 +132,18 @@ it does, it checks if that outgoing edge reaches a state in the current
 partition. If it does, the current state is added to the first split. If it
 does not, it is added to the second split.
 '''     
-def __splitting(partition, letter, states):
+def splitting(partition, letter, states):
     p1 = pt.Partition(st.State("", []))
     p2 = pt.Partition(st.State("", []))
     for s in states:
         edge_labels = [edge[0] for edge in s.outedges]
         if letter in edge_labels:
-            next = s.next_from_edge(letter)
-            if next.name in partition.name:
-                p1.add_to_partition(s)
-            else:
-                p2.add_to_partition(s)
+            next = s.next_state_from_edge(letter)
+            if next:
+                if next.name in partition.name:
+                    p1.add_to_partition(s)
+                    break
+            p2.add_to_partition(s)
         else:
             p1.add_to_partition(s)
             p2.add_to_partition(s)
@@ -158,7 +160,7 @@ Description: Applies the intersection function between each pair of sets in
 partition 1 and partition 2. Checks for redundancy. The set of all the 
 unique intersections is the coarsest partition.
 '''      
-def __coarsest_partition(partition1, partition2):
+def coarsest_partition(partition1, partition2):
     coarse = []
     for p1 in partition1:
         for p2 in partition2:
@@ -166,8 +168,8 @@ def __coarsest_partition(partition1, partition2):
             if inter: #disregards empty intersections
                 if coarse:
                     #to avoid redundancy:
-                    names = set([el.name for el in coarse])
-                    if not inter.issubset(names):
+                    names = [el.name for el in coarse]
+                    if inter.name not in names:
                         coarse.append(inter)
                 else:
                     coarse.append(inter)
@@ -182,12 +184,12 @@ Outputs:
 Description: Finds and returns the states in common between partitions p1
 and p2.
 '''      
-def __intersection(p1, p2):
+def intersection(p1, p2):
     inter = []
     for a in p1.name:
         for b in p2.name:
             if a == b:
-                name.append(b)
+                inter.append(b)
                 break
     if inter:
         p = pt.Partition(st.State(inter.pop(0), []))

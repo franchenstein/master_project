@@ -118,7 +118,7 @@ class GraphGenerator():
                 c = children.pop(0)
                 fail_count = 0
                 for p in partitions:
-                    pmorph = (p.outedges[0][0][0], p.outedges[0][0][2])
+                    pmorph = self.partition_morph(p.outedges[0])
                     result = self.original_graph.compare_morphs(pmorph, 
                                                                 c.morph(),
                                                                 alpha, test)
@@ -140,7 +140,7 @@ class GraphGenerator():
                     if not_in_partitions:
                         children.append(n)                   
             else:
-                return P
+                return partitions
     
     '''
     Name: is_suffix
@@ -150,9 +150,15 @@ class GraphGenerator():
     Outputs: 
         *P: true if w is suffix of n, false otherwise.
     '''             
-    def __is_suffix(self,w,n):
+    def is_suffix(self,w,n):
         if len(w) > len(n):
             return False
         else:
             nSuffix = n[-len(w):]
             return w == nSuffix
+            
+    def partition_morph(self, partition_oedges):
+        morph = []
+        for edge in partition_oedges:
+            morph.append((edge[0], edge[2]))
+        return morph

@@ -26,7 +26,7 @@ class PartitionSet:
         *h: graph created by making the partition set into a graph
     Description:
     '''            
-    def recoverGraph(self, g):
+    def recover_graph(self, g):
         states = [g.state_named(p.name[0]) for p in self.partitions]
         states = [x for x in S if x != None] #Just making sure no invalid states
         new_states = []
