@@ -98,7 +98,6 @@ http://arxiv.org/abs/1010.5318
 '''                 
 def moore_iteration(graph, current_partition):
     partition_for_alphabet = []
-    print "***"
     for a in graph.alphabet:
         splits = []
         for p in current_partition:
@@ -111,7 +110,7 @@ def moore_iteration(graph, current_partition):
                                                       split)
         partition_for_alphabet.append(partition_for_letter)        
     final_partition = partition_for_alphabet[0]
-    for pb in partition_for_alphabet:
+    for pb in partition_for_alphabet[1:]:
         final_partition = coarsest_partition(final_partition, pb)
     new_partition = coarsest_partition(current_partition, final_partition)
     return new_partition 
@@ -142,8 +141,10 @@ def splitting(partition, letter, states):
             if next:
                 if next.name in partition.name:
                     p1.add_to_partition(s)
-                    break
-            p2.add_to_partition(s)
+                else:
+                    p2.add_to_partition(s)
+            else:
+                p2.add_to_partition(s)
         else:
             p1.add_to_partition(s)
             p2.add_to_partition(s)
@@ -165,7 +166,7 @@ def coarsest_partition(partition1, partition2):
     for p1 in partition1:
         for p2 in partition2:
             inter = intersection(p1, p2)
-            if inter: #disregards empty intersections
+            if inter.name: #disregards empty intersections
                 if coarse:
                     #to avoid redundancy:
                     names = [el.name for el in coarse]
