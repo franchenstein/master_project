@@ -56,8 +56,8 @@ class PartitionSet:
                                     break
                             break
             u = st.State(s.name, oedge)
-            states.append(u)
-        h = gr.Graph(states, g.alphabet)
+            new_states.append(u)
+        h = gr.Graph(new_states, g.alphabet)
         # As commented before, the edges were created pointing to names. They are
         # corrected here:
         corrected_states = h.reassign_dest_edges(h.states)
