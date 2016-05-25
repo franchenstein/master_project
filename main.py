@@ -70,51 +70,93 @@ def analyze_sequences(graph_path, algorithms, drange, terminations, lrange, alph
             kld = []
             l1 = []
             for d in drange:
-                path = 'sequences/len_' +str(seq_len) + '_' + graph_path + '/dmarkov_d' + str(d) + '.json'
+                path = 'sequences/len_' +str(seq_len) + '_' + graph_path + 'dmarkov_d' + str(d) + '.json'
                 seq_an = sa.SequenceAnalyzer(path)
-                kld, l1 = analyze_sequences_core_1(path, to_analyze, params, seq_an)
+                kld_step, l1_step = analyze_sequences_core_1(path, to_analyze, params, seq_an)
+                kld.append(kld_step)
+                l1.append(l1_step)
+            if to_analyze['kld']:
+                k_path = 'results/kld/' + path[10:]
+                with open(k_path, 'w') as f:
+                    json.dump(kld, f)
+            if to_analyze['l1metric']:
+                l_path = 'results/l1/' + path[10:]
+                with open(l_path, 'w') as f:
+                    json.dump(l1, f)
         else:
             for t in terminations:
                 for l in lrange:
                     for alpha in alpharange:
-                        path = 'sequences/len_' +str(seq_len) + '_' '/L' + str(l) + '_alpha' +\
+                        path = 'sequences/len_' +str(seq_len) + '_' 'L' + str(l) + '_alpha' +\
                                str(alpha) + '_' + t + '_' + algo + '.json'
+                        seq_an = sa.SequenceAnalyzer(path)
+                        kld_step, l1_step = analyze_sequences_core_1(path, to_analyze, params, seq_an)
+                        kld.append(kld_step)
+                        l1.append(l1_step)
+                    if to_analyze['kld']:
+                        k_path = 'results/kld/' + path[10:]
+                        with open(k_path, 'w') as f:
+                            json.dump(kld, f)
+                    if to_analyze['l1metric']:
+                        l_path = 'results/l1/' + path[10:]
+                        with open(l_path, 'w') as f:
+                            json.dump(l1, f)
 
 
-def analyze_sequences_core_1(path, to_analyze, params, seq_an):
+def analyze_sequences_core_1(graph_path, path, to_analyze, params, seq_an):
     if to_analyze['probabilities']:
         p, alph = seq_an.calc_probs(params['L'])
         p_path = 'results/probabilities_' + path[10:]
         with open(p_path, 'w') as f:
             json.dump([p, alph], f)
     if to_analyze['cond_probabilities']:
-        if not seq_an.probabilities:
-            p_path = 'results/probabilities_' + path[10:]
-            with open(p_path, 'r') as f:
-                p, alph = json.load(f)
-                seq_an.probabilities = p
-                seq_an.alphabet = alph
-        p_cond = seq_an.calc_cond_probs(params[L])
-        p_cond_path = 'results/cond_probabilities_' + path[10:]
+        check_probs(seq_an, path)
+        p_cond = seq_an.calc_cond_probs(params['L'])
+        p_cond_path = 'results/probabilities/cond_' + path[10:]
         with open(p_cond_path, 'w') as f:
             json.dump(p_cond, f)
     if to_analyze['cond_entropy']:
-        if not seq_an.probabilities:
-            p_path = 'results/probabilities_' + path[10:]
-            with open(p_path, 'r') as f:
+        check_probs(seq_an, path)
+        check_cond_probs(seq_an, path)
+        h = seq_an.calc_cond_entropy(params['L'])
+        h_path = 'results/cond_entropies/' + path[10:]
+        with open(h_path, 'w') as f:
+            json.dump(h, f)
+    if to_analyze['autocorrelation']:
+        a = seq_an.calc_autocorrelation(params['up_to'])
+        a_path = 'results/autocorrelations/' + path[10:]
+        with open(a_path, 'w') as f:
+            json.dump(a, f)
+    if to_analyze['kld']:
+        check_probs(seq_an, path)
+        p = load_reference_probs(graph_path)
+        kld = seq_an.calc_kldivergence(p, params['K'])
+    if to_analyze['l1metric']:
+        check_probs(seq_an, path())
+        p = load_reference_probs(graph_path)
+        l1 = seq_an.calc_l1metric(p, params['l1'])
+    return kld, l1
+
+
+def check_probs(seq_an, path):
+    if not seq_an.probabilities:
+        p_path = 'results/probabilities/' + path[10:]
+        with open(p_path, 'r') as f:
                 p, alph = json.load(f)
                 seq_an.probabilities = p
-            if not seq_an.conditional_probabilities:
-                p_cond_path = 'results/cond_probabilities_' + path[10:]
-                with open(p_cond_path], 'r') as f:
-                    seq_an.conditional_probabilities = json.load(f)
-        h = seq_an.calc_cond_entropy(params[L])
-    if to_analyze['autocorrelation']:
-        a = seq_an.calc_autocorrelation()
-    if to_analyze['kld']:
-        if not seq_an.probabilities:
-            kld.append(seq_an.calc_kldivergence())
-    if to_analyze['l1metric']:
-        if not seq_an.probabilities:
-            l1.append(seq_an.calc_l1metric())
-    return kld, l1
+                seq_an.alphabet = alph
+
+
+def check_cond_probs(seq_an, path):
+    if not seq_an.conditional_probabilities:
+        p_path = 'results/probabilities/cond_' + path[10:]
+        with open(p_path, 'r') as f:
+                pcond = json.load(f)
+                seq_an.conditional_probabilities = pcond
+
+
+def load_reference_probs(graph_path):
+    path = 'results/' + graph_path + '/probabilities/original.json'
+    with open(path, 'r') as f:
+        p = json.load(f)
+    return p[0]
