@@ -63,24 +63,24 @@ class GraphGenerator():
     then expands each state. If a new state ends with a synchronization word, it
     is eliminated and edges connecting to it are then connected to the 
     respective synchronization word. 
-    ''' 
+    '''
     def mk2(self):
         synchlist = [x.name for x in self.synch_words]
-        s = self.synch_words   
+        s = list(self.synch_words)
         newstates = []
         while True:
             if not s:
                 break
             else:
                 aux = s.pop(0)
-                nexts = [x[1] for x in aux.outedges]
+                nexts = [x[1] for x in aux.outedges if x[1]]
                 i = 0
                 new_outedges = []
                 for n in nexts:
                     for w in synchlist:
                         newdest = n
                         if self.is_suffix(w, n.name):
-                            newdest = [x for x in synch_words 
+                            newdest = [x for x in self.synch_words
                                        if x.name == w][0]                                       
                             break
                     oedge = (aux.outedges[i][0], newdest, aux.outedges[i][2])
@@ -90,9 +90,11 @@ class GraphGenerator():
                 newstates.append(new_state)
                 states_names = [x.name for x in newstates]
                 new_children = new_state.obtain_children()
+                new_children = [x for x in new_children if x.name not in states_names]
                 s.extend(new_children)
         new_graph = pg.ProbabilisticGraph(newstates, 
                                           self.original_graph.alphabet)
+        new_graph.save_graph_file(self.save_path)
         return new_graph
             
     '''
