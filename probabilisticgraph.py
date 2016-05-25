@@ -30,8 +30,9 @@ class ProbabilisticGraph(graph.Graph):
         making sure they are in the same order (i.e. the probs for the same 
         symbol are in the same position). It performs the test and returns its
         results.
-    '''     
-    def compare_morphs(self, morph1, morph2, alpha, test):
+    '''
+    @staticmethod
+    def compare_morphs(morph1, morph2, alpha, test):
         probs1 = [float(x[1]) for x in morph1]
         probs2 = []
         #Loop to guarantee the probability distributions are in the same order:
@@ -62,8 +63,9 @@ class ProbabilisticGraph(graph.Graph):
         destination state for the next iteration. Stores the names of visited
         states, which might be useful in the future, to check if there are 
         states that are not reached during a certain 
-    '''            
-    def generate_sequence(self, length, ini_state):
+    '''
+    @staticmethod
+    def generate_sequence(length, ini_state):
         data = ""
         s = ini_state
         visited_states = [s.name]
@@ -99,11 +101,11 @@ class ProbabilisticGraph(graph.Graph):
             *New: Similar to the old method, but checks only if the suffixes 
              pass the statistical test and return the one with the longest label 
     '''            
-    def expand_last_level(self, L, method, alpha = 0.95, test = 'chi-squared'):
+    def expand_last_level(self, l, method, alpha=0.95, test='chi-squared'):
         if method == "dmark":
-            h = self.dmark_expansion(L)
+            h = self.dmark_expansion(l)
         else:
-            h = self.expansion(L, alpha, test, method)
+            h = self.expansion(l, alpha, test, method)
         return h         
     
     '''
@@ -124,15 +126,15 @@ class ProbabilisticGraph(graph.Graph):
         of the label until it finds a state that exists. If none does, it will 
         connect to the root.
     '''       
-    def dmark_expansion(self, L):
-        last_level = [x for x in self.states if x.name_length() == L]
+    def dmark_expansion(self, l):
+        last_level = [x for x in self.states if x.name_length() == l]
         new_last_level = []
         for x in last_level:
             new_outedges = []
             for e in x.outedges:
                 next = x.name[1:] + e[0]
                 for i in range(1, len(next)+1):
-                    if i < L:
+                    if i < l:
                         next_state = self.state_named(next)
                         if next_state or (e[2] == 0.0):
                             new_outedges.append((e[0], next_state, e[2]))
@@ -141,7 +143,7 @@ class ProbabilisticGraph(graph.Graph):
                         new_outedges.append((e[0], self.root(), e[2]))
             x.outedges = new_outedges
             new_last_level.append(x)
-        new_states = [x for x in self.states if x.name_length() < L]
+        new_states = [x for x in self.states if x.name_length() < l]
         new_states.extend(new_last_level)
         return ProbabilisticGraph(new_states, self.alphabet)
     
@@ -163,8 +165,8 @@ class ProbabilisticGraph(graph.Graph):
         an appropriate function to choose between the old and new methods' 
         criteria. 
     '''       
-    def expansion(self, L, alpha, test, method):
-        last_level = [x for x in self.states if x.name_length() == L]
+    def expansion(self, l, alpha, test, method):
+        last_level = [x for x in self.states if x.name_length() == l]
         new_last_level = []
         for s in last_level:
             new_outedges = []
@@ -173,15 +175,15 @@ class ProbabilisticGraph(graph.Graph):
                 total_next = s.name + a
                 true_next = self.state_named(total_next)
                 if true_next:
-                    l = len(total_next)
+                    lgth = len(total_next)
                     results = []
                     for i in range(1, l+1):
-                        if i < l:
+                        if i < lgth:
                             candidate = self.state_named(total_next[i:])
                         else:
                             candidate = self.root()
                         if candidate:
-                            r = self.compare_morphs(s.morph(),candidate.morph(),
+                            r = self.compare_morphs(s.morph(), candidate.morph(),
                                                     alpha, test)
                         else:
                             r = [False, 0.0]
@@ -196,7 +198,7 @@ class ProbabilisticGraph(graph.Graph):
                     new_outedges.append((a, None, '0.0'))
             x.outedges = new_outedges
             new_last_level.append(x)
-        new_states = [x for x in self.states if x.name_length() < L]
+        new_states = [x for x in self.states if x.name_length() < l]
         new_states.extend(new_last_level)
         h = ProbabilisticGraph(new_states, self.alphabet)
         return h
@@ -211,8 +213,9 @@ class ProbabilisticGraph(graph.Graph):
         *The state for which the test result was the highest.
     Description:
         Implements the old method criterion. 
-    '''   
-    def old_method(self, results):
+    '''
+    @staticmethod
+    def old_method(results):
         w = [r[0][1] for r in results]
         arg = w.index(max(w))
         return results[arg][1]
@@ -228,8 +231,9 @@ class ProbabilisticGraph(graph.Graph):
     Description:
         Implements the new method criterion. If no state passes the test, it
         simply applies the d-markov criterion for this specific state.
-    ''' 
-    def new_method(self, results, default_name):
+    '''
+    @staticmethod
+    def new_method(results, default_name):
         w = [c[1] for c in results if c[0][0]]
         if w:
             lens = [len(y.name) for y in w]

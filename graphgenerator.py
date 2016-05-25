@@ -52,7 +52,7 @@ class GraphGenerator():
         partition_set = ps.PartitionSet(p)
         reduced_classes = mr.moore(partition_set, self.original_graph)
         reduced_graph = reduced_classes.recover_graph(self.original_graph)
-        reduced_graph.save_graph_file(self.save_path)
+        reduced_graph.save_graph_file(self.save_path + '_mk1.json')
         return reduced_graph
             
     '''    
@@ -94,7 +94,7 @@ class GraphGenerator():
                 s.extend(new_children)
         new_graph = pg.ProbabilisticGraph(newstates, 
                                           self.original_graph.alphabet)
-        new_graph.save_graph_file(self.save_path)
+        new_graph.save_graph_file(self.save_path + '_mk2.json')
         return new_graph
             
     '''
@@ -120,17 +120,16 @@ class GraphGenerator():
                 c = children.pop(0)
                 fail_count = 0
                 for p in partitions:
+                    fail_count += 1
                     pmorph = self.partition_morph(p.outedges[0])
                     result = self.original_graph.compare_morphs(pmorph, 
                                                                 c.morph(),
                                                                 alpha, test)
-                    if result:
+                    if result[0]:
                         p.add_to_partition(c)
                         break
                     else:
-                        if fail_count < len(partitions):
-                            fail_count += 1
-                        else:
+                        if fail_count == len(partitions):
                             new_partition = pt.Partition(c)
                             partitions.append(new_partition)
                 new_states = c.obtain_children()
