@@ -143,7 +143,7 @@ class GraphGenerator():
                         children.append(n)                   
             else:
                 return partitions
-    
+
     '''
     Name: is_suffix
     Inputs: 
@@ -151,15 +151,31 @@ class GraphGenerator():
         *n: string for which w might be a suffix.
     Outputs: 
         *P: true if w is suffix of n, false otherwise.
-    '''             
-    def is_suffix(self,w,n):
+    '''
+    @staticmethod
+    def is_suffix(w,n):
         if len(w) > len(n):
             return False
         else:
             nSuffix = n[-len(w):]
             return w == nSuffix
-            
-    def partition_morph(self, partition_oedges):
+
+    '''
+    Name: partition_morph
+    Inputs:
+        *partition_oedges: the first element of the
+         partition outedges.
+    Outputs:
+        *morph: the probability distribution associated
+        to the partition outedges.
+    Description:
+        I don't think this method should be in this class.
+        I need the morph from a partition, but the partition
+        class is not specific to probabilistic states.
+        I will leave this here until a better solution shows up.
+    '''
+    @staticmethod
+    def partition_morph(partition_oedges):
         morph = []
         for edge in partition_oedges:
             morph.append((edge[0], edge[2]))
