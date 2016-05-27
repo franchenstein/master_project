@@ -212,16 +212,16 @@ def plot_entropies(graph_path, algorithms, terminations, drange, lrange, alphara
         plt.semilogx(states[i], entropy, marker = 'o', label = labels[i])
         i += 1
 
-    plt.axhline(y = h_base, color = 'k', linewidth = 3, label = 'Original sequence baseline')
+    plt.axhline(y=h_base, color='k', linewidth = 3, label='Original sequence baseline')
     plt.legend(loc='upper right', shadow=False, fontsize='medium')
     plt.xlabel('Number of states')
     plt.ylabel('Conditional Entropy')
-    save_path = 'plots/' + graph_path + '/cond_entropies_' + tag + '.json'
-    plt.savefig(save_path, bbox_inches = 'tight')
+    save_path = 'plots/' + graph_path + '/cond_entropies_' + tag + '.png'
+    plt.savefig(save_path, bbox_inches='tight')
     plt.show()
 
 
-def plot_others(type, algorithms, terminations, drange, lrange, alpharange, tag):
+def plot_others(kind, graph_path, algorithms, terminations, drange, lrange, alpharange, tag):
     h = []
     states = []
     labels = []
@@ -231,7 +231,7 @@ def plot_others(type, algorithms, terminations, drange, lrange, alpharange, tag)
             h_dmark = []
             states_dmark = []
             for d in drange:
-                h_path = 'results/' + graph_path + '/' + type + '/d_markov_d' + str(d) + '.json'
+                h_path = 'results/' + graph_path + '/' + kind + '/d_markov_d' + str(d) + '.json'
                 with open(h_path, 'r') as f:
                     h_dmark.append(json.load(f))
                 g_path = 'graphs/' + graph_path + '/d_markov_d' + str(d) + '.json'
@@ -248,7 +248,7 @@ def plot_others(type, algorithms, terminations, drange, lrange, alpharange, tag)
                 for l in lrange:
                     for alpha in alpharange:
                         p = 'L' + str(l) + '_alpha_' + str(alpha) + '_' + t + '_' + algo + '.json'
-                        h_path = 'results/' + graph_path + '/' + type + '/' + p
+                        h_path = 'results/' + graph_path + '/' + kind + '/' + p
                         with open(h_path, 'r') as f:
                             h_term.append(json.load(f))
                         g_path = 'graphs/' + graph_path + '/' + p
@@ -260,14 +260,60 @@ def plot_others(type, algorithms, terminations, drange, lrange, alpharange, tag)
                 states.append(states_term)
     i = 0
     for value in h:
-        plt.semilogx(states[i], value, marker = 'o', label = labels[i])
+        plt.semilogx(states[i], value, marker='o', label=labels[i])
         i += 1
     plt.legend(loc='upper right', shadow=False, fontsize='medium')
     plt.xlabel('Number of states')
-    if type == 'l1metric':
+    if kind == 'l1metric':
         plt.ylabel('L1-Metric')
-    elif type == 'kld':
+    elif kind == 'kld':
         plt.ylabel('Kullback-Leibler Divergence')
-    save_path = 'plots/' + graph_path + '/' + type + '/' + tag + '.json'
-    plt.savefig(save_path, bbox_inches = 'tight')
+    save_path = 'plots/' + graph_path + '/' + kind + '_' + tag + '.png'
+    plt.savefig(save_path, bbox_inches='tight')
+    plt.show()
+
+
+def plot_autocorr(graph_path, algorithms, terminations, drange, lrange, alpharange, up_to, tag):
+    path_original = 'results/' + graph_path + '/autocorrelations/original.json'
+    with open(path_original, 'r') as f:
+        h_base = json.load(f)
+    h = []
+    labels = []
+    g = pg.ProbabilisticGraph([], [])
+    for algo in algorithms:
+        if algo == 'dmark':
+            for d in drange:
+                h_path = 'results/' + graph_path + '/autocorrelations/d_markov_d' + str(d) + '.json'
+                with open(h_path, 'r') as f:
+                    h_eval = json.load(f)
+                    h.append(h_eval)
+                g_path = 'graphs/' + graph_path + '/d_markov_d' + str(d) + '.json'
+                g.open_graph_file(g_path)
+                lbl = 'D-Markov, D = ' + str(d) + ', ' + str(len(g.states)) + ' states'
+                labels.append(lbl)
+        else:
+            for t in terminations:
+                for l in lrange:
+                    for alpha in alpharange:
+                        p = 'L' + str(l) + '_alpha_' + str(alpha) + '_' + t + '_' + algo + '.json'
+                        h_path = 'results/' + graph_path + '/autocorrelations/' + p
+                        with open(h_path, 'r') as f:
+                            h_eval = json.load(f)
+                            h.append(h_eval)
+                        g_path = 'graphs/' + graph_path + '/' + p
+                        g.open_graph_file(g_path)
+                        lbl = algo + ', ' + t + ', ' + str(len(g.states)) + ' states'
+                        labels.append(lbl)
+    i = 0
+    x = range(1, up_to + 1)
+    for autocorr in h:
+        plt.plot(x, autocorr[1:], marker='o', label=labels[i])
+        i += 1
+
+    plt.plot(x, h_base, color='k', linewidth=3, label='Original sequence')
+    plt.legend(loc='upper right', shadow=False, fontsize='medium')
+    plt.xlabel('Lag')
+    plt.ylabel('Autocorrelation')
+    save_path = 'plots/' + graph_path + '/autocorrelations_' + tag + '.png'
+    plt.savefig(save_path, bbox_inches='tight')
     plt.show()
