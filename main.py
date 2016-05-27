@@ -7,14 +7,55 @@ import json
 import matplotlib.pyplot as plt
 
 
-def terminate_graphs(graph_path, terminations, lrange, alpharange, save_path, test):
+def main(config_file, terminate, dmark, generate, gen_seq, an_seq, plot, tag, seq_len=10000000):
+    with open(config_file, 'r') as f:
+        configs = json.load(f)
+    graph_path = configs['graph_path']
+    terminations = configs['terminations']
+    lmax = configs['lmax']
+    algorithms = configs['algorithms']
+    lrange = configs['lrange']
+    alpharange = configs['alpharange']
+    drange = configs['drange']
+    test = configs['test']
+    synch_words = configs['synch_words']
+    if terminate:
+        terminate_graphs(graph_path, terminations, lrange, lmax, alpharange, test)
+    if dmark:
+        generate_dmarkov(graph_path, drange, lmax)
+    if generate:
+        generate_graphs(algorithms, terminations, lrange, alpharange, graph_path, synch_words, test)
+    if gen_seq:
+        generate_sequences(graph_path, algorithms, drange, terminations, lrange, alpharange, seq_len)
+    if an_seq:
+        p = 'configs/' + graph_path + '/params.json'
+        with open(p, 'r') as f:
+            params = json.load(f)
+        analyze_sequences(graph_path, algorithms, drange, terminations, lrange, alpharange, seq_len,
+                          params['to_analyze'], params['other_params'])
+    if plot:
+        p = 'configs/' + graph_path + '/plotconfigs.json'
+        with open(p, 'r') as f:
+            params = json.load(f)
+        if params['cond_entropy']:
+            plot_entropies(graph_path, algorithms, terminations, drange, lrange, alpharange, params['eval_l'], tag)
+        if params['autocorrelation']:
+            plot_entropies(graph_path, algorithms, terminations, drange, lrange, alpharange, params['up_to'], tag)
+        if params['kld']:
+            plot_others('kld', graph_path, algorithms, terminations, drange, lrange, alpharange, tag)
+        if params['l1metric']:
+            plot_others('l1metric', graph_path, algorithms, terminations, drange, lrange, alpharange, tag)
+
+
+def terminate_graphs(graph_path, terminations, lrange, lmax, alpharange, test):
     g = pg.ProbabilisticGraph([], [])
     for t in terminations:
         for l in lrange:
             for alpha in alpharange:
-                g.open_graph_file(graph_path)
+                p = 'graphs/' + graph_path + '/rtp_L' + str(lmax) + '.json'
+                g.open_graph_file(p)
                 h = g.expand_last_level(l, t, alpha, test)
-                path = 'graphs/' + save_path + '/rtp_L' + str(l) + '_alpha' + str(alpha) + '_' + t + '.json'
+                path = 'graphs/' + graph_path + '/rtp_L' + str(l) + '_alpha' + str(alpha) + '_' + t + '.json'
                 h.save_graph_file(path)
 
 
@@ -32,12 +73,13 @@ def generate_graphs(algorithms, terminations, lrange, alpharange, save_path, syn
                         g.mk2()
 
 
-def generate_dmarkov(graph_path, drange, save_path):
+def generate_dmarkov(graph_path, drange, lmax):
     g = pg.ProbabilisticGraph([], [])
     for d in drange:
-        g.open_graph_file(graph_path)
+        p = 'graphs/' + graph_path + '/rtp_L' + str(lmax) + '.json'
+        g.open_graph_file(p)
         h = dm.DMarkov(g, d)
-        path = 'graphs/' + save_path + '/dmarkov_d' + str(d) + '.json'
+        path = 'graphs/' + graph_path + '/dmarkov_d' + str(d) + '.json'
         h.save_graph_file(path)
 
 
