@@ -187,7 +187,7 @@ def plot_entropies(graph_path, algorithms, terminations, drange, lrange, alphara
                 states_dmark.append(len(g.states))
             h.append(h_dmark)
             states.append(states_dmark)
-            lbl = 'D-Markov, D from ' str(drange[0]) + ' to ' + str(drange[-1])
+            lbl = 'D-Markov, D from ' + str(drange[0]) + ' to ' + str(drange[-1])
             labels.append(lbl)
         else:
             for t in terminations:
@@ -217,5 +217,57 @@ def plot_entropies(graph_path, algorithms, terminations, drange, lrange, alphara
     plt.xlabel('Number of states')
     plt.ylabel('Conditional Entropy')
     save_path = 'plots/' + graph_path + '/cond_entropies_' + tag + '.json'
+    plt.savefig(save_path, bbox_inches = 'tight')
+    plt.show()
+
+
+def plot_others(type, algorithms, terminations, drange, lrange, alpharange, tag):
+    h = []
+    states = []
+    labels = []
+    g = pg.ProbabilisticGraph([], [])
+    for algo in algorithms:
+        if algo == 'dmark':
+            h_dmark = []
+            states_dmark = []
+            for d in drange:
+                h_path = 'results/' + graph_path + '/' + type + '/d_markov_d' + str(d) + '.json'
+                with open(h_path, 'r') as f:
+                    h_dmark.append(json.load(f))
+                g_path = 'graphs/' + graph_path + '/d_markov_d' + str(d) + '.json'
+                g.open_graph_file(g_path)
+                states_dmark.append(len(g.states))
+            h.append(h_dmark)
+            states.append(states_dmark)
+            lbl = 'D-Markov, D from ' + str(drange[0]) + ' to ' + str(drange[-1])
+            labels.append(lbl)
+        else:
+            for t in terminations:
+                h_term = []
+                states_term = []
+                for l in lrange:
+                    for alpha in alpharange:
+                        p = 'L' + str(l) + '_alpha_' + str(alpha) + '_' + t + '_' + algo + '.json'
+                        h_path = 'results/' + graph_path + '/' + type + '/' + p
+                        with open(h_path, 'r') as f:
+                            h_term.append(json.load(f))
+                        g_path = 'graphs/' + graph_path + '/' + p
+                        g.open_graph_file(g_path)
+                        states_term.append(len(g.states))
+                lbl = algo + ', ' + t
+                labels.append(lbl)
+                h.append(h_term)
+                states.append(states_term)
+    i = 0
+    for value in h:
+        plt.semilogx(states[i], value, marker = 'o', label = labels[i])
+        i += 1
+    plt.legend(loc='upper right', shadow=False, fontsize='medium')
+    plt.xlabel('Number of states')
+    if type == 'l1metric':
+        plt.ylabel('L1-Metric')
+    elif type == 'kld':
+        plt.ylabel('Kullback-Leibler Divergence')
+    save_path = 'plots/' + graph_path + '/' + type + '/' + tag + '.json'
     plt.savefig(save_path, bbox_inches = 'tight')
     plt.show()
