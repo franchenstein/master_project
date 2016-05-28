@@ -1,4 +1,4 @@
-import probabilisticGraph as pg
+import probabilisticgraph as pg
 
 '''
 This class creates a probabilistic graph from a rooted tree with probabilities
