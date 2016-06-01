@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>702</width>
-    <height>644</height>
+    <height>737</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -20,7 +20,7 @@
       <x>0</x>
       <y>0</y>
       <width>701</width>
-      <height>621</height>
+      <height>711</height>
      </rect>
     </property>
     <property name="currentIndex">
@@ -157,6 +157,9 @@
        </property>
        <property name="text">
         <string>D-Markov</string>
+       </property>
+       <property name="tristate">
+        <bool>false</bool>
        </property>
       </widget>
      </widget>
@@ -394,6 +397,32 @@
        <string>Load Config</string>
       </property>
      </widget>
+     <widget class="QLineEdit" name="max_l">
+      <property name="geometry">
+       <rect>
+        <x>370</x>
+        <y>20</y>
+        <width>113</width>
+        <height>27</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_18">
+      <property name="geometry">
+       <rect>
+        <x>280</x>
+        <y>20</y>
+        <width>81</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Max L:</string>
+      </property>
+     </widget>
     </widget>
     <widget class="QWidget" name="tab_2">
      <attribute name="title">
@@ -540,7 +569,7 @@
       <property name="geometry">
        <rect>
         <x>20</x>
-        <y>20</y>
+        <y>80</y>
         <width>651</width>
         <height>71</height>
        </rect>
@@ -592,7 +621,7 @@
       <property name="geometry">
        <rect>
         <x>20</x>
-        <y>100</y>
+        <y>160</y>
         <width>651</width>
         <height>71</height>
        </rect>
@@ -639,12 +668,25 @@
         <string>Enable</string>
        </property>
       </widget>
+      <widget class="QLabel" name="label_39">
+       <property name="geometry">
+        <rect>
+         <x>430</x>
+         <y>-30</y>
+         <width>131</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Sequence Length:</string>
+       </property>
+      </widget>
      </widget>
      <widget class="QGroupBox" name="groupBox_7">
       <property name="geometry">
        <rect>
         <x>20</x>
-        <y>180</y>
+        <y>240</y>
         <width>651</width>
         <height>71</height>
        </rect>
@@ -696,7 +738,7 @@
       <property name="geometry">
        <rect>
         <x>20</x>
-        <y>260</y>
+        <y>320</y>
         <width>651</width>
         <height>71</height>
        </rect>
@@ -748,7 +790,7 @@
       <property name="geometry">
        <rect>
         <x>20</x>
-        <y>340</y>
+        <y>400</y>
         <width>651</width>
         <height>71</height>
        </rect>
@@ -800,7 +842,7 @@
       <property name="geometry">
        <rect>
         <x>20</x>
-        <y>420</y>
+        <y>480</y>
         <width>651</width>
         <height>71</height>
        </rect>
@@ -852,7 +894,7 @@
       <property name="geometry">
        <rect>
         <x>290</x>
-        <y>510</y>
+        <y>570</y>
         <width>98</width>
         <height>27</height>
        </rect>
@@ -865,13 +907,36 @@
       <property name="geometry">
        <rect>
         <x>260</x>
-        <y>550</y>
+        <y>610</y>
         <width>161</width>
         <height>23</height>
        </rect>
       </property>
       <property name="value">
        <number>0</number>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="an_seq_len">
+      <property name="geometry">
+       <rect>
+        <x>210</x>
+        <y>20</y>
+        <width>121</width>
+        <height>27</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_40">
+      <property name="geometry">
+       <rect>
+        <x>50</x>
+        <y>20</y>
+        <width>131</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Sequence Length:</string>
       </property>
      </widget>
     </widget>
