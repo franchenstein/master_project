@@ -83,12 +83,12 @@ class SequenceAnalyzer():
                 d = {}
                 l1 = self.probabilities[l]
                 l2 = self.probabilities[l+1]
-                for s in self.alphabet:
-                    for a in l1:
-                        cond = s + "|" + a
-                        t = a + s
+                for a in self.alphabet:
+                    for s in l1:
+                        cond = a + "|" + s
+                        t = s + a
                         if t in l2.keys():
-                            d[cond] = l2[t]/l1[a]
+                            d[cond] = l2[t]/l1[s]
                         else:
                             d[cond] = 0.0
                 self.conditional_probabilities.append(d)

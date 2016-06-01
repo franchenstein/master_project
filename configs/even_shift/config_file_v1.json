@@ -1,1 +1,1 @@
-{"alpharange": [], "drange": [4, 5, 6, 7, 8, 9, 10], "synch_words": ["0"], "lmax": 14, "algorithms": ["dmark", "mk2", "mk1"], "lrange": [4, 6, 8, 10], "terminations": ["new", "dmark", "old"], "test": "chi-squared", "graph_path": "even_shift"}
+{"alpharange": [0.95], "drange": [4, 5, 6, 7, 8, 9, 10], "synch_words": ["0"], "lmax": 14, "algorithms": ["dmark", "mk2", "mk1"], "lrange": [4, 6, 8, 10], "terminations": ["new", "dmark", "old"], "test": "chi-squared", "graph_path": "even_shift"}

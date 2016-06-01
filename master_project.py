@@ -44,7 +44,7 @@ class MasterProject(QtGui.QMainWindow, gui.Ui_projectgui):
         self.lrange['end'] = int(self.l_end.text())
         self.alpharange['ini'] = float(self.alpha_ini.text())
         self.alpharange['end'] = float(self.alpha_end.text())
-        self.configs_tag = str(self.tag.text())
+        self.config_tag = str(self.tag.text())
         self.config_file_path = 'configs/' + self.configs['graph_path'] + '/config_file_' + self.config_tag + '.json'
         lrange = range(self.lrange['ini'], self.lrange['end'] + 2, 2)
         drange = range(self.drange['ini'], self.drange['end'] + 1)

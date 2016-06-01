@@ -35,7 +35,7 @@ class GraphGenerator():
     '''    
     Name: mk1
     Inputs:
-        *test: Statistical test type (chi-squared or Solmogorov-Smirnov);
+        *test: Statistical test type (chi-squared or Kolmogorov-Smirnov);
         *alpha: Statistical test quality parameter.
     Outputs:
         *reduced_graph = Minimal graph for the original sequence.
@@ -112,10 +112,10 @@ class GraphGenerator():
     create a new partition for it if is not succesful for any partition.
     ''' 
     def create_initial_partition(self, init_state, alpha, test):
-         partition_0 = pt.Partition(init_state)
-         children = init_state.obtain_children()
-         partitions = [partition_0]
-         while True:
+        partition_0 = pt.Partition(init_state)
+        children = init_state.obtain_children()
+        partitions = [partition_0]
+        while True:
             if children:
                 c = children.pop(0)
                 fail_count = 0
