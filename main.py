@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 
 
 def main(config_file, terminate=False, dmark=False, generate=False, gen_seq=False, an_seq=False, plot=False,
-         seq_len=10000000):
+         seq_len=10000000, tag='default'):
     with open(config_file, 'r') as f:
         configs = json.load(f)
     graph_path = configs['graph_path']
@@ -19,7 +19,6 @@ def main(config_file, terminate=False, dmark=False, generate=False, gen_seq=Fals
     alpharange = configs['alpharange']
     drange = configs['drange']
     test = configs['test']
-    tag = configs['tag']
     synch_words = configs['synch_words']
     if terminate:
         terminate_graphs(graph_path, terminations, lrange, lmax, alpharange, test)
@@ -30,13 +29,13 @@ def main(config_file, terminate=False, dmark=False, generate=False, gen_seq=Fals
     if gen_seq:
         generate_sequences(graph_path, algorithms, drange, terminations, lrange, alpharange, seq_len)
     if an_seq:
-        p = graph_path + '/configs/params.json'
+        p = 'configs/' + graph_path + 'params.json'
         with open(p, 'r') as f:
             params = json.load(f)
         analyze_sequences(graph_path, algorithms, drange, terminations, lrange, alpharange, seq_len,
                           params['to_analyze'], params['other_params'])
     if plot:
-        p = graph_path + '/configs/plotconfigs.json'
+        p = 'configs/' +  graph_path + '/plotconfigs.json'
         with open(p, 'r') as f:
             params = json.load(f)
         if params['cond_entropy']:
