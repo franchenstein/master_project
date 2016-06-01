@@ -51,11 +51,14 @@ class MasterProject(QtGui.QMainWindow, gui.Ui_projectgui):
         if self.alpharange['ini'] ==  self.alpharange['end']:
             alpharange = [self.alpharange['ini']]
         else:
-            if self.alpharange['end'] == 0.99:
-                alpharange = list(np.arange(self.alpharange['ini'], 1, 0.05))
-                alpharange.append(0.99)
+            if self.alpharange['ini'] == self.alpharange['end']:
+                alpharange = [self.alpharange['ini']]
             else:
-                alpharange = list(np.arange(self.alpharange['ini'], self.alpharange['end'] + 0.05, 0.05))
+                if self.alpharange['end'] == 0.99:
+                    alpharange = list(np.arange(self.alpharange['ini'], 1, 0.05))
+                    alpharange.append(0.99)
+                else:
+                    alpharange = list(np.arange(self.alpharange['ini'], self.alpharange['end'] + 0.05, 0.05))
         self.configs['lrange'] = lrange
         self.configs['alpharange'] = alpharange
         self.configs['algorithms'] = [x for x in self.algorithms.keys() if self.algorithms[x]]
@@ -89,13 +92,13 @@ class MasterProject(QtGui.QMainWindow, gui.Ui_projectgui):
         self.apply_algo_bar.value = 100
 
     def call_gen_seq(self):
-        seq_len = int(self.seq_len.value())
+        seq_len = int(self.seq_len.text())
         self.gen_seq_bar.value = 0
         mn.main(self.config_file_path, gen_seq=True, seq_len=seq_len, tag=self.config_tag)
         self.gen_seq_bar.value = 100
 
     def call_analyze_seq(self):
-        seq_len = int(self.an_seq_len.value())
+        seq_len = int(self.an_seq_len.text())
         to_analyze = {}
         to_analyze['probabilities'] = self.probs.isChecked()
         to_analyze['cond_probabilities'] = self.cond_probs.isChecked()

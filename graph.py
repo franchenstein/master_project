@@ -80,7 +80,8 @@ class Graph:
         *states: the corrected list, with the outedges correctly pointing to 
         the destination state.
     '''
-    def reassign_dest_edges(self, states):
+    @staticmethod
+    def reassign_dest_edges(states):
         for s in states:
             new_outedges = []
             for e in s.outedges:
@@ -158,9 +159,10 @@ class Graph:
             for outedge in outedges: #Goes through each outedge in the outedge list
                 #Checks if the destination state of the current outedge is already
                 #in the list:
-                if outedge[1].name not in reachable_states:
-                    #If it is not, it is considered as a new reachable state.
-                    reachable_states.append(outedge[1].name)
+                if outedge[1]:
+                    if outedge[1].name not in reachable_states:
+                        #If it is not, it is considered as a new reachable state.
+                        reachable_states.append(outedge[1].name)
                     
         #A new list of states is created only with states whose names are in 
         #reachableStates            
@@ -168,9 +170,9 @@ class Graph:
         
         #List of outedges lists of the new states:
         aux = [x.outedges for x in new_states]
-        new_alphabet = [] #Receives the new alphabet
-        for outedges in aux: #Goes through each state's outedge list
-            for outedge in outedges: #Goes through each outedge in the outedge list
+        new_alphabet = []  #Receives the new alphabet
+        for outedges in aux:  #Goes through each state's outedge list
+            for outedge in outedges:  #Goes through each outedge in the outedge list
                 #Checks if the outedge label is already in the alphabet:
                 if outedge[0] not in new_alphabet:
                     #If it's not, it is included to the new alphabet.
@@ -178,8 +180,8 @@ class Graph:
         
         #Creates a new graph, without previous unreachable states:
         reduced_graph = Graph(new_states, new_alphabet)
-        newSize = len(reducedGraph.states)        
-        if (oldSize != newSize):
+        newSize = len(reduced_graph.states)
+        if (old_size != newSize):
             reduced_graph = reduced_graph.removeUnreachableStates()
         
         return reduced_graph

@@ -70,7 +70,7 @@ def generate_graphs(algorithms, terminations, lrange, alpharange, save_path, syn
                 for algo in algorithms:
                     if algo == 'mk1':
                         g.mk1(test, alpha)
-                    else:
+                    elif algo == 'mk2':
                         g.mk2()
 
 
