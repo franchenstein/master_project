@@ -170,20 +170,20 @@ class ProbabilisticGraph(graph.Graph):
         new_last_level = []
         for s in last_level:
             new_outedges = []
-            for edge in x.outedges:
+            for edge in s.outedges:
                 a = edge[0]
-                total_next = s.name + a
-                true_next = self.state_named(total_next)
+                next_name = s.name + a
+                true_next = self.state_named(next_name)
                 if true_next:
-                    lgth = len(total_next)
+                    lgth = len(next_name)
                     results = []
-                    for i in range(1, l+1):
+                    for i in range(1, lgth+1):
                         if i < lgth:
-                            candidate = self.state_named(total_next[i:])
+                            candidate = self.state_named(next_name[i:])
                         else:
                             candidate = self.root()
                         if candidate:
-                            r = self.compare_morphs(s.morph(), candidate.morph(),
+                            r = self.compare_morphs(true_next.morph(), candidate.morph(),
                                                     alpha, test)
                         else:
                             r = [False, 0.0]
@@ -191,13 +191,13 @@ class ProbabilisticGraph(graph.Graph):
                     if method == 'old':
                         new_next = self.old_method(results)
                     else:
-                        new_next = self.new_method(results, total_next[1:])
+                        new_next = self.new_method(results, next_name[1:])
                     new_outedge = (a, new_next, edge[2])
                     new_outedges.append(new_outedge)                     
                 else:
                     new_outedges.append((a, None, '0.0'))
-            x.outedges = new_outedges
-            new_last_level.append(x)
+            s.outedges = new_outedges
+            new_last_level.append(s)
         new_states = [x for x in self.states if x.name_length() < l]
         new_states.extend(new_last_level)
         h = ProbabilisticGraph(new_states, self.alphabet)

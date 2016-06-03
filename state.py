@@ -52,3 +52,24 @@ class State:
             return 0
         else:
             return len(self.name)
+
+    def __str__(self):
+        r = '*************\n'
+        r += 'State name: ' + self.name + '\n'
+        r += 'Outedges:\n'
+        for edge in self.outedges:
+            r += "-----\n"
+            i = 0
+            for e in edge:
+                if i == 0:
+                    r += "Edge with label: " + e + '\n'
+                elif i == 1:
+                    if e:
+                        r += "To: " + e.name + '\n'
+                    else:
+                        r += "To nowhere \n"
+                else:
+                    r += e + '\n'
+                i += 1
+        r += "\n\n"
+        return r

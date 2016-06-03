@@ -73,16 +73,16 @@ class GraphGenerator():
                 break
             else:
                 aux = s.pop(0)
-                nexts = [x[1] for x in aux.outedges if x[1]]
+                nexts = [x[1] for x in aux.outedges]
                 i = 0
                 new_outedges = []
                 for n in nexts:
-                    for w in synchlist:
-                        newdest = n
-                        if self.is_suffix(w, n.name):
-                            newdest = [x for x in self.synch_words
-                                       if x.name == w][0]                                       
-                            break
+                    newdest = n
+                    if n:
+                        for w in synchlist:
+                            if self.is_suffix(w, n.name):
+                                newdest = [x for x in self.synch_words if x.name == w][0]
+                                break
                     oedge = (aux.outedges[i][0], newdest, aux.outedges[i][2])
                     new_outedges.append(oedge)
                     i += 1    

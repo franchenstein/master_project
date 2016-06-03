@@ -185,3 +185,14 @@ class Graph:
             reduced_graph = reduced_graph.removeUnreachableStates()
         
         return reduced_graph
+
+    def __str__(self):
+        for s in self.states:
+            print s
+        r = '****************************************\n'
+        r += 'Number of states: ' + str(len(self.states)) + '\n'
+        return r
+
+    def print_state_named(self, n):
+        s = self.state_named(n)
+        print s

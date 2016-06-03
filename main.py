@@ -89,21 +89,22 @@ def generate_sequences(graph_path, algorithms, drange, terminations, lrange, alp
     for algo in algorithms:
         if algo == 'dmark':
             for d in drange:
-                path = 'graphs/' + graph_path + '/dmarkov_d' + str(d) + '.json'
-                generate_sequences_core(g, path, seq_len)
+                p = 'dmarkov_d' + str(d) + '.json'
+                path = 'graphs/' + graph_path + '/' + p
+                generate_sequences_core(g, graph_path, path, p, seq_len)
         else:
             for t in terminations:
                 for l in lrange:
                     for alpha in alpharange:
-                        path = 'graphs/' + graph_path + '/L' + str(l) + '_alpha' + str(alpha) + \
-                               '_' + t + '_' + algo + '.json'
-                        generate_sequences_core(g, path, seq_len)
+                        p = 'L' + str(l) + '_alpha' + str(alpha) + '_' + t + '_' + algo + '.json'
+                        path = 'graphs/' + graph_path + '/' + p
+                        generate_sequences_core(g, graph_path, path, p, seq_len)
 
 
-def generate_sequences_core(g, path, seq_len):
+def generate_sequences_core(g, graph_path, path, p, seq_len):
     g.open_graph_file(path)
     seq = g.generate_sequence(seq_len, g.states[0])
-    p = 'sequences/len_' + str(seq_len) + '_' + path[7:]
+    p = 'sequences/' + graph_path + '/len_' + str(seq_len) + '_' + p
     with open(p, 'w') as f:
         json.dump(seq, f)
 
