@@ -1,0 +1,1 @@
+{"other_params": {"upto": 50, "K": 13, "L": 14, "l1": 13}, "to_analyze": {"kld": true, "probabilities": false, "l1metric": true, "cond_entropy": false, "cond_probabilities": false, "autocorrelation": false}}

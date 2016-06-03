@@ -110,8 +110,8 @@ class MasterProject(QtGui.QMainWindow, gui.Ui_projectgui):
         other_params = {}
         other_params['L'] = int(self.probs_l.text())
         other_params['upto'] = int(self.autocorr_upto.text())
-        other_params['K'] = int(self.kld_l.text())
-        other_params['l1'] = int(self.l1m_upto.text())
+        other_params['K'] = int(self.kld_l.text()) - 1
+        other_params['l1'] = int(self.l1m_upto.text()) - 1
 
         params = {}
         params['to_analyze'] = to_analyze

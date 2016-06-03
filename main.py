@@ -29,7 +29,7 @@ def main(config_file, terminate=False, dmark=False, generate=False, gen_seq=Fals
     if gen_seq:
         generate_sequences(graph_path, algorithms, drange, terminations, lrange, alpharange, seq_len)
     if an_seq:
-        p = 'configs/' + graph_path + 'params.json'
+        p = 'configs/' + graph_path + '/params.json'
         with open(p, 'r') as f:
             params = json.load(f)
         analyze_sequences(graph_path, algorithms, drange, terminations, lrange, alpharange, seq_len,
@@ -41,7 +41,7 @@ def main(config_file, terminate=False, dmark=False, generate=False, gen_seq=Fals
         if params['cond_entropy']:
             plot_entropies(graph_path, algorithms, terminations, drange, lrange, alpharange, params['eval_l'], tag)
         if params['autocorrelation']:
-            plot_entropies(graph_path, algorithms, terminations, drange, lrange, alpharange, params['up_to'], tag)
+            plot_entropies(graph_path, algorithms, terminations, drange, lrange, alpharange, params['upto'], tag)
         if params['kld']:
             plot_others('kld', graph_path, algorithms, terminations, drange, lrange, alpharange, tag)
         if params['l1metric']:
@@ -115,41 +115,43 @@ def analyze_sequences(graph_path, algorithms, drange, terminations, lrange, alph
             kld = []
             l1 = []
             for d in drange:
-                p = 'd_markov_d' + str(d) + '.json'
+                p = 'dmarkov_d' + str(d) + '.json'
                 path = 'sequences/' + graph_path + '/len_' +str(seq_len) + '_' + p
                 seq_an = sa.SequenceAnalyzer(path)
                 kld_step, l1_step = analyze_sequences_core_1(graph_path, p, to_analyze, params, seq_an)
                 kld.append(kld_step)
                 l1.append(l1_step)
             if to_analyze['kld']:
-                k_path = 'results/kld/' + path[10:]
+                k_path = 'results/' +  graph_path + '/kld/' + p
                 with open(k_path, 'w') as f:
                     json.dump(kld, f)
             if to_analyze['l1metric']:
-                l_path = 'results/l1/' + path[10:]
+                l_path = 'results/' + graph_path + '/l1/' + p
                 with open(l_path, 'w') as f:
                     json.dump(l1, f)
         else:
             for t in terminations:
                 for l in lrange:
                     for alpha in alpharange:
-                        p = 'L' + str(l) + '_alpha_' + str(alpha) + '_' + t + '_' + algo + '.json'
+                        p = 'L' + str(l) + '_alpha' + str(alpha) + '_' + t + '_' + algo + '.json'
                         path = 'sequences/' + graph_path + '/len_' +str(seq_len) + '_' + p
                         seq_an = sa.SequenceAnalyzer(path)
                         kld_step, l1_step = analyze_sequences_core_1(graph_path, p, to_analyze, params, seq_an)
                         kld.append(kld_step)
                         l1.append(l1_step)
                     if to_analyze['kld']:
-                        k_path = 'results/kld/' + p
+                        k_path = 'results/' + graph_path + '/kld/' + p
                         with open(k_path, 'w') as f:
                             json.dump(kld, f)
                     if to_analyze['l1metric']:
-                        l_path = 'results/l1/' + p
+                        l_path = 'results/' + graph_path + '/l1/' + p
                         with open(l_path, 'w') as f:
                             json.dump(l1, f)
 
 
 def analyze_sequences_core_1(graph_path, path, to_analyze, params, seq_an):
+    kld = 0
+    l1 = 0
     if to_analyze['probabilities']:
         p, alph = seq_an.calc_probs(params['L'])
         p_path = 'results/'+ graph_path + '/probabilities/' + path
@@ -157,20 +159,20 @@ def analyze_sequences_core_1(graph_path, path, to_analyze, params, seq_an):
             json.dump([p, alph], f)
     if to_analyze['cond_probabilities']:
         check_probs(seq_an, graph_path, path)
-        p_cond = seq_an.calc_cond_probs(params['L'])
-        p_cond_path = 'results/'+ graph_path + '/cond_' + path
+        p_cond = seq_an.calc_cond_probs(params['L']-1)
+        p_cond_path = 'results/'+ graph_path + '/probabilities/cond_' + path
         with open(p_cond_path, 'w') as f:
             json.dump(p_cond, f)
     if to_analyze['cond_entropy']:
         check_probs(seq_an, graph_path, path)
         check_cond_probs(seq_an, graph_path, path)
-        h = seq_an.calc_cond_entropy(params['L'])
+        h = seq_an.calc_cond_entropy(params['L']-1)
         h_path = 'results/'+ graph_path + '/cond_entropies/' + path
         with open(h_path, 'w') as f:
             json.dump(h, f)
     if to_analyze['autocorrelation']:
-        a = seq_an.calc_autocorrelation(params['up_to'])
-        a_path = 'results/' + graph_path + '/autocorrelations'/ + path
+        a = seq_an.calc_autocorrelation(params['upto'])
+        a_path = 'results/' + graph_path + '/autocorrelations/' + path
         with open(a_path, 'w') as f:
             json.dump(a, f)
     if to_analyze['kld']:
@@ -178,7 +180,7 @@ def analyze_sequences_core_1(graph_path, path, to_analyze, params, seq_an):
         p = load_reference_probs(graph_path)
         kld = seq_an.calc_kldivergence(p, params['K'])
     if to_analyze['l1metric']:
-        check_probs(seq_an, graph_path, path())
+        check_probs(seq_an, graph_path, path)
         p = load_reference_probs(graph_path)
         l1 = seq_an.calc_l1metric(p, params['l1'])
     return [kld, l1]
@@ -239,7 +241,7 @@ def plot_entropies(graph_path, algorithms, terminations, drange, lrange, alphara
                 states_term = []
                 for l in lrange:
                     for alpha in alpharange:
-                        p = 'L' + str(l) + '_alpha_' + str(alpha) + '_' + t + '_' + algo + '.json'
+                        p = 'L' + str(l) + '_alpha' + str(alpha) + '_' + t + '_' + algo + '.json'
                         h_path = 'results/' + graph_path + '/entropies/' + p
                         with open(h_path, 'r') as f:
                             h_eval = json.load(f)
@@ -291,7 +293,7 @@ def plot_others(kind, graph_path, algorithms, terminations, drange, lrange, alph
                 states_term = []
                 for l in lrange:
                     for alpha in alpharange:
-                        p = 'L' + str(l) + '_alpha_' + str(alpha) + '_' + t + '_' + algo + '.json'
+                        p = 'L' + str(l) + '_alpha' + str(alpha) + '_' + t + '_' + algo + '.json'
                         h_path = 'results/' + graph_path + '/' + kind + '/' + p
                         with open(h_path, 'r') as f:
                             h_term.append(json.load(f))
@@ -339,7 +341,7 @@ def plot_autocorr(graph_path, algorithms, terminations, drange, lrange, alpharan
             for t in terminations:
                 for l in lrange:
                     for alpha in alpharange:
-                        p = 'L' + str(l) + '_alpha_' + str(alpha) + '_' + t + '_' + algo + '.json'
+                        p = 'L' + str(l) + '_alpha' + str(alpha) + '_' + t + '_' + algo + '.json'
                         h_path = 'results/' + graph_path + '/autocorrelations/' + p
                         with open(h_path, 'r') as f:
                             h_eval = json.load(f)
