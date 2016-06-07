@@ -11,8 +11,11 @@ to complete the last level of the graph.
 
 
 class ProbabilisticGraph(graph.Graph):
-    def __init__(self, states, alphabet):
-        graph.Graph.__init__(self, states, alphabet)
+    def __init__(self, states=[], alphabet=[], path=''):
+        if path:
+            self.open_graph_file(path)
+        else:
+            graph.Graph.__init__(self, states, alphabet)
     
     '''
     Name: compare_morphs
