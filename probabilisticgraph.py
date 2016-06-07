@@ -75,11 +75,12 @@ class ProbabilisticGraph(graph.Graph):
         s = ini_state
         for i in range(0, length):
             d, dest = s.random_step()
-            if dest:
-                s = self.state_named(dest)
+            s = self.state_named(dest)
+            if s:
                 data += d
             else:
                 print "[error] Sequence generation entered in invalid state at step " + str(i+1)
+                return data
         return data   
     
     '''
@@ -251,24 +252,11 @@ class ProbabilisticGraph(graph.Graph):
         Adapts super's open_graph_file in order to convert all states to prob
         states.
     '''
-    '''
     def open_graph_file(self, path):
         aux = graph.Graph([],[])
         aux.open_graph_file(path)
         states = []
         for s in aux.states:
             states.append(pst.ProbabilisticState(s.name, s.outedges))
-        for ns in states:
-            newedges = []
-            for edge in ns.outedges:
-                if edge[1]:
-                    destname = edge[1].name
-                    newdest = [x for x in states if x.name == destname][0]
-                else:
-                    newdest = None
-                newedge = (edge[0], newdest, edge[2])
-                newedges.append(newedge)
-            ns.outedges = newedges
         self.states = states
         self.alphabet = aux.alphabet
-    '''

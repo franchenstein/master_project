@@ -5,6 +5,8 @@ import numpy as num
 This class opens a sequence saved in a json file and has methods to compute 
 various parameters based on said sequence.
 '''
+
+
 class SequenceAnalyzer():
     
     def __init__(self, path, probabilities = [], alphabet = [], 

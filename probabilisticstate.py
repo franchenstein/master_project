@@ -58,7 +58,7 @@ class ProbabilisticState(state.State):
         randomly generated number does not fall into the distribution, an error
         2-tuple is returned.
     '''
-    def randomstep(self):
+    def random_step(self):
         r = rnd.random()
         acc = 0
         for e in self.outedges:
