@@ -73,7 +73,8 @@ class GraphGenerator():
                 break
             else:
                 aux = s.pop(0)
-                nexts = [x[1] for x in aux.outedges]
+                nexts_names = [x[1] for x in aux.outedges]
+                nexts = [self.original_graph.state_named(x) for x in nexts_names]
                 i = 0
                 new_outedges = []
                 for n in nexts:

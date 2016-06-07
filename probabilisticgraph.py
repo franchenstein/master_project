@@ -74,23 +74,12 @@ class ProbabilisticGraph(graph.Graph):
         data = ''
         s = ini_state
         for i in range(0, length):
-            dist = [0]
-            dist.extend([float(x[2]) for x in s.outedges])
-            r = rd()
-            c = 0
-            for j in range(0, len(dist) - 1):
-                c += dist[j]
-                if c < r <= c + dist[j+1]:
-                    taken_edge = s.outedges[j]
-                    data += taken_edge[0]
-                    destination = taken_edge[1].name
-                    s = self.state_named(destination)
-                    if s:
-                        break
-                    else:
-                        print "[error] Sequence generation entered invalid state."
-                        print "Sequence stopped at length: ", (i + 1)
-                        return data
+            d, dest = s.random_step()
+            if dest:
+                s = self.state_named(dest)
+                data += d
+            else:
+                print "[error] Sequence generation entered in invalid state at step " + str(i+1)
         return data   
     
     '''
@@ -144,10 +133,10 @@ class ProbabilisticGraph(graph.Graph):
         for x in last_level:
             new_outedges = []
             for e in x.outedges:
-                next = x.name[1:] + e[0]
-                for i in range(1, len(next)+1):
+                for i in range(1, len(dest)+1):
                     if i < l:
-                        next_state = self.state_named(next)
+                        dest = x.name[i:] + e[0]
+                        next_state = self.state_named(dest)
                         if next_state or (e[2] == 0.0):
                             new_outedges.append((e[0], next_state, e[2]))
                             break
@@ -261,7 +250,8 @@ class ProbabilisticGraph(graph.Graph):
     Description:
         Adapts super's open_graph_file in order to convert all states to prob
         states.
-    '''             
+    '''
+    '''
     def open_graph_file(self, path):
         aux = graph.Graph([],[])
         aux.open_graph_file(path)
@@ -281,3 +271,4 @@ class ProbabilisticGraph(graph.Graph):
             ns.outedges = newedges
         self.states = states
         self.alphabet = aux.alphabet
+    '''

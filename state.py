@@ -65,7 +65,7 @@ class State:
                     r += "Edge with label: " + e + '\n'
                 elif i == 1:
                     if e:
-                        r += "To: " + e.name + '\n'
+                        r += "To: " + e + '\n'
                     else:
                         r += "To nowhere \n"
                 else:

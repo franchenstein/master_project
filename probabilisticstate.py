@@ -44,12 +44,12 @@ class ProbabilisticState(state.State):
     def morph(self):
         m = [(x[0], x[2]) for x in self.outedges]
         return m
-   
+
     '''
     Name: randomstep
     Input:
-    Output: 
-        *A 2-tuple of the randomly chosen output symbol and the destination 
+    Output:
+        *A 2-tuple of the randomly chosen output symbol and the destination
          state.
     Description:
         Takes on step in a walk through the graph. It randomly generates a
@@ -57,7 +57,7 @@ class ProbabilisticState(state.State):
         an output symbol and destination accordingly. If, by some error, the
         randomly generated number does not fall into the distribution, an error
         2-tuple is returned.
-    '''     
+    '''
     def randomstep(self):
         r = rnd.random()
         acc = 0
@@ -66,4 +66,4 @@ class ProbabilisticState(state.State):
                 return e[:2]
             else:
                 acc += float(e[2])
-        return ('', None) #Error 2-tuple.
+        return '', ''   #Error situation

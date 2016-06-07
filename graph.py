@@ -30,21 +30,7 @@ class Graph:
     def save_graph_file(self, path):
         savestates = []
         for s in self.states:
-            saveedges = []
-            for e in s.outedges:
-                i = 0
-                s_edge = []
-                for element in e:
-                    if i == 1:
-                        if element:
-                            s_edge.append(element.name)
-                        else:
-                            s_edge.append('')
-                    else:
-                        s_edge.append(element)
-                    i+=1
-                saveedges.append(tuple(s_edge))
-            savestates.append((s.name, saveedges))            
+            savestates.append((s.name, s.outedges))
         with open(path, 'w') as file_:
             json.dump([savestates, self.alphabet], file_)
         return
@@ -67,7 +53,6 @@ class Graph:
         for x in savedstates:
             s = st.State(x[0], tuple(x[1]))
             states.append(s)
-        states = self.reassign_dest_edges(states)
         self.states = states
         return
         
@@ -79,7 +64,6 @@ class Graph:
     Output:
         *states: the corrected list, with the outedges correctly pointing to 
         the destination state.
-    '''
     @staticmethod
     def reassign_dest_edges(states):
         for s in states:
@@ -102,7 +86,8 @@ class Graph:
                 new_outedges.append(new_e)
             s.outedges = new_outedges
         return states
-    
+    '''
+
     '''
     Name: root
     output:
@@ -160,9 +145,10 @@ class Graph:
                 #Checks if the destination state of the current outedge is already
                 #in the list:
                 if outedge[1]:
-                    if outedge[1].name not in reachable_states:
+                    s = self.state_named(outedge[1])
+                    if s.name not in reachable_states:
                         #If it is not, it is considered as a new reachable state.
-                        reachable_states.append(outedge[1].name)
+                        reachable_states.append(s.name)
                     
         #A new list of states is created only with states whose names are in 
         #reachableStates            
@@ -182,7 +168,7 @@ class Graph:
         reduced_graph = Graph(new_states, new_alphabet)
         newSize = len(reduced_graph.states)
         if (old_size != newSize):
-            reduced_graph = reduced_graph.removeUnreachableStates()
+            reduced_graph = reduced_graph.remove_unreachable_states()
         
         return reduced_graph
 
