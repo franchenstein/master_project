@@ -1,1 +1,1 @@
-{"kld": false, "l1metric": false, "up_to": 13, "eval_l": 13, "cond_entropy": true, "autocorrelation": false}
+{"kld": true, "upto": 50, "l1metric": true, "eval_l": 13, "cond_entropy": true, "autocorrelation": true}

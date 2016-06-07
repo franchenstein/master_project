@@ -224,11 +224,11 @@ def plot_entropies(graph_path, algorithms, terminations, drange, lrange, alphara
             h_dmark = []
             states_dmark = []
             for d in drange:
-                h_path = 'results/' + graph_path + '/entropies/d_markov_d' + str(d) + '.json'
+                h_path = 'results/' + graph_path + '/cond_entropies/dmarkov_d' + str(d) + '.json'
                 with open(h_path, 'r') as f:
                     h_eval = json.load(f)
                     h_dmark.append(h_eval[eval_l])
-                g_path = 'graphs/' + graph_path + '/d_markov_d' + str(d) + '.json'
+                g_path = 'graphs/' + graph_path + '/dmarkov_d' + str(d) + '.json'
                 g.open_graph_file(g_path)
                 states_dmark.append(len(g.states))
             h.append(h_dmark)
@@ -242,7 +242,7 @@ def plot_entropies(graph_path, algorithms, terminations, drange, lrange, alphara
                 for l in lrange:
                     for alpha in alpharange:
                         p = 'L' + str(l) + '_alpha' + str(alpha) + '_' + t + '_' + algo + '.json'
-                        h_path = 'results/' + graph_path + '/entropies/' + p
+                        h_path = 'results/' + graph_path + '/cond_entropies/' + p
                         with open(h_path, 'r') as f:
                             h_eval = json.load(f)
                             h_term.append(h_eval[eval_l])
@@ -277,10 +277,10 @@ def plot_others(kind, graph_path, algorithms, terminations, drange, lrange, alph
             h_dmark = []
             states_dmark = []
             for d in drange:
-                h_path = 'results/' + graph_path + '/' + kind + '/d_markov_d' + str(d) + '.json'
+                h_path = 'results/' + graph_path + '/' + kind + '/dmarkov_d' + str(d) + '.json'
                 with open(h_path, 'r') as f:
                     h_dmark.append(json.load(f))
-                g_path = 'graphs/' + graph_path + '/d_markov_d' + str(d) + '.json'
+                g_path = 'graphs/' + graph_path + '/dmarkov_d' + str(d) + '.json'
                 g.open_graph_file(g_path)
                 states_dmark.append(len(g.states))
             h.append(h_dmark)
@@ -329,11 +329,11 @@ def plot_autocorr(graph_path, algorithms, terminations, drange, lrange, alpharan
     for algo in algorithms:
         if algo == 'dmark':
             for d in drange:
-                h_path = 'results/' + graph_path + '/autocorrelations/d_markov_d' + str(d) + '.json'
+                h_path = 'results/' + graph_path + '/autocorrelations/dmarkov_d' + str(d) + '.json'
                 with open(h_path, 'r') as f:
                     h_eval = json.load(f)
                     h.append(h_eval)
-                g_path = 'graphs/' + graph_path + '/d_markov_d' + str(d) + '.json'
+                g_path = 'graphs/' + graph_path + '/dmarkov_d' + str(d) + '.json'
                 g.open_graph_file(g_path)
                 lbl = 'D-Markov, D = ' + str(d) + ', ' + str(len(g.states)) + ' states'
                 labels.append(lbl)

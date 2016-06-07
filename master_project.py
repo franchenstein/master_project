@@ -132,8 +132,8 @@ class MasterProject(QtGui.QMainWindow, gui.Ui_projectgui):
         params['kld'] = self.plot_kld.isChecked()
         params['l1metric'] = self.plot_l1m.isChecked()
         params['eval_l'] = int(self.eval_l.text())
-        params['up_to'] = int(self.plot_upto.text())
-        p = 'configs/' + self.configs['graph_path'] + 'plotconfigs.json'
+        params['upto'] = int(self.plot_upto.text())
+        p = 'configs/' + self.configs['graph_path'] + '/plotconfigs.json'
         with open(p, 'w') as f:
             json.dump(params, f)
         mn.main(self.config_file_path, plot=True, tag=self.config_tag)
