@@ -1,6 +1,7 @@
 import graph
 import probabilisticstate as pst
 from scipy import stats
+from random import random as rd
 '''
 Probabilistic version of a graph. It uses probabilistic states instead of 
 common states. This allows for a method that computes statistical tests of two
@@ -66,18 +67,27 @@ class ProbabilisticGraph(graph.Graph):
         states, which might be useful in the future, to check if there are 
         states that are not reached during a certain 
     '''
-    @staticmethod
-    def generate_sequence(length, ini_state):
+    def generate_sequence(self, length, ini_state):
         data = ''
         s = ini_state
         for i in range(0, length):
-            symbol, s = s.randomstep()
-            if s:
-                data += symbol
-            else:
-                print "[error] Sequence generation entered invalid state."
-                print "Sequence stopped at length: ", (i + 1) 
-                break
+            dist = [0]
+            dist.extend([float(x[2]) for x in s.outedges])
+            r = rd()
+            c = 0
+            for j in range(0, len(dist) - 1):
+                c += dist[j]
+                if c < r <= c + dist[j+1]:
+                    taken_edge = s.outedges[j]
+                    data += taken_edge[0]
+                    destination = taken_edge[1].name
+                    s = self.state_named(destination)
+                    if s:
+                        break
+                    else:
+                        print "[error] Sequence generation entered invalid state."
+                        print "Sequence stopped at length: ", (i + 1)
+                        return data
         return data   
     
     '''
