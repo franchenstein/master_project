@@ -7,6 +7,8 @@ common states. This allows for a method that computes statistical tests of two
 states' morphs, create randomly generated sequences and use statistical criteria
 to complete the last level of the graph.
 '''
+
+
 class ProbabilisticGraph(graph.Graph):
     def __init__(self, states, alphabet):
         graph.Graph.__init__(self, states, alphabet)
@@ -66,19 +68,16 @@ class ProbabilisticGraph(graph.Graph):
     '''
     @staticmethod
     def generate_sequence(length, ini_state):
-        data = ""
+        data = ''
         s = ini_state
-        visited_states = [s.name]
-        for i in range(0,length):
+        for i in range(0, length):
             symbol, s = s.randomstep()
             if s:
                 data += symbol
-                if s.name not in visited_states:
-                    visited_states.append(s.name)
             else:
                 print "[error] Sequence generation entered invalid state."
                 print "Sequence stopped at length: ", (i + 1) 
-                return data
+                break
         return data   
     
     '''
