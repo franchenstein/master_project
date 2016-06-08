@@ -139,10 +139,10 @@ class ProbabilisticGraph(graph.Graph):
                         dest = x.name[i:] + e[0]
                         next_state = self.state_named(dest)
                         if next_state or (e[2] == 0.0):
-                            new_outedges.append((e[0], next_state, e[2]))
+                            new_outedges.append((e[0], next_state.name, e[2]))
                             break
                     else:
-                        new_outedges.append((e[0], self.root(), e[2]))
+                        new_outedges.append((e[0], 'e', e[2]))
             x.outedges = new_outedges
             new_last_level.append(x)
         new_states = [x for x in self.states if x.name_length() < l]
@@ -194,10 +194,10 @@ class ProbabilisticGraph(graph.Graph):
                         new_next = self.old_method(results)
                     else:
                         new_next = self.new_method(results, next_name[1:])
-                    new_outedge = (a, new_next, edge[2])
+                    new_outedge = (a, new_next.name, edge[2])
                     new_outedges.append(new_outedge)                     
                 else:
-                    new_outedges.append((a, None, '0.0'))
+                    new_outedges.append((a, '', '0.0'))
             s.outedges = new_outedges
             new_last_level.append(s)
         new_states = [x for x in self.states if x.name_length() < l]
