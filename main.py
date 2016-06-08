@@ -72,6 +72,8 @@ def generate_graphs(algorithms, terminations, lrange, alpharange, save_path, syn
                         g.mk1(test, alpha)
                     elif algo == 'mk2':
                         g.mk2()
+                    elif algo == 'mk2_moore':
+                        g.mk2_moore(test, alpha)
 
 
 def generate_dmarkov(graph_path, drange, lmax):
@@ -262,6 +264,8 @@ def plot_entropies(graph_path, algorithms, terminations, drange, lrange, alphara
     plt.legend(loc='upper right', shadow=False, fontsize='medium')
     plt.xlabel('Number of states')
     plt.ylabel('Conditional Entropy')
+    fig_mngr = plt.get_current_fig_manager()
+    fig_mngr.window.showMaximized()
     save_path = 'plots/' + graph_path + '/cond_entropies_' + tag + '.png'
     plt.savefig(save_path, bbox_inches='tight')
     plt.show()
@@ -315,6 +319,8 @@ def plot_others(kind, graph_path, algorithms, terminations, drange, lrange, alph
     elif kind == 'kld':
         plt.ylabel('Kullback-Leibler Divergence')
     save_path = 'plots/' + graph_path + '/' + kind + '_' + tag + '.png'
+    fig_mngr = plt.get_current_fig_manager()
+    fig_mngr.window.showMaximized()
     plt.savefig(save_path, bbox_inches='tight')
     plt.show()
 
@@ -360,6 +366,8 @@ def plot_autocorr(graph_path, algorithms, terminations, drange, lrange, alpharan
     plt.legend(loc='upper right', shadow=False, fontsize='medium')
     plt.xlabel('Lag')
     plt.ylabel('Autocorrelation')
+    fig_mngr = plt.get_current_fig_manager()
+    fig_mngr.window.showMaximized()
     save_path = 'plots/' + graph_path + '/autocorrelations_' + tag + '.png'
     plt.savefig(save_path, bbox_inches='tight')
     plt.show()

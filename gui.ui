@@ -149,7 +149,7 @@
       <widget class="QCheckBox" name="dmark">
        <property name="geometry">
         <rect>
-         <x>260</x>
+         <x>420</x>
          <y>30</y>
          <width>97</width>
          <height>22</height>
@@ -160,6 +160,19 @@
        </property>
        <property name="tristate">
         <bool>false</bool>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="mk2_moore">
+       <property name="geometry">
+        <rect>
+         <x>260</x>
+         <y>30</y>
+         <width>121</width>
+         <height>22</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Mk2 w/ Moore</string>
        </property>
       </widget>
      </widget>
@@ -271,7 +284,7 @@
         <rect>
          <x>170</x>
          <y>30</y>
-         <width>81</width>
+         <width>21</width>
          <height>17</height>
         </rect>
        </property>
@@ -292,10 +305,10 @@
         <string/>
        </property>
       </widget>
-      <widget class="QLineEdit" name="alpha_end">
+      <widget class="QLineEdit" name="alpha_ini">
        <property name="geometry">
         <rect>
-         <x>200</x>
+         <x>120</x>
          <y>70</y>
          <width>41</width>
          <height>27</height>
@@ -310,7 +323,7 @@
         <rect>
          <x>170</x>
          <y>70</y>
-         <width>81</width>
+         <width>21</width>
          <height>17</height>
         </rect>
        </property>
@@ -331,10 +344,10 @@
         <string>alpha from:</string>
        </property>
       </widget>
-      <widget class="QLineEdit" name="alpha_ini">
+      <widget class="QLineEdit" name="alpha_end">
        <property name="geometry">
         <rect>
-         <x>120</x>
+         <x>200</x>
          <y>70</y>
          <width>41</width>
          <height>27</height>

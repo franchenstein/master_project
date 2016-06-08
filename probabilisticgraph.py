@@ -41,11 +41,15 @@ class ProbabilisticGraph(graph.Graph):
     def compare_morphs(morph1, morph2, alpha, test):
         probs1 = [float(x[1]) for x in morph1]
         probs2 = []
+        symbols_2 = [x[0] for x in morph2]
         #Loop to guarantee the probability distributions are in the same order:
         for a in [x[0] for x in morph1]:
-            for b in morph2:
-                if b[0] == a:
-                    probs2.append(float(b[1])) 
+            if a in symbols_2:
+                for b in morph2:
+                    if b[0] == a:
+                        probs2.append(float(b[1]))
+            else:
+                probs2.append(0.0)
         if probs1 == probs2:
             return [True, 1.0]
         else: 

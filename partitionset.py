@@ -38,7 +38,7 @@ class PartitionSet:
                 t = s.next_state_from_edge(a)
                 if t != None:
                     for p in self.partitions:
-                        if t.name in p.name:
+                        if t in p.name:
                             for e in s.outedges:
                                 if e[0] == a:
                                     newedge = []
@@ -58,8 +58,4 @@ class PartitionSet:
             u = st.State(s.name, oedge)
             new_states.append(u)
         h = gr.Graph(new_states, g.alphabet)
-        # As commented before, the edges were created pointing to names. They are
-        # corrected here:
-        corrected_states = h.reassign_dest_edges(h.states)
-        h.states = corrected_states
         return h
