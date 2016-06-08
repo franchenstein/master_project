@@ -133,7 +133,7 @@ def splitting(partition, letter, states):
         if letter in edge_labels:
             next = s.next_state_from_edge(letter)
             if next:
-                if next.name in partition.name:
+                if next in partition.name:
                     p1.add_to_partition(s)
                 else:
                     p2.add_to_partition(s)
