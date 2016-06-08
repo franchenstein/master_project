@@ -146,9 +146,10 @@ class Graph:
                 #in the list:
                 if outedge[1]:
                     s = self.state_named(outedge[1])
-                    if s.name not in reachable_states:
-                        #If it is not, it is considered as a new reachable state.
-                        reachable_states.append(s.name)
+                    if s:
+                        if s.name not in reachable_states:
+                            #If it is not, it is considered as a new reachable state.
+                            reachable_states.append(s.name)
                     
         #A new list of states is created only with states whose names are in 
         #reachableStates            

@@ -84,13 +84,17 @@ class GraphGenerator():
                             if self.is_suffix(w, n.name):
                                 newdest = [x for x in self.synch_words if x.name == w][0]
                                 break
-                    oedge = (aux.outedges[i][0], newdest, aux.outedges[i][2])
+                    if newdest:
+                        oedge = (aux.outedges[i][0], newdest.name, aux.outedges[i][2])
+                    else:
+                        oedge = (aux.outedges[i][0], '', aux.outedges[i][2])
                     new_outedges.append(oedge)
                     i += 1    
                 new_state = pst.ProbabilisticState(aux.name, new_outedges)
                 newstates.append(new_state)
                 states_names = [x.name for x in newstates]
-                new_children = new_state.obtain_children()
+                new_c = new_state.obtain_children()
+                new_children = [self.original_graph.state_named(x) for x in new_c]
                 new_children = [x for x in new_children if x.name not in states_names]
                 s.extend(new_children)
         new_graph = pg.ProbabilisticGraph(newstates, 
@@ -119,28 +123,30 @@ class GraphGenerator():
         while True:
             if children:
                 c = children.pop(0)
-                fail_count = 0
-                for p in partitions:
-                    fail_count += 1
-                    pmorph = self.partition_morph(p.outedges[0])
-                    result = self.original_graph.compare_morphs(pmorph, 
+                c = self.original_graph.state_named(c)
+                if c:
+                    fail_count = 0
+                    for p in partitions:
+                        fail_count += 1
+                        pmorph = self.partition_morph(p.outedges[0])
+                        result = self.original_graph.compare_morphs(pmorph, 
                                                                 c.morph(),
                                                                 alpha, test)
-                    if result[0]:
-                        p.add_to_partition(c)
-                        break
-                    else:
-                        if fail_count == len(partitions):
-                            new_partition = pt.Partition(c)
-                            partitions.append(new_partition)
-                new_states = c.obtain_children()
-                for n in new_states:
-                    not_in_partitions = True
-                    for p in partitions:
-                        if n.name in p.name:
-                            not_in_partitions = False
-                    if not_in_partitions:
-                        children.append(n)                   
+                        if result[0]:
+                            p.add_to_partition(c)
+                            break
+                        else:
+                            if fail_count == len(partitions):
+                                new_partition = pt.Partition(c)
+                                partitions.append(new_partition)
+                    new_states = c.obtain_children()
+                    for n in new_states:
+                        not_in_partitions = True
+                        for p in partitions:
+                            if n in p.name:
+                                not_in_partitions = False
+                        if not_in_partitions:
+                            children.append(n)                   
             else:
                 return partitions
 

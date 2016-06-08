@@ -134,7 +134,7 @@ class ProbabilisticGraph(graph.Graph):
         for x in last_level:
             new_outedges = []
             for e in x.outedges:
-                for i in range(1, len(dest)+1):
+                for i in range(1, l+1):
                     if i < l:
                         dest = x.name[i:] + e[0]
                         next_state = self.state_named(dest)
