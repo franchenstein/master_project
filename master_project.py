@@ -35,6 +35,7 @@ class MasterProject(QtGui.QMainWindow, gui.Ui_projectgui):
         self.terminations['old'] = self.old_term.isChecked()
         self.terminations['new'] = self.new_term.isChecked()
         self.terminations['dmark'] = self.dmark_term.isChecked()
+        self.terminations['omega'] = self.omega_term.isChecked()
         self.algorithms['dmark'] = self.dmark.isChecked()
         self.algorithms['mk1'] = self.mk1.isChecked()
         self.algorithms['mk2'] = self.mk2.isChecked()

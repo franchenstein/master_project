@@ -2,7 +2,8 @@
 
 # Form implementation generated from reading ui file 'gui.ui'
 #
-# Created by: PyQt4 UI code generator 4.11.4
+# Created: Thu Jun  9 18:11:09 2016
+#      by: PyQt4 UI code generator 4.10.4
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -49,8 +50,11 @@ class Ui_projectgui(object):
         self.new_term = QtGui.QCheckBox(self.groupBox)
         self.new_term.setGeometry(QtCore.QRect(140, 30, 97, 22))
         self.new_term.setObjectName(_fromUtf8("new_term"))
+        self.omega_term = QtGui.QCheckBox(self.groupBox)
+        self.omega_term.setGeometry(QtCore.QRect(260, 30, 97, 22))
+        self.omega_term.setObjectName(_fromUtf8("omega_term"))
         self.dmark_term = QtGui.QCheckBox(self.groupBox)
-        self.dmark_term.setGeometry(QtCore.QRect(260, 30, 97, 22))
+        self.dmark_term.setGeometry(QtCore.QRect(420, 30, 97, 22))
         self.dmark_term.setObjectName(_fromUtf8("dmark_term"))
         self.groupBox_2 = QtGui.QGroupBox(self.tab)
         self.groupBox_2.setGeometry(QtCore.QRect(30, 150, 651, 80))
@@ -333,6 +337,7 @@ class Ui_projectgui(object):
         self.groupBox.setTitle(_translate("projectgui", "Terminations", None))
         self.old_term.setText(_translate("projectgui", "Old", None))
         self.new_term.setText(_translate("projectgui", "New", None))
+        self.omega_term.setText(_translate("projectgui", "Omega", None))
         self.dmark_term.setText(_translate("projectgui", "D-Markov", None))
         self.groupBox_2.setTitle(_translate("projectgui", "Algorithms", None))
         self.mk1.setText(_translate("projectgui", "Mk1", None))

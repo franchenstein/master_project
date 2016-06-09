@@ -211,8 +211,10 @@ class ProbabilisticGraph(graph.Graph):
                         results.append([r, candidate])
                     if method == 'old':
                         new_next = self.old_method(results)
-                    else:
+                    elif method == 'new':
                         new_next = self.new_method(results, next_name[1:])
+                    elif method == 'omega':
+                        new_next = self.omega_method(s, results, nect_name[1:], alpha, test)
                     new_outedge = (a, new_next.name, edge[2])
                     new_outedges.append(new_outedge)                     
                 else:
@@ -261,6 +263,19 @@ class ProbabilisticGraph(graph.Graph):
             arg = lens.index(max(lens))
             return w[arg]
         else:
+            return [x[1] for x in results if x[1].name == default_name][0]
+
+    def omega_method(self, exp, results, default_name, alpha, test):
+        w = [c[1] for c in results if c[0][0]]
+        if w:
+            lens = [len(y.name) for y in w]
+            arg = lens.index(max(lens))
+            return w[arg]
+        else:
+            for s in self.states:
+                r = self.compare_morphs(s.morph(), exp.morph(), alpha, test)
+                if r[0]:
+                    return s
             return [x[1] for x in results if x[1].name == default_name][0]
     
     '''

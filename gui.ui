@@ -94,10 +94,23 @@
         <string>New</string>
        </property>
       </widget>
-      <widget class="QCheckBox" name="dmark_term">
+      <widget class="QCheckBox" name="omega_term">
        <property name="geometry">
         <rect>
          <x>260</x>
+         <y>30</y>
+         <width>97</width>
+         <height>22</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Omega</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="dmark_term">
+       <property name="geometry">
+        <rect>
+         <x>420</x>
          <y>30</y>
          <width>97</width>
          <height>22</height>
