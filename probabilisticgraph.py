@@ -214,7 +214,7 @@ class ProbabilisticGraph(graph.Graph):
                     elif method == 'new':
                         new_next = self.new_method(results, next_name[1:])
                     elif method == 'omega':
-                        new_next = self.omega_method(s, results, nect_name[1:], alpha, test)
+                        new_next = self.omega_method(s, results, next_name[1:], alpha, test)
                     new_outedge = (a, new_next.name, edge[2])
                     new_outedges.append(new_outedge)                     
                 else:
