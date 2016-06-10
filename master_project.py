@@ -1,7 +1,7 @@
 from PyQt4 import QtGui
 import sys
 import gui
-import json
+import yaml
 import main as mn
 import numpy as np
 
@@ -47,7 +47,7 @@ class MasterProject(QtGui.QMainWindow, gui.Ui_projectgui):
         self.alpharange['ini'] = float(self.alpha_ini.text())
         self.alpharange['end'] = float(self.alpha_end.text())
         self.config_tag = str(self.tag.text())
-        self.config_file_path = 'configs/' + self.configs['graph_path'] + '/config_file_' + self.config_tag + '.json'
+        self.config_file_path = 'configs/' + self.configs['graph_path'] + '/config_file_' + self.config_tag + '.yaml'
         lrange = range(self.lrange['ini'], self.lrange['end'] + 2, 2)
         drange = range(self.drange['ini'], self.drange['end'] + 1)
         if self.alpharange['ini'] ==  self.alpharange['end']:
@@ -67,16 +67,16 @@ class MasterProject(QtGui.QMainWindow, gui.Ui_projectgui):
         self.configs['terminations'] = [x for x in self.terminations.keys() if self.terminations[x]]
         self.configs['drange'] = drange
         self.configs['test'] = 'chi-squared'
-        synch_path = 'synch_words/' + self.configs['graph_path'] + '/sw.json'
+        synch_path = 'synch_words/' + self.configs['graph_path'] + '/sw.yaml'
         with open(synch_path, 'r') as f:
-            self.configs['synch_words'] = json.load(f)
+            self.configs['synch_words'] = yaml.safe_load(f)
         with open(self.config_file_path, 'w') as f:
-            json.dump(self.configs, f)
+            yaml.dump(self.configs, f)
 
     def load(self):
         self.configs['graph_path'] = str(self.graph_path.text())
         self.config_tag = str(self.tag.text())
-        self.config_file_path = 'configs/' + self.configs['graph_path'] + '/config_file_' + self.config_tag + '.json'
+        self.config_file_path = 'configs/' + self.configs['graph_path'] + '/config_file_' + self.config_tag + '.yaml'
 
     def call_create_term(self):
         self.create_term_bar.value = 0
@@ -119,9 +119,9 @@ class MasterProject(QtGui.QMainWindow, gui.Ui_projectgui):
         params['to_analyze'] = to_analyze
         params['other_params'] = other_params
 
-        p = 'configs/' + self.configs['graph_path'] + '/params.json'
+        p = 'configs/' + self.configs['graph_path'] + '/params.yaml'
         with open(p, 'w') as f:
-            json.dump(params, f)
+            yaml.dump(params, f)
 
         self.analyze_bar.value = 0
         mn.main(self.config_file_path, an_seq=True, seq_len=seq_len, tag=self.config_tag)
@@ -135,9 +135,9 @@ class MasterProject(QtGui.QMainWindow, gui.Ui_projectgui):
         params['l1metric'] = self.plot_l1m.isChecked()
         params['eval_l'] = int(self.eval_l.text())
         params['upto'] = int(self.plot_upto.text())
-        p = 'configs/' + self.configs['graph_path'] + '/plotconfigs.json'
+        p = 'configs/' + self.configs['graph_path'] + '/plotconfigs.yaml'
         with open(p, 'w') as f:
-            json.dump(params, f)
+            yaml.dump(params, f)
         mn.main(self.config_file_path, plot=True, tag=self.config_tag)
 
 

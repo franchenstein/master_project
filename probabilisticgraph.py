@@ -78,28 +78,17 @@ class ProbabilisticGraph(graph.Graph):
         data = ''
         s = ini_state
         for i in range(0, length):
+            d = [float(x[2]) for x in s.outedges]
+            dist = [0] + d
             r = rd()
             acc = 0
-            i = 0
-            for e in s.outedges:
-                i += 1
-                if i == len(s.outedges):
-                    d = e[0]
-                    dest = e[1]
+            for j in range(0, len(dist) - 1):
+                acc += dist[j]
+                if acc <= r < acc + dist[j + 1]:
+                    selected_edge = s.outedges[j]
+                    data += selected_edge[0]
+                    s = self.state_named(selected_edge[1])
                     break
-                else:
-                    if acc <= r < acc + float(e[2]):
-                        d = e[0]
-                        dest = e[1]
-                        break
-                    else:
-                        acc += float(e[2])
-            s = self.state_named(dest)
-            if s:
-                data += d
-            else:
-                print "[error] Sequence generation entered in invalid state at step " + str(i+1)
-                return data
         return data   
     
     '''

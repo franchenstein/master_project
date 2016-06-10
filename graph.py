@@ -1,5 +1,5 @@
 import state as st
-import json
+import yaml
 
 class Graph:
     '''
@@ -20,10 +20,10 @@ class Graph:
     Input:
         *path: file path where the graph file will be saved.
     Description:
-        Saves the graph as a json file. The file will contain a list of saved
+        Saves the graph as a yaml file. The file will contain a list of saved
         states and the graph alphabet. The saved state list will contain tuples
         of (state name, state outedges). The state outedges have to be modified
-        as json cannot save the whole state. The destination state in the 
+        as yaml cannot save the whole state. The destination state in the
         outedges tuple is replaced just by the name of the state. The dest state
         will be recovered in the open graph file function.
     '''    
@@ -32,7 +32,7 @@ class Graph:
         for s in self.states:
             savestates.append((s.name, s.outedges))
         with open(path, 'w') as file_:
-            json.dump([savestates, self.alphabet], file_)
+            yaml.dump([savestates, self.alphabet], file_)
         return
     
     '''
@@ -40,18 +40,21 @@ class Graph:
     Input:
         *path: file path where the graph file is saved.
     Description:
-        Opens a graph saved in json format described above. To recover the dest
+        Opens a graph saved in yaml format described above. To recover the dest
         state for each outedge, the state whose name is in the saved outedge
         will be searched for in the states list and it will substitute its name
         in the outedge.
     '''            
     def open_graph_file(self, path):
         with open(path, 'r') as file_:
-            savedstates, alph = json.load(file_)
+            savedstates, alph = yaml.safe_load(file_)
         self.alphabet = alph
         states = []
         for x in savedstates:
-            s = st.State(x[0], tuple(x[1]))
+            edges = []
+            for y in x[1]:
+                edges.append(tuple(y))
+            s = st.State(x[0], edges)
             states.append(s)
         self.states = states
         return

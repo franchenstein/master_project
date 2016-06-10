@@ -1,8 +1,8 @@
-import json
+import yaml
 import numpy as num
 
 '''
-This class opens a sequence saved in a json file and has methods to compute 
+This class opens a sequence saved in a yaml file and has methods to compute
 various parameters based on said sequence.
 '''
 
@@ -20,7 +20,7 @@ class SequenceAnalyzer():
         self.l1metric = l1metric
         self.autocorrelation = autocorrelation
         with open(path, 'r') as file_:
-            self.seq = json.load(file_)
+            self.seq = yaml.safe_load(file_)
     
     '''
     Name: calc_probs
@@ -257,7 +257,7 @@ class SequenceAnalyzer():
                     states.append(state)
                 i += 1
             with open(path, 'w') as file_:
-                json.dump([states, self.alphabet], file_)
+                yaml.dump([states, self.alphabet], file_)
         else:
             print "Conditional probabilities not computed."
             print "Run calc_cond_probs function before this one."            
