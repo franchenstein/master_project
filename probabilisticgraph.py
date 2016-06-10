@@ -12,10 +12,7 @@ to complete the last level of the graph.
 
 class ProbabilisticGraph(graph.Graph):
     def __init__(self, states=[], alphabet=[], path=''):
-        if path:
-            self.open_graph_file(path)
-        else:
-            graph.Graph.__init__(self, states, alphabet)
+        graph.Graph.__init__(self, states, alphabet, path)
     
     '''
     Name: compare_morphs
@@ -78,9 +75,8 @@ class ProbabilisticGraph(graph.Graph):
         data = ''
         s = ini_state
         for i in range(0, length):
-            d, dest = s.random_step()
+            d, s = s.random_step()
             data += d
-            s = self.state_named(dest)
         return data   
     
     '''
@@ -139,10 +135,10 @@ class ProbabilisticGraph(graph.Graph):
                         dest = x.name[i:] + e[0]
                         next_state = self.state_named(dest)
                         if next_state or (e[2] == 0.0):
-                            new_outedges.append((e[0], next_state.name, e[2]))
+                            new_outedges.append((e[0], next_state, e[2]))
                             break
                     else:
-                        new_outedges.append((e[0], 'e', e[2]))
+                        new_outedges.append((e[0], self.root(), e[2]))
             x.outedges = new_outedges
             new_last_level.append(x)
         new_states = [x for x in self.states if x.name_length() < l]
@@ -198,10 +194,10 @@ class ProbabilisticGraph(graph.Graph):
                     elif method == 'omega':
                         new_next = self.omega_method(s, results, new_states + new_last_level, next_name[1:],
                                                      alpha, test)
-                    new_outedge = (a, new_next.name, edge[2])
+                    new_outedge = (a, new_next, edge[2])
                     new_outedges.append(new_outedge)                     
                 else:
-                    new_outedges.append((a, '', '0.0'))
+                    new_outedges.append((a, self.root(), '0.0'))
             s.outedges = new_outedges
             new_last_level.append(s)
         new_states.extend(new_last_level)
@@ -269,10 +265,20 @@ class ProbabilisticGraph(graph.Graph):
         states.
     '''
     def open_graph_file(self, path):
-        aux = graph.Graph([],[])
-        aux.open_graph_file(path)
+        aux = graph.Graph(path=path)
         states = []
         for s in aux.states:
             states.append(pst.ProbabilisticState(s.name, s.outedges))
+        for ns in states:
+            newedges = []
+            for edge in ns.outedges:
+                if edge[1]:
+                    destname = edge[1].name
+                    newdest = [x for x in states if x.name == destname][0]
+                else:
+                    newdest = None
+                newedge = (edge[0], newdest, edge[2])
+                newedges.append(newedge)
+            ns.outedges = newedges
         self.states = states
         self.alphabet = aux.alphabet

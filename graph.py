@@ -11,9 +11,12 @@ class Graph:
     same format.
     '''
     
-    def __init__(self, states, alphabet):
-        self.states = states        #Graph's list of states
-        self.alphabet = alphabet    #List of letters representing the alphabet
+    def __init__(self, states=[], alphabet=[], path=''):
+        if path:
+            self.open_graph_file(path)
+        else:
+            self.states = states        #Graph's list of states
+            self.alphabet = alphabet    #List of letters representing the alphabet
     
     '''
     Name: save_graph_file
@@ -23,13 +26,27 @@ class Graph:
         Saves the graph as a yaml file. The file will contain a list of saved
         states and the graph alphabet. The saved state list will contain tuples
         of (state name, state outedges). The state outedges have to be modified
-        as yaml cannot save the whole state. The destination state in the
+        as  cannot save the whole state. The destination state in the
         outedges tuple is replaced just by the name of the state. The dest state
         will be recovered in the open graph file function.
     '''    
     def save_graph_file(self, path):
         savestates = []
         for s in self.states:
+            saveedges = []
+            for e in s.outedges:
+                i = 0
+                s_edge = []
+                for element in e:
+                    if i == 1:
+                        if element:
+                            s_edge.append(element.name)
+                        else:
+                            s_edge.append('')
+                    else:
+                        s_edge.append(element)
+                    i+=1
+                saveedges.append(tuple(s_edge))
             savestates.append((s.name, s.outedges))
         with open(path, 'w') as file_:
             yaml.dump([savestates, self.alphabet], file_)
@@ -56,6 +73,7 @@ class Graph:
                 edges.append(tuple(y))
             s = st.State(x[0], edges)
             states.append(s)
+        states = self.reassign_dest_edges(states)
         self.states = states
         return
         
@@ -67,6 +85,7 @@ class Graph:
     Output:
         *states: the corrected list, with the outedges correctly pointing to 
         the destination state.
+    '''
     @staticmethod
     def reassign_dest_edges(states):
         for s in states:
@@ -89,7 +108,6 @@ class Graph:
                 new_outedges.append(new_e)
             s.outedges = new_outedges
         return states
-    '''
 
     '''
     Name: root
@@ -135,45 +153,44 @@ class Graph:
     of them which only includes states whose names are on the list of reachable 
     states. The alphabet is updated accordingly. With those two elements, a new 
     reduced graph is created and returned. 
-    '''        
+    '''
+
     def remove_unreachable_states(self):
-        
+
         old_size = len(self.states)
-        reachable_states = [] #This will receive the reachable states' names
-        #Creates a list of all states' outedges:
-        aux = [x.outedges for x in self.states] 
-        
-        for outedges in aux: #Goes through each state's outedge list
-            for outedge in outedges: #Goes through each outedge in the outedge list
-                #Checks if the destination state of the current outedge is already
-                #in the list:
+        reachable_states = []  # This will receive the reachable states' names
+        # Creates a list of all states' outedges:
+        aux = [x.outedges for x in self.states]
+
+        for outedges in aux:  # Goes through each state's outedge list
+            for outedge in outedges:  # Goes through each outedge in the outedge list
+                # Checks if the destination state of the current outedge is already
+                # in the list:
                 if outedge[1]:
-                    s = self.state_named(outedge[1])
-                    if s:
-                        if s.name not in reachable_states:
-                            #If it is not, it is considered as a new reachable state.
-                            reachable_states.append(s.name)
-                    
-        #A new list of states is created only with states whose names are in 
-        #reachableStates            
+                    if outedge[1].name not in reachable_states:
+                        # If it is not, it is considered as a new reachable state.
+                        reachable_states.append(outedge[1].name)
+
+        # A new list of states is created only with states whose names are in
+        # reachableStates
         new_states = [x for x in self.states if x.name in reachable_states]
-        
-        #List of outedges lists of the new states:
+
+        # List of outedges lists of the new states:
         aux = [x.outedges for x in new_states]
-        new_alphabet = []  #Receives the new alphabet
-        for outedges in aux:  #Goes through each state's outedge list
-            for outedge in outedges:  #Goes through each outedge in the outedge list
-                #Checks if the outedge label is already in the alphabet:
+        new_alphabet = []  # Receives the new alphabet
+        for outedges in aux:  # Goes through each state's outedge list
+            for outedge in outedges:  # Goes through each outedge in the outedge list
+                # Checks if the outedge label is already in the alphabet:
                 if outedge[0] not in new_alphabet:
-                    #If it's not, it is included to the new alphabet.
+                    # If it's not, it is included to the new alphabet.
                     new_alphabet.append(outedge[0])
-        
-        #Creates a new graph, without previous unreachable states:
+
+        # Creates a new graph, without previous unreachable states:
         reduced_graph = Graph(new_states, new_alphabet)
-        newSize = len(reduced_graph.states)
-        if (old_size != newSize):
+        new_size = len(reduced_graph.states)
+        if (old_size != new_size):
             reduced_graph = reduced_graph.remove_unreachable_states()
-        
+
         return reduced_graph
 
     def __str__(self):

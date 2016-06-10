@@ -70,4 +70,4 @@ class ProbabilisticState(state.State):
                 return e[:2]
             else:
                 acc += float(e[2])
-        return '', ''   #Error situation
+        return '', None   #Error situation

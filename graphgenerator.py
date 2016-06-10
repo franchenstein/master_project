@@ -24,15 +24,13 @@ III - A D-Markov termination.
 class GraphGenerator():
     #Initialization:
     def __init__(self, original_path, synch_words, save_path):
-        self.original_graph = pg.ProbabilisticGraph([],[])
-        self.original_graph.open_graph_file(original_path)
+        self.original_graph = pg.ProbabilisticGraph(path=original_path)
         self.synch_words = []
         for w in synch_words:
             self.synch_words.append(self.original_graph.state_named(w))
         self.save_path = save_path
-        
-    
-    '''    
+
+    '''
     Name: mk1
     Inputs:
         *test: Statistical test type (chi-squared or Kolmogorov-Smirnov);
@@ -73,8 +71,7 @@ class GraphGenerator():
                 break
             else:
                 aux = s.pop(0)
-                nexts_names = [x[1] for x in aux.outedges]
-                nexts = [self.original_graph.state_named(x) for x in nexts_names]
+                nexts = [x[1] for x in aux.outedges]
                 i = 0
                 new_outedges = []
                 for n in nexts:
@@ -85,16 +82,15 @@ class GraphGenerator():
                                 newdest = [x for x in self.synch_words if x.name == w][0]
                                 break
                     if newdest:
-                        oedge = (aux.outedges[i][0], newdest.name, aux.outedges[i][2])
+                        oedge = (aux.outedges[i][0], newdest, aux.outedges[i][2])
                     else:
-                        oedge = (aux.outedges[i][0], '', aux.outedges[i][2])
+                        oedge = (aux.outedges[i][0], None, aux.outedges[i][2])
                     new_outedges.append(oedge)
                     i += 1    
                 new_state = pst.ProbabilisticState(aux.name, new_outedges)
                 newstates.append(new_state)
                 states_names = [x.name for x in newstates]
-                new_c = new_state.obtain_children()
-                new_children = [self.original_graph.state_named(x) for x in new_c]
+                new_children = new_state.obtain_children()
                 new_children = [x for x in new_children if x.name not in states_names]
                 s.extend(new_children)
         new_graph = pg.ProbabilisticGraph(newstates, 
@@ -133,15 +129,12 @@ class GraphGenerator():
         while True:
             if children:
                 c = children.pop(0)
-                c = self.original_graph.state_named(c)
                 if c:
                     fail_count = 0
                     for p in partitions:
                         fail_count += 1
                         pmorph = self.partition_morph(p.outedges[0])
-                        result = self.original_graph.compare_morphs(pmorph, 
-                                                                c.morph(),
-                                                                alpha, test)
+                        result = self.original_graph.compare_morphs(pmorph, c.morph(), alpha, test)
                         if result[0]:
                             p.add_to_partition(c)
                             break
@@ -153,7 +146,7 @@ class GraphGenerator():
                     for n in new_states:
                         not_in_partitions = True
                         for p in partitions:
-                            if n in p.name:
+                            if n.name in p.name:
                                 not_in_partitions = False
                         if not_in_partitions:
                             children.append(n)                   

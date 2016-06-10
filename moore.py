@@ -131,9 +131,9 @@ def splitting(partition, letter, states):
     for s in states:
         edge_labels = [edge[0] for edge in s.outedges]
         if letter in edge_labels:
-            next = s.next_state_from_edge(letter)
-            if next:
-                if next in partition.name:
+            next_state = s.next_state_from_edge(letter)
+            if next_state:
+                if next_state.name in partition.name:
                     p1.add_to_partition(s)
                 else:
                     p2.add_to_partition(s)
@@ -143,7 +143,7 @@ def splitting(partition, letter, states):
             p1.add_to_partition(s)
             p2.add_to_partition(s)
     return [p1, p2]
-    
+
 '''
 Name: coarsest_partition
 Inputs: 
@@ -154,7 +154,7 @@ Outputs:
 Description: Applies the intersection function between each pair of sets in
 partition 1 and partition 2. Checks for redundancy. The set of all the 
 unique intersections is the coarsest partition.
-'''      
+'''
 def coarsest_partition(partition1, partition2):
     coarse = []
     for p1 in partition1:
