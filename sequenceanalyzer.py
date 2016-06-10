@@ -49,6 +49,7 @@ class SequenceAnalyzer():
         self.probabilities = []
         self.alphabet = []
         print "Calculating subsequence probabilities for sequence at: " + self.sequence_path
+        print "L = " + str(L)
         while l <= L:
             print "Sequence: " + self.sequence_path
             print "Calculating probabilities of subsequences of length: " + str(l)
@@ -91,6 +92,7 @@ class SequenceAnalyzer():
     def calc_cond_probs(self, L):
         self.conditional_probabilities = []
         print "Calculating subsequence conditional probabilities for sequence at: " + self.sequence_path
+        print "L = " + str(L)
         if self.probabilities:
             self.conditional_probabilities = [self.probabilities[0]]
             l = 0
@@ -133,6 +135,7 @@ class SequenceAnalyzer():
     def calc_cond_entropy(self, L):
         self.cond_entropy = []
         print "Calculating conditional entropy for sequence at: " + self.sequence_path
+        print "L = " + str(L)
         if self.probabilities: 
             if self.conditional_probabilities:   
                 l = 0
@@ -179,6 +182,7 @@ class SequenceAnalyzer():
     def calc_kldivergence(self, base_probs, K):
         self.kldivergence = 0
         print "Calculating Kullback-Leibler divergence for sequence at: " + self.sequence_path
+        print "K = " + str(K)
         if self.probabilities:
             for key in base_probs[K].keys():
                 p = base_probs[K][key]
@@ -210,6 +214,7 @@ class SequenceAnalyzer():
         self.autocorrelation = []
         temp = []
         print "Calculating autocorrelation probabilities for sequence at: " + self.sequence_path
+        print "Up to " + str(up_to)
         for i in range(0, up_to):
             acc = 0
             for j in range(0, len(self.seq) - i):
@@ -240,6 +245,7 @@ class SequenceAnalyzer():
         self.l1metric = 0
         acc = 0
         print "Calculating l1-metric for sequence at: " + self.sequence_path
+        print "Up to " + str(up_to)
         if self.probabilities:
             for i in range(0, up_to):
                 for key in base_probs[i].keys():

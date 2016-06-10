@@ -6,14 +6,14 @@ import getopt
 
 
 def main(graph_path, length, l):
-    sequence_path = 'sequences/'+ graph_path + '/original_length_' + str(length) + '.yaml'
+    sequence_path = 'sequences/' + graph_path + '/original_length_' + str(length) + '.yaml'
     sa = seqan.SequenceAnalyzer(sequence_path)
     p, alph = sa.calc_probs(l)
     p_cond = sa.calc_cond_probs(l - 1)
     h = sa.calc_cond_entropy(l - 1)
     sa.save_cond_probs_as_graph('graphs/' + graph_path + '/rtp_L' + str(l) + '.yaml')
     with open('results/' + graph_path + '/probabilities/original.yaml', 'w') as f:
-        yaml.dump([p,alph], f)
+        yaml.dump([p, alph], f)
     with open('results/' + graph_path + '/probabilities/original_cond.yaml', 'w') as f:
         yaml.dump(p_cond, f)
     with open('results/' + graph_path + '/cond_entropies/original.yaml', 'w') as f:
