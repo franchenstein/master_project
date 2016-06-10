@@ -78,17 +78,9 @@ class ProbabilisticGraph(graph.Graph):
         data = ''
         s = ini_state
         for i in range(0, length):
-            d = [float(x[2]) for x in s.outedges]
-            dist = [0] + d
-            r = rd()
-            acc = 0
-            for j in range(0, len(dist) - 1):
-                acc += dist[j]
-                if acc <= r < acc + dist[j + 1]:
-                    selected_edge = s.outedges[j]
-                    data += selected_edge[0]
-                    s = self.state_named(selected_edge[1])
-                    break
+            d, dest = s.random_step()
+            data += d
+            s = self.state_named(dest)
         return data   
     
     '''
