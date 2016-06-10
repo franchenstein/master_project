@@ -45,12 +45,11 @@ class SequenceAnalyzer():
         sequence's alphabet.
     '''             
     def calc_probs(self, L):
-        l = 1
         self.probabilities = []
         self.alphabet = []
         print "Calculating subsequence probabilities for sequence at: " + self.sequence_path
         print "L = " + str(L)
-        while l <= L:
+        for l in range(1, L + 1):
             print "Sequence: " + self.sequence_path
             print "Calculating probabilities of subsequences of length: " + str(l)
             current_probs = {}
@@ -67,7 +66,6 @@ class SequenceAnalyzer():
             for key in current_probs.keys():
                 current_probs[key] /= float(len(self.seq))
             self.probabilities.append(current_probs)
-            l += 1
         print "*****************"
         print "Sequence: " + self.sequence_path
         print "Probabilities calculated!"
@@ -95,8 +93,7 @@ class SequenceAnalyzer():
         print "L = " + str(L)
         if self.probabilities:
             self.conditional_probabilities = [self.probabilities[0]]
-            l = 0
-            while l < L:
+            for l in range(0, L):
                 print "Sequence: " + self.sequence_path
                 print "Calculating conditional probabilities of subsequences of length: " + str(l)
                 d = {}
@@ -111,7 +108,6 @@ class SequenceAnalyzer():
                         else:
                             d[cond] = 0.0
                 self.conditional_probabilities.append(d)
-                l += 1            
         else:
             print "Probabilities not computed."
             print "Run calc_probs function before this one."
@@ -137,9 +133,8 @@ class SequenceAnalyzer():
         print "Calculating conditional entropy for sequence at: " + self.sequence_path
         print "L = " + str(L)
         if self.probabilities: 
-            if self.conditional_probabilities:   
-                l = 0
-                while l <= L:
+            if self.conditional_probabilities:
+                for l in range(0, L +1):
                     print "Sequence: " + self.sequence_path
                     print "Calculating conditional entropy of length: " + str(l)
                     acc = 0
@@ -153,7 +148,6 @@ class SequenceAnalyzer():
                             if not pcond[y_given_x] == 0:
                                 acc -= p[x]*num.log2(pcond[y_given_x])
                     self.cond_entropy.append(acc)
-                    l += 1
             else:
                 print "Conditional probabilities not computed."
                 print "Run calc_cond_probs function before this one." 
