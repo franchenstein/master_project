@@ -38,7 +38,7 @@ def read_input(argv):
         if opt in ("-x", "--length"):
             length = arg
         if opt in ("-l", "--l"):
-            l = arg
+            l = int(arg)
     return [graph_path, length, l]
 
 if __name__ == "__main__":
