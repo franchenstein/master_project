@@ -9,9 +9,9 @@ various parameters based on said sequence.
 
 class SequenceAnalyzer():
     
-    def __init__(self, path, probabilities = [], alphabet = [], 
-                 conditional_probabilities = [], conditional_entropy = [],
-                 kldivergence = 0, l1metric = 0, autocorrelation = []):
+    def __init__(self, path, probabilities=[], alphabet=[],
+                 conditional_probabilities=[], conditional_entropy=[],
+                 kldivergence=0, l1metric=0, autocorrelation=[]):
         self.probabilities = probabilities
         self.alphabet = alphabet
         self.conditional_probabilities = conditional_probabilities
@@ -19,8 +19,13 @@ class SequenceAnalyzer():
         self.kldivergence = kldivergence
         self.l1metric = l1metric
         self.autocorrelation = autocorrelation
+        self.sequence_path = path
         with open(path, 'r') as file_:
+            print "Sequence Analyzer opening sequence at: " + path
             self.seq = yaml.safe_load(file_)
+            print "*****************"
+            print "Sequence loaded!"
+            print "*****************"
     
     '''
     Name: calc_probs
@@ -43,7 +48,10 @@ class SequenceAnalyzer():
         l = 1
         self.probabilities = []
         self.alphabet = []
+        print "Calculating subsequence probabilities for sequence at: " + self.sequence_path
         while l <= L:
+            print "Sequence: " + self.sequence_path
+            print "Calculating probabilities of subsequences of length: " + str(l)
             current_probs = {}
             for i in range(0, len(self.seq) - (l - 1)):
                 current_value = ''.join(str(e) for e in self.seq[i:i+l])
@@ -59,6 +67,10 @@ class SequenceAnalyzer():
                 current_probs[key] /= float(len(self.seq))
             self.probabilities.append(current_probs)
             l += 1
+        print "*****************"
+        print "Sequence: " + self.sequence_path
+        print "Probabilities calculated!"
+        print "*****************"
         return [self.probabilities, self.alphabet] 
     
     '''
@@ -78,10 +90,13 @@ class SequenceAnalyzer():
     '''     
     def calc_cond_probs(self, L):
         self.conditional_probabilities = []
+        print "Calculating subsequence conditional probabilities for sequence at: " + self.sequence_path
         if self.probabilities:
             self.conditional_probabilities = [self.probabilities[0]]
             l = 0
             while l < L:
+                print "Sequence: " + self.sequence_path
+                print "Calculating conditional probabilities of subsequences of length: " + str(l)
                 d = {}
                 l1 = self.probabilities[l]
                 l2 = self.probabilities[l+1]
@@ -97,7 +112,11 @@ class SequenceAnalyzer():
                 l += 1            
         else:
             print "Probabilities not computed."
-            print "Run calc_probs function before this one." 
+            print "Run calc_probs function before this one."
+        print "*****************"
+        print "Sequence: " + self.sequence_path
+        print "Conditional probabilities calculated!"
+        print "*****************"
         return self.conditional_probabilities
         
     '''
@@ -112,11 +131,14 @@ class SequenceAnalyzer():
         sequences of lengths up to L.
     '''    
     def calc_cond_entropy(self, L):
-        self.cond_entropy = [] 
+        self.cond_entropy = []
+        print "Calculating conditional entropy for sequence at: " + self.sequence_path
         if self.probabilities: 
             if self.conditional_probabilities:   
                 l = 0
                 while l <= L:
+                    print "Sequence: " + self.sequence_path
+                    print "Calculating conditional entropy of length: " + str(l)
                     acc = 0
                     p = self.probabilities[l]
                     pcond = self.conditional_probabilities[l]
@@ -134,7 +156,11 @@ class SequenceAnalyzer():
                 print "Run calc_cond_probs function before this one." 
         else:
             print "Probabilities not computed."
-            print "Run calc_probs function before this one."                 
+            print "Run calc_probs function before this one."
+        print "*****************"
+        print "Sequence: " + self.sequence_path
+        print "Conditional entropy calculated!"
+        print "*****************"
         return self.cond_entropy        
     
     '''
@@ -152,6 +178,7 @@ class SequenceAnalyzer():
     '''       
     def calc_kldivergence(self, base_probs, K):
         self.kldivergence = 0
+        print "Calculating Kullback-Leibler divergence for sequence at: " + self.sequence_path
         if self.probabilities:
             for key in base_probs[K].keys():
                 p = base_probs[K][key]
@@ -162,7 +189,11 @@ class SequenceAnalyzer():
                 self.kldivergence += p*num.log2(p/q)
         else:
             print "[error] Probabilities not computed."
-            print "Run calc_probs function before this one." 
+            print "Run calc_probs function before this one."
+        print "*****************"
+        print "Sequence: " + self.sequence_path
+        print "Kullback-Leibler divergence calculated!"
+        print "*****************"
         return self.kldivergence              
      
     '''
@@ -178,6 +209,7 @@ class SequenceAnalyzer():
     def calc_autocorrelation(self, up_to):
         self.autocorrelation = []
         temp = []
+        print "Calculating autocorrelation probabilities for sequence at: " + self.sequence_path
         for i in range(0, up_to):
             acc = 0
             for j in range(0, len(self.seq) - i):
@@ -185,6 +217,10 @@ class SequenceAnalyzer():
             temp.append(acc)
         m = max(temp)
         self.autocorrelation = [float(x)/(2*float(m)) for x in temp]
+        print "*****************"
+        print "Sequence: " + self.sequence_path
+        print "Autocorrelation calculated!"
+        print "*****************"
         return self.autocorrelation
     
     '''
@@ -203,6 +239,7 @@ class SequenceAnalyzer():
     def calc_l1metric(self, base_probs, up_to):
         self.l1metric = 0
         acc = 0
+        print "Calculating l1-metric for sequence at: " + self.sequence_path
         if self.probabilities:
             for i in range(0, up_to):
                 for key in base_probs[i].keys():
@@ -214,7 +251,11 @@ class SequenceAnalyzer():
             self.l1metric = acc
         else:
             print "Probabilities not computed."
-            print "Run calc_probs function before this one." 
+            print "Run calc_probs function before this one."
+        print "*****************"
+        print "Sequence: " + self.sequence_path
+        print "L1-Metric calculated!"
+        print "*****************"
         return self.l1metric
     
     '''
@@ -230,6 +271,7 @@ class SequenceAnalyzer():
         given the current state.
     '''    
     def save_cond_probs_as_graph(self, path):
+        print "Generating rooted tree with probabilities for sequence at: " + self.sequence_path
         if self.conditional_probabilities:
             i = 0
             states = []
@@ -258,6 +300,10 @@ class SequenceAnalyzer():
                 i += 1
             with open(path, 'w') as file_:
                 yaml.dump([states, self.alphabet], file_)
+            print "*****************"
+            print "Sequence: " + self.sequence_path
+            print "Rooted Tree With Probabilities Generated!"
+            print "*****************"
         else:
             print "Conditional probabilities not computed."
             print "Run calc_cond_probs function before this one."            
