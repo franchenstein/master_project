@@ -189,6 +189,7 @@ class ProbabilisticGraph(graph.Graph):
     def expansion(self, l, alpha, test, method):
         last_level = [x for x in self.states if x.name_length() == l]
         new_last_level = []
+        new_states = [x for x in self.states if x.name_length() < l]
         for s in last_level:
             new_outedges = []
             for edge in s.outedges:
@@ -214,14 +215,14 @@ class ProbabilisticGraph(graph.Graph):
                     elif method == 'new':
                         new_next = self.new_method(results, next_name[1:])
                     elif method == 'omega':
-                        new_next = self.omega_method(s, results, next_name[1:], alpha, test)
+                        new_next = self.omega_method(s, results, new_states + new_last_level, next_name[1:],
+                                                     alpha, test)
                     new_outedge = (a, new_next.name, edge[2])
                     new_outedges.append(new_outedge)                     
                 else:
                     new_outedges.append((a, '', '0.0'))
             s.outedges = new_outedges
             new_last_level.append(s)
-        new_states = [x for x in self.states if x.name_length() < l]
         new_states.extend(new_last_level)
         h = ProbabilisticGraph(new_states, self.alphabet)
         return h
@@ -265,14 +266,14 @@ class ProbabilisticGraph(graph.Graph):
         else:
             return [x[1] for x in results if x[1].name == default_name][0]
 
-    def omega_method(self, exp, results, default_name, alpha, test):
+    def omega_method(self, exp, results, new_last_level, default_name, alpha, test):
         w = [c[1] for c in results if c[0][0]]
         if w:
             lens = [len(y.name) for y in w]
             arg = lens.index(max(lens))
             return w[arg]
         else:
-            for s in self.states:
+            for s in new_last_level:
                 r = self.compare_morphs(s.morph(), exp.morph(), alpha, test)
                 if r[0]:
                     return s
