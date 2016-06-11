@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 def main(config_file, terminate=False, dmark=False, generate=False, gen_seq=False, an_seq=False, plot=False,
          seq_len=10000000, tag='default'):
     with open(config_file, 'r') as f:
-        configs = yaml.safe_load(f)
+        configs = yaml.load(f)
     graph_path = configs['graph_path']
     terminations = configs['terminations']
     lmax = configs['lmax']
@@ -31,13 +31,13 @@ def main(config_file, terminate=False, dmark=False, generate=False, gen_seq=Fals
     if an_seq:
         p = 'configs/' + graph_path + '/params.yaml'
         with open(p, 'r') as f:
-            params = yaml.safe_load(f)
+            params = yaml.load(f)
         analyze_sequences(graph_path, algorithms, drange, terminations, lrange, alpharange, seq_len,
                           params['to_analyze'], params['other_params'])
     if plot:
         p = 'configs/' +  graph_path + '/plotconfigs.yaml'
         with open(p, 'r') as f:
-            params = yaml.safe_load(f)
+            params = yaml.load(f)
         if params['cond_entropy']:
             plot_entropies(graph_path, algorithms, terminations, drange, lrange, alpharange, params['eval_l'], tag)
         if params['autocorrelation']:
@@ -192,7 +192,7 @@ def check_probs(seq_an, graph_path, path):
     if not seq_an.probabilities:
         p_path = 'results/'+ graph_path + '/probabilities/' + path
         with open(p_path, 'r') as f:
-                p, alph = yaml.safe_load(f)
+                p, alph = yaml.load(f)
                 seq_an.probabilities = p
                 seq_an.alphabet = alph
 
@@ -201,21 +201,21 @@ def check_cond_probs(seq_an, graph_path, path):
     if not seq_an.conditional_probabilities:
         p_path = 'results/'+ graph_path + '/probabilities/cond_' + path
         with open(p_path, 'r') as f:
-                pcond = yaml.safe_load(f)
+                pcond = yaml.load(f)
                 seq_an.conditional_probabilities = pcond
 
 
 def load_reference_probs(graph_path):
     path = 'results/' + graph_path + '/probabilities/original.yaml'
     with open(path, 'r') as f:
-        p = yaml.safe_load(f)
+        p = yaml.load(f)
     return p[0]
 
 
 def plot_entropies(graph_path, algorithms, terminations, drange, lrange, alpharange, eval_l, tag):
     path_original = 'results/' + graph_path + '/cond_entropies/original.yaml'
     with open(path_original, 'r') as f:
-        h_original = yaml.safe_load(f)
+        h_original = yaml.load(f)
     h_base = h_original[eval_l]
     h = []
     states = []
@@ -228,7 +228,7 @@ def plot_entropies(graph_path, algorithms, terminations, drange, lrange, alphara
             for d in drange:
                 h_path = 'results/' + graph_path + '/cond_entropies/dmarkov_d' + str(d) + '.yaml'
                 with open(h_path, 'r') as f:
-                    h_eval = yaml.safe_load(f)
+                    h_eval = yaml.load(f)
                     h_dmark.append(h_eval[eval_l])
                 g_path = 'graphs/' + graph_path + '/dmarkov_d' + str(d) + '.yaml'
                 g.open_graph_file(g_path)
@@ -246,7 +246,7 @@ def plot_entropies(graph_path, algorithms, terminations, drange, lrange, alphara
                         p = 'L' + str(l) + '_alpha' + str(alpha) + '_' + t + '_' + algo + '.yaml'
                         h_path = 'results/' + graph_path + '/cond_entropies/' + p
                         with open(h_path, 'r') as f:
-                            h_eval = yaml.safe_load(f)
+                            h_eval = yaml.load(f)
                             h_term.append(h_eval[eval_l])
                         g_path = 'graphs/' + graph_path + '/' + p
                         g.open_graph_file(g_path)
@@ -283,7 +283,7 @@ def plot_others(kind, graph_path, algorithms, terminations, drange, lrange, alph
             for d in drange:
                 h_path = 'results/' + graph_path + '/' + kind + '/dmarkov_d' + str(d) + '.yaml'
                 with open(h_path, 'r') as f:
-                    h_dmark.append(yaml.safe_load(f))
+                    h_dmark.append(yaml.load(f))
                 g_path = 'graphs/' + graph_path + '/dmarkov_d' + str(d) + '.yaml'
                 g.open_graph_file(g_path)
                 states_dmark.append(len(g.states))
@@ -300,7 +300,7 @@ def plot_others(kind, graph_path, algorithms, terminations, drange, lrange, alph
                         p = 'L' + str(l) + '_alpha' + str(alpha) + '_' + t + '_' + algo + '.yaml'
                         h_path = 'results/' + graph_path + '/' + kind + '/' + p
                         with open(h_path, 'r') as f:
-                            h_term.append(yaml.safe_load(f))
+                            h_term.append(yaml.load(f))
                         g_path = 'graphs/' + graph_path + '/' + p
                         g.open_graph_file(g_path)
                         states_term.append(len(g.states))
@@ -328,7 +328,7 @@ def plot_others(kind, graph_path, algorithms, terminations, drange, lrange, alph
 def plot_autocorr(graph_path, algorithms, terminations, drange, lrange, alpharange, up_to, tag):
     path_original = 'results/' + graph_path + '/autocorrelations/original.yaml'
     with open(path_original, 'r') as f:
-        h_base = yaml.safe_load(f)
+        h_base = yaml.load(f)
     h = []
     labels = []
     g = pg.ProbabilisticGraph([], [])
@@ -337,7 +337,7 @@ def plot_autocorr(graph_path, algorithms, terminations, drange, lrange, alpharan
             for d in drange:
                 h_path = 'results/' + graph_path + '/autocorrelations/dmarkov_d' + str(d) + '.yaml'
                 with open(h_path, 'r') as f:
-                    h_eval = yaml.safe_load(f)
+                    h_eval = yaml.load(f)
                     h.append(h_eval)
                 g_path = 'graphs/' + graph_path + '/dmarkov_d' + str(d) + '.yaml'
                 g.open_graph_file(g_path)
@@ -350,7 +350,7 @@ def plot_autocorr(graph_path, algorithms, terminations, drange, lrange, alpharan
                         p = 'L' + str(l) + '_alpha' + str(alpha) + '_' + t + '_' + algo + '.yaml'
                         h_path = 'results/' + graph_path + '/autocorrelations/' + p
                         with open(h_path, 'r') as f:
-                            h_eval = yaml.safe_load(f)
+                            h_eval = yaml.load(f)
                             h.append(h_eval)
                         g_path = 'graphs/' + graph_path + '/' + p
                         g.open_graph_file(g_path)

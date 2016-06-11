@@ -22,7 +22,7 @@ class SequenceAnalyzer():
         self.sequence_path = path
         with open(path, 'r') as file_:
             print "Sequence Analyzer opening sequence at: " + path
-            self.seq = yaml.safe_load(file_)
+            self.seq = yaml.load(file_)
             print "*****************"
             print "Sequence loaded!"
             print "*****************"

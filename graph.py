@@ -64,7 +64,7 @@ class Graph:
     '''            
     def open_graph_file(self, path):
         with open(path, 'r') as file_:
-            savedstates, alph = yaml.safe_load(file_)
+            savedstates, alph = yaml.load(file_)
         self.alphabet = alph
         states = []
         for x in savedstates:

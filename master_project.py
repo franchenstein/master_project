@@ -69,7 +69,7 @@ class MasterProject(QtGui.QMainWindow, gui.Ui_projectgui):
         self.configs['test'] = 'chi-squared'
         synch_path = 'synch_words/' + self.configs['graph_path'] + '/sw.yaml'
         with open(synch_path, 'r') as f:
-            self.configs['synch_words'] = yaml.safe_load(f)
+            self.configs['synch_words'] = yaml.load(f)
         with open(self.config_file_path, 'w') as f:
             yaml.dump(self.configs, f)
 
