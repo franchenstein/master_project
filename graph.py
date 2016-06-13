@@ -46,8 +46,8 @@ class Graph:
                     else:
                         s_edge.append(element)
                     i+=1
-                saveedges.append(tuple(s_edge))
-            savestates.append((s.name, s.outedges))
+                saveedges.append(s_edge)
+            savestates.append([s.name, s.outedges])
         with open(path, 'w') as file_:
             yaml.dump([savestates, self.alphabet], file_)
         return
