@@ -59,15 +59,19 @@ class ProbabilisticState(state.State):
         2-tuple is returned.
     '''
     def random_step(self):
-        r = rnd.random()
-        acc = 0
-        i = 0
-        for e in self.outedges:
-            i += 1
-            if i == len(self.outedges):
-                return e[:2]
-            if acc <= r < (acc + float(e[2])):
-                return e[:2]
-            else:
-                acc += float(e[2])
-        return '', None   #Error situation
+        dest = [x[:2] for x in self.outedges if float(x[2]) == 1.0]
+        if dest:
+            return dest[0]
+        else:
+            r = rnd.random()
+            acc = 0
+            i = 0
+            for e in self.outedges:
+                i += 1
+                if i == len(self.outedges):
+                    return e[:2]
+                if acc <= r < (acc + float(e[2])):
+                    return e[:2]
+                else:
+                    acc += float(e[2])
+            return '', None   #Error situation
