@@ -73,3 +73,21 @@ class State:
                 i += 1
         r += "\n\n"
         return r
+
+    def serialize(self):
+        serial_edges = []
+        for edge in self.outedges:
+            i = 0
+            s_edge = []
+            for e in edge:
+                if i == 1:
+                    if e:
+                        s_edge.append(e.name)
+                    else:
+                        s_edge.append('')
+                else:
+                    s_edge.append(e)
+                i += 1
+            serial_edges.append(s_edge)
+        serial_state = [self.name, serial_edges]
+        return serial_state

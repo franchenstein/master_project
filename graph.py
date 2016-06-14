@@ -33,23 +33,11 @@ class Graph:
     def save_graph_file(self, path):
         savestates = []
         for s in self.states:
-            saveedges = []
-            for e in s.outedges:
-                i = 0
-                s_edge = []
-                for element in e:
-                    if i == 1:
-                        if element:
-                            s_edge.append(element.name)
-                        else:
-                            s_edge.append('')
-                    else:
-                        s_edge.append(element)
-                    i+=1
-                saveedges.append(s_edge)
-            savestates.append([s.name, s.outedges])
+            s_state = s.serialize()
+            savestates.append(s_state)
+        save_graph = [savestates, self.alphabet]
         with open(path, 'w') as file_:
-            yaml.dump([savestates, self.alphabet], file_)
+            yaml.dump(save_graph, file_)
         return
     
     '''
