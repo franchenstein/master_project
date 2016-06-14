@@ -50,6 +50,8 @@ class GraphGenerator():
         partition_set = ps.PartitionSet(p)
         reduced_classes = mr.moore(partition_set, self.original_graph)
         reduced_graph = reduced_classes.recover_graph(self.original_graph)
+        reduced_graph = pg.ProbabilisticGraph(reduced_graph.states, reduced_graph.alphabet)
+        reduced_graph.reassign_dest_edges(reduced_graph.states)
         reduced_graph.save_graph_file(self.save_path + '_mk1.yaml')
         return reduced_graph
             
@@ -105,6 +107,8 @@ class GraphGenerator():
         partition_set = ps.PartitionSet(pts)
         reduced_classes = mr.moore(partition_set, self.original_graph)
         reduced_graph = reduced_classes.recover_graph(self.original_graph)
+        reduced_graph = pg.ProbabilisticGraph(reduced_graph.states, reduced_graph.alphabet)
+        reduced_graph.reassign_dest_edges(reduced_graph.states)
         reduced_graph.save_graph_file(self.save_path + '_mk2_moore.yaml')
         return reduced_graph
             
