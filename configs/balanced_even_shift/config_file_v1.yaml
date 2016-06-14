@@ -1,0 +1,9 @@
+algorithms: [dmark, mk2_moore, mk2, mk1]
+alpharange: [0.95]
+drange: [4, 5, 6, 7, 8, 9, 10]
+graph_path: balanced_even_shift
+lmax: 14
+lrange: [4, 6, 8, 10]
+synch_words: ['0']
+terminations: [new, dmark, omega]
+test: chi-squared
