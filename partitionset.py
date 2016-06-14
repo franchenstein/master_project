@@ -30,15 +30,15 @@ class PartitionSet:
 
     def recover_graph(self, g):
         states = [g.state_named(p.name[0]) for p in self.partitions]
-        states = [x for x in states if x != None]  ##Just making sure no invalid states
+        states = [x for x in states if x]  ##Just making sure no invalid states
         new_states = []
         for s in states:
             oedge = []
             for a in g.alphabet:
                 t = s.next_state_from_edge(a)
-                if t != None:
+                if t:
                     for p in self.partitions:
-                        if t in p.name:
+                        if t.name in p.name:
                             for e in s.outedges:
                                 if e[0] == a:
                                     newedge = []
