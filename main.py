@@ -41,7 +41,7 @@ def main(config_file, terminate=False, dmark=False, generate=False, gen_seq=Fals
         if params['cond_entropy']:
             plot_entropies(graph_path, algorithms, terminations, drange, lrange, alpharange, params['eval_l'], tag)
         if params['autocorrelation']:
-            plot_entropies(graph_path, algorithms, terminations, drange, lrange, alpharange, params['upto'], tag)
+            plot_autocorr(graph_path, algorithms, terminations, drange, lrange, alpharange, params['upto'], tag)
         if params['kld']:
             plot_others('kld', graph_path, algorithms, terminations, drange, lrange, alpharange, tag)
         if params['l1metric']:
@@ -124,14 +124,16 @@ def analyze_sequences(graph_path, algorithms, drange, terminations, lrange, alph
                 kld.append(kld_step)
                 l1.append(l1_step)
             if to_analyze['kld']:
-                k_path = 'results/' +  graph_path + '/kld/' + p
+                k_path = 'results/' + graph_path + '/kld/dmarkov.yaml'
                 with open(k_path, 'w') as f:
                     yaml.dump(kld, f)
             if to_analyze['l1metric']:
-                l_path = 'results/' + graph_path + '/l1/' + p
+                l_path = 'results/' + graph_path + '/l1/dmarkov.yaml'
                 with open(l_path, 'w') as f:
                     yaml.dump(l1, f)
         else:
+            kld = []
+            l1 = []
             for t in terminations:
                 for l in lrange:
                     for alpha in alpharange:
@@ -141,14 +143,14 @@ def analyze_sequences(graph_path, algorithms, drange, terminations, lrange, alph
                         kld_step, l1_step = analyze_sequences_core_1(graph_path, p, to_analyze, params, seq_an)
                         kld.append(kld_step)
                         l1.append(l1_step)
-                    if to_analyze['kld']:
-                        k_path = 'results/' + graph_path + '/kld/' + p
-                        with open(k_path, 'w') as f:
-                            yaml.dump(kld, f)
-                    if to_analyze['l1metric']:
-                        l_path = 'results/' + graph_path + '/l1/' + p
-                        with open(l_path, 'w') as f:
-                            yaml.dump(l1, f)
+                if to_analyze['kld']:
+                    k_path = 'results/' + graph_path + '/kld/' + t + '_' + algo + '.yaml'
+                    with open(k_path, 'w') as f:
+                        yaml.dump(kld, f)
+                if to_analyze['l1metric']:
+                    l_path = 'results/' + graph_path + '/l1/' + t + '_' + algo + '.yaml'
+                    with open(l_path, 'w') as f:
+                        yaml.dump(l1, f)
 
 
 def analyze_sequences_core_1(graph_path, path, to_analyze, params, seq_an):
@@ -257,15 +259,15 @@ def plot_entropies(graph_path, algorithms, terminations, drange, lrange, alphara
                 states.append(states_term)
     i = 0
     for entropy in h:
-        plt.semilogx(states[i], entropy, marker = 'o', label = labels[i])
+        plt.semilogx(states[i], entropy, marker='o', label = labels[i])
         i += 1
 
     plt.axhline(y=h_base, color='k', linewidth = 3, label='Original sequence baseline')
     plt.legend(loc='upper right', shadow=False, fontsize='medium')
     plt.xlabel('Number of states')
     plt.ylabel('Conditional Entropy')
-    fig_mngr = plt.get_current_fig_manager()
-    fig_mngr.window.showMaximized()
+    #fig_mngr = plt.get_current_fig_manager()
+    #fig_mngr.window.showMaximized()
     save_path = 'plots/' + graph_path + '/cond_entropies_' + tag + '.png'
     plt.savefig(save_path, bbox_inches='tight')
     plt.show()
@@ -278,12 +280,11 @@ def plot_others(kind, graph_path, algorithms, terminations, drange, lrange, alph
     g = pg.ProbabilisticGraph([], [])
     for algo in algorithms:
         if algo == 'dmark':
-            h_dmark = []
             states_dmark = []
+            h_path = 'results/' + graph_path + '/' + kind + '/dmarkov_d.yaml'
+            with open(h_path, 'r') as f:
+                h_dmark = yaml.load(f)
             for d in drange:
-                h_path = 'results/' + graph_path + '/' + kind + '/dmarkov_d' + str(d) + '.yaml'
-                with open(h_path, 'r') as f:
-                    h_dmark.append(yaml.load(f))
                 g_path = 'graphs/' + graph_path + '/dmarkov_d' + str(d) + '.yaml'
                 g.open_graph_file(g_path)
                 states_dmark.append(len(g.states))
@@ -295,12 +296,12 @@ def plot_others(kind, graph_path, algorithms, terminations, drange, lrange, alph
             for t in terminations:
                 h_term = []
                 states_term = []
+                h_path = 'results/' + graph_path + '/' + kind + '/' + + t + '_' + algo + '.yaml'
+                with open(h_path, 'r') as f:
+                    h_term.append(yaml.load(f))
                 for l in lrange:
                     for alpha in alpharange:
                         p = 'L' + str(l) + '_alpha' + str(alpha) + '_' + t + '_' + algo + '.yaml'
-                        h_path = 'results/' + graph_path + '/' + kind + '/' + p
-                        with open(h_path, 'r') as f:
-                            h_term.append(yaml.load(f))
                         g_path = 'graphs/' + graph_path + '/' + p
                         g.open_graph_file(g_path)
                         states_term.append(len(g.states))
@@ -319,8 +320,8 @@ def plot_others(kind, graph_path, algorithms, terminations, drange, lrange, alph
     elif kind == 'kld':
         plt.ylabel('Kullback-Leibler Divergence')
     save_path = 'plots/' + graph_path + '/' + kind + '_' + tag + '.png'
-    fig_mngr = plt.get_current_fig_manager()
-    fig_mngr.window.showMaximized()
+    #fig_mngr = plt.get_current_fig_manager()
+    #fig_mngr.window.showMaximized()
     plt.savefig(save_path, bbox_inches='tight')
     plt.show()
 
@@ -354,20 +355,20 @@ def plot_autocorr(graph_path, algorithms, terminations, drange, lrange, alpharan
                             h.append(h_eval)
                         g_path = 'graphs/' + graph_path + '/' + p
                         g.open_graph_file(g_path)
-                        lbl = algo + ', ' + t + ', ' + str(len(g.states)) + ' states'
+                        lbl = algo + ', ' + t + ', L = ' +str(l) + '. ' + str(len(g.states)) + ' states'
                         labels.append(lbl)
     i = 0
-    x = range(1, up_to + 1)
+    x = range(1, up_to)
     for autocorr in h:
-        plt.plot(x, autocorr[1:], marker='o', label=labels[i])
+        plt.plot(x, autocorr[1:up_to], marker='o', label=labels[i])
         i += 1
 
-    plt.plot(x, h_base, color='k', linewidth=3, label='Original sequence')
+    plt.plot(x, h_base[1:up_to], color='k', linewidth=3, label='Original sequence')
     plt.legend(loc='upper right', shadow=False, fontsize='medium')
     plt.xlabel('Lag')
     plt.ylabel('Autocorrelation')
-    fig_mngr = plt.get_current_fig_manager()
-    fig_mngr.window.showMaximized()
+    #fig_mngr = plt.get_current_fig_manager()
+    #fig_mngr.window.showMaximized()
     save_path = 'plots/' + graph_path + '/autocorrelations_' + tag + '.png'
     plt.savefig(save_path, bbox_inches='tight')
     plt.show()
