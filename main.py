@@ -281,7 +281,7 @@ def plot_others(kind, graph_path, algorithms, terminations, drange, lrange, alph
     for algo in algorithms:
         if algo == 'dmark':
             states_dmark = []
-            h_path = 'results/' + graph_path + '/' + kind + '/dmarkov_d.yaml'
+            h_path = 'results/' + graph_path + '/' + kind + '/dmarkov.yaml'
             with open(h_path, 'r') as f:
                 h_dmark = yaml.load(f)
             for d in drange:
@@ -296,7 +296,7 @@ def plot_others(kind, graph_path, algorithms, terminations, drange, lrange, alph
             for t in terminations:
                 h_term = []
                 states_term = []
-                h_path = 'results/' + graph_path + '/' + kind + '/' + + t + '_' + algo + '.yaml'
+                h_path = 'results/' + graph_path + '/' + kind + '/' + t + '_' + algo + '.yaml'
                 with open(h_path, 'r') as f:
                     h_term.append(yaml.load(f))
                 for l in lrange:
