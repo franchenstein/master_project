@@ -71,7 +71,8 @@ class ProbabilisticGraph(graph.Graph):
         states, which might be useful in the future, to check if there are 
         states that are not reached during a certain 
     '''
-    def generate_sequence(self, length, ini_state):
+    @staticmethod
+    def generate_sequence(length, ini_state):
         data = ''
         s = ini_state
         for i in range(0, length):
@@ -197,7 +198,7 @@ class ProbabilisticGraph(graph.Graph):
                     new_outedge = (a, new_next, edge[2])
                     new_outedges.append(new_outedge)                     
                 else:
-                    new_outedges.append((a, self.root(), '0.0'))
+                    new_outedges.append((a, None, '0.0'))
             s.outedges = new_outedges
             new_last_level.append(s)
         new_states.extend(new_last_level)

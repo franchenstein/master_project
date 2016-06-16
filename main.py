@@ -132,9 +132,9 @@ def analyze_sequences(graph_path, algorithms, drange, terminations, lrange, alph
                 with open(l_path, 'w') as f:
                     yaml.dump(l1, f)
         else:
-            kld = []
-            l1 = []
             for t in terminations:
+                kld = []
+                l1 = []
                 for l in lrange:
                     for alpha in alpharange:
                         p = 'L' + str(l) + '_alpha' + str(alpha) + '_' + t + '_' + algo + '.yaml'
@@ -148,7 +148,7 @@ def analyze_sequences(graph_path, algorithms, drange, terminations, lrange, alph
                     with open(k_path, 'w') as f:
                         yaml.dump(kld, f)
                 if to_analyze['l1metric']:
-                    l_path = 'results/' + graph_path + '/l1/' + t + '_' + algo + '.yaml'
+                    l_path = 'results/' + graph_path + '/l1metric/' + t + '_' + algo + '.yaml'
                     with open(l_path, 'w') as f:
                         yaml.dump(l1, f)
 
@@ -294,11 +294,10 @@ def plot_others(kind, graph_path, algorithms, terminations, drange, lrange, alph
             labels.append(lbl)
         else:
             for t in terminations:
-                h_term = []
                 states_term = []
                 h_path = 'results/' + graph_path + '/' + kind + '/' + t + '_' + algo + '.yaml'
                 with open(h_path, 'r') as f:
-                    h_term.append(yaml.load(f))
+                    h.append(yaml.load(f))
                 for l in lrange:
                     for alpha in alpharange:
                         p = 'L' + str(l) + '_alpha' + str(alpha) + '_' + t + '_' + algo + '.yaml'
@@ -307,7 +306,6 @@ def plot_others(kind, graph_path, algorithms, terminations, drange, lrange, alph
                         states_term.append(len(g.states))
                 lbl = algo + ', ' + t
                 labels.append(lbl)
-                h.append(h_term)
                 states.append(states_term)
     i = 0
     for value in h:

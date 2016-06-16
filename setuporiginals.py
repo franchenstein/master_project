@@ -5,12 +5,13 @@ import sys
 import getopt
 
 
-def main(graph_path, length, l):
+def main(graph_path, length, l, up_to):
     sequence_path = 'sequences/' + graph_path + '/original_length_' + str(length) + '.yaml'
     sa = seqan.SequenceAnalyzer(sequence_path)
     p, alph = sa.calc_probs(l)
     p_cond = sa.calc_cond_probs(l - 1)
     h = sa.calc_cond_entropy(l - 1)
+    a = sa.calc_autocorrelation(up_to)
     sa.save_cond_probs_as_graph('graphs/' + graph_path + '/rtp_L' + str(l) + '.yaml')
     with open('results/' + graph_path + '/probabilities/original.yaml', 'w') as f:
         yaml.dump([p, alph], f)
@@ -18,20 +19,23 @@ def main(graph_path, length, l):
         yaml.dump(p_cond, f)
     with open('results/' + graph_path + '/cond_entropies/original.yaml', 'w') as f:
         yaml.dump(h, f)
+    with open('results/' + graph_path + '/autocorrelations/original.yaml', 'w') as f:
+        yaml.dump(a, f)
 
 
 def read_input(argv):
     graph_path = ''
     length = 10000000
     l = 0
+    u =0
     try:
-        opts, args = getopt.getopt(argv, "hg:x:l:", ["graphpath=", "length=", "l="])
+        opts, args = getopt.getopt(argv, "hg:x:l:u:", ["graphpath=", "length=", "l=", "upto="])
     except getopt.GetoptError:
-        print "setuporiginals.py -g <graphpath> -x <length> -l <l>"
+        print "setuporiginals.py -g <graphpath> -x <length> -l <l> -u <upto>"
         sys.exit(2)
     for opt, arg in opts:
         if opt in ("-h", "--help"):
-            print "setuporiginals.py -g <graphpath> -x <length> -l <l>"
+            print "setuporiginals.py -g <graphpath> -x <length> -l <l> -u <upto>"
             sys.exit()
         if opt in ("-g", "--graphpath"):
             graph_path = arg
@@ -39,8 +43,10 @@ def read_input(argv):
             length = arg
         if opt in ("-l", "--l"):
             l = int(arg)
-    return [graph_path, length, l]
+        if opt in ("-u", "--upto"):
+            u = int(arg)
+    return [graph_path, length, l, u]
 
 if __name__ == "__main__":
-    graph_path, length, l = read_input(sys.argv[1:])
-    main(graph_path, length, l)
+    graph_path, length, l, u = read_input(sys.argv[1:])
+    main(graph_path, length, l, u)
