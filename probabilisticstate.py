@@ -52,7 +52,8 @@ class ProbabilisticState(state.State):
                     k = j
                 j += 1
             if i == 1:
-                self.outedges[k][2] = '1.0'
+                e = (self.outedges[k][0], self.outedges[k][1], '1.0')
+                self.outedges[k] = e
         m = [(x[0], x[2]) for x in self.outedges]
         return m
 
