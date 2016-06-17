@@ -75,10 +75,13 @@ class ProbabilisticGraph(graph.Graph):
     def generate_sequence(length, ini_state):
         data = ''
         s = ini_state
+        visited_states = [s.name]
         for i in range(0, length):
             d, s = s.random_step()
+            if s.name not in visited_states:
+                visited_states.append(s.name)
             data += d
-        return data   
+        return data, visited_states
     
     '''
     Name: expand_last_level
@@ -283,3 +286,8 @@ class ProbabilisticGraph(graph.Graph):
             ns.outedges = newedges
         self.states = states
         self.alphabet = aux.alphabet
+
+    def irreducible(self, seq_len):
+        d, v = self.generate_sequence(seq_len, self.states[0])
+        irreducible_states = [s for s in self.states if s.name in v]
+        self.states = irreducible_states
