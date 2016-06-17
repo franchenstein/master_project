@@ -42,6 +42,17 @@ class ProbabilisticState(state.State):
     it occurs, disregarding the destination state.
     '''     
     def morph(self):
+        if sum([float(x[2]) for x in self.outedges]) != 0:
+            i = 0
+            j =0
+            k = 0
+            for x in self.outedges:
+                if x[2] != 0:
+                    i += 1
+                    k = j
+                j += 1
+            if i == 1:
+                self.outedges[k][2] = '1.0'
         m = [(x[0], x[2]) for x in self.outedges]
         return m
 

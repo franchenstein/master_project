@@ -128,7 +128,7 @@ def analyze_sequences(graph_path, algorithms, drange, terminations, lrange, alph
                 with open(k_path, 'w') as f:
                     yaml.dump(kld, f)
             if to_analyze['l1metric']:
-                l_path = 'results/' + graph_path + '/l1/dmarkov.yaml'
+                l_path = 'results/' + graph_path + '/l1metric/dmarkov.yaml'
                 with open(l_path, 'w') as f:
                     yaml.dump(l1, f)
         else:
@@ -283,12 +283,11 @@ def plot_others(kind, graph_path, algorithms, terminations, drange, lrange, alph
             states_dmark = []
             h_path = 'results/' + graph_path + '/' + kind + '/dmarkov.yaml'
             with open(h_path, 'r') as f:
-                h_dmark = yaml.load(f)
+                h.append(yaml.load(f))
             for d in drange:
                 g_path = 'graphs/' + graph_path + '/dmarkov_d' + str(d) + '.yaml'
                 g.open_graph_file(g_path)
                 states_dmark.append(len(g.states))
-            h.append(h_dmark)
             states.append(states_dmark)
             lbl = 'D-Markov, D from ' + str(drange[0]) + ' to ' + str(drange[-1])
             labels.append(lbl)
@@ -309,6 +308,8 @@ def plot_others(kind, graph_path, algorithms, terminations, drange, lrange, alph
                 states.append(states_term)
     i = 0
     for value in h:
+        print len(value)
+        print len(states[i])
         plt.semilogx(states[i], value, marker='o', label=labels[i])
         i += 1
     plt.legend(loc='upper right', shadow=False, fontsize='medium')
