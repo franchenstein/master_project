@@ -12,7 +12,12 @@ to complete the last level of the graph.
 
 class ProbabilisticGraph(graph.Graph):
     def __init__(self, states=[], alphabet=[], path=''):
-        graph.Graph.__init__(self, states, alphabet, path)
+        p_states = []
+        for s in states:
+            if s:
+                s = pst.ProbabilisticState(s.name, s.outedges)
+                p_states.append(s)
+        graph.Graph.__init__(self, p_states, alphabet, path)
     
     '''
     Name: compare_morphs
@@ -78,8 +83,9 @@ class ProbabilisticGraph(graph.Graph):
         visited_states = [s.name]
         for i in range(0, length):
             d, s = s.random_step()
-            if s.name not in visited_states:
-                visited_states.append(s.name)
+            if s:
+                if s.name not in visited_states:
+                    visited_states.append(s.name)
             data += d
         return data, visited_states
     

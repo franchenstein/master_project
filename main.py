@@ -105,7 +105,7 @@ def generate_sequences(graph_path, algorithms, drange, terminations, lrange, alp
 
 def generate_sequences_core(g, graph_path, path, p, seq_len):
     g.open_graph_file(path)
-    seq = g.generate_sequence(seq_len, g.states[0])
+    seq, v = g.generate_sequence(seq_len, g.states[0])
     p = 'sequences/' + graph_path + '/len_' + str(seq_len) + '_' + p
     with open(p, 'w') as f:
         yaml.dump(seq, f)
