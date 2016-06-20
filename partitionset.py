@@ -29,8 +29,7 @@ class PartitionSet:
     '''
 
     def recover_graph(self, g):
-        states = [g.state_named(p.name[0]) for p in self.partitions]
-        states = [x for x in states if x]  ##Just making sure no invalid states
+        states = [g.state_named(p.name[0]) for p in self.partitions if g.state_named(p.name[0])]
         new_states = []
         for s in states:
             oedge = []
@@ -55,6 +54,8 @@ class PartitionSet:
                                     oedge.append(newedge)
                                     break
                             break
+                else:
+                    oedge.append((a, None, '0.0'))
             u = st.State(s.name, oedge)
             new_states.append(u)
         h = gr.Graph(new_states, g.alphabet)

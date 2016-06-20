@@ -54,6 +54,7 @@ class GraphGenerator():
         reduced_graph.reassign_dest_edges(reduced_graph.states)
         reduced_graph = reduced_graph.remove_unreachable_states()
         reduced_graph = pg.ProbabilisticGraph(reduced_graph.states, reduced_graph.alphabet)
+        reduced_graph.reassign_dest_edges(reduced_graph.states)
         reduced_graph.irreducible(1000000)
         reduced_graph.save_graph_file(self.save_path + '_mk1.yaml')
         return reduced_graph
@@ -114,6 +115,7 @@ class GraphGenerator():
         reduced_graph.reassign_dest_edges(reduced_graph.states)
         reduced_graph = reduced_graph.remove_unreachable_states()
         reduced_graph = pg.ProbabilisticGraph(reduced_graph.states, reduced_graph.alphabet)
+        reduced_graph.reassign_dest_edges(reduced_graph.states)
         reduced_graph.irreducible(1000000)
         reduced_graph.save_graph_file(self.save_path + '_mk2_moore.yaml')
         return reduced_graph
