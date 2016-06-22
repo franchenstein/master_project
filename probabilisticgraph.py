@@ -192,7 +192,7 @@ class ProbabilisticGraph(graph.Graph):
                         else:
                             candidate = self.root()
                         if candidate:
-                            r = self.compare_morphs(true_next.morph, candidate.morph,
+                            r = self.compare_morphs(true_next.morph(), candidate.morph(),
                                                     alpha, test)
                         else:
                             r = [False, 0.0]

@@ -42,15 +42,6 @@ class ProbabilisticState(state.State):
     it occurs, disregarding the destination state.
     '''     
     def morph(self):
-        i = 0
-        extremes = [0.0, 1.0]
-        for e in self.outedges:
-            newedge = e
-            for v in extremes:
-                if abs(v - float(e[2])) < 1e-5:
-                    newedge = (e[0], e[1], str(v))
-            self.outedges[i] = newedge
-            i += 1
         m = [(x[0], x[2]) for x in self.outedges]
         return m
 
