@@ -69,7 +69,7 @@ class State:
                     else:
                         r += "To nowhere \n"
                 else:
-                    r += e + '\n'
+                    r += str(e) + '\n'
                 i += 1
         r += "\n\n"
         return r

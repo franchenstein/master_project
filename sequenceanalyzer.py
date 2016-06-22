@@ -65,10 +65,6 @@ class SequenceAnalyzer():
                     current_probs[current_value] += 1
             for key in current_probs.keys():
                 current_probs[key] /= float(len(self.seq))
-            if not sum(current_probs.values()) == 1.0:
-                dif = (1.0 - sum(current_probs.values()))/len(current_probs.values())
-                for k in current_probs.keys():
-                    current_probs[k] += dif
             self.probabilities.append(current_probs)
         print "*****************"
         print "Sequence: " + self.sequence_path
@@ -104,20 +100,13 @@ class SequenceAnalyzer():
                 l1 = self.probabilities[l]
                 l2 = self.probabilities[l+1]
                 for s in l1:
-                    acc = 0
-                    conds = []
                     for a in self.alphabet:
                         cond = a + "|" + s
                         t = s + a
                         if t in l2.keys():
                             d[cond] = l2[t]/l1[s]
-                            acc += d[cond]
                         else:
                             d[cond] = 0.0
-                    if not acc == 1.0:
-                        dif = (1.0 - acc)/len(self.alphabet)
-                        for c in conds:
-                            d[c] += dif
                 self.conditional_probabilities.append(d)
         else:
             print "Probabilities not computed."
@@ -297,7 +286,7 @@ class SequenceAnalyzer():
                             dest = name + a
                             oedge = [a, dest, prob]
                             outedges.append(oedge)
-                        outedges = self.outedges_sum_one(outedges, self.alphabet)
+                        outedges = self.normalize_morph(outedges, self.alphabet)
                         state = [name, outedges]
                         states.append(state)
                 else:
@@ -307,7 +296,7 @@ class SequenceAnalyzer():
                         prob = level[k]
                         oedge = [k, k, prob]
                         outedges.append(oedge)
-                    outedges = self.outedges_sum_one(outedges, self.alphabet)
+                    outedges = self.normalize_morph(outedges, self.alphabet)
                     state = [name, outedges]
                     states.append(state)
                 i += 1
@@ -322,10 +311,8 @@ class SequenceAnalyzer():
             print "Run calc_cond_probs function before this one."            
 
     @staticmethod
-    def outedges_sum_one(outedges, alph):
-        dif = 1.0 - sum([x[2] for x in outedges])
-        if not dif == 0.0:
-            dif /= len(alph)
-            for e in outedges:
-                e[2] += dif
+    def normalize_morph(outedges, alph):
+        acc = sum([x[2] for x in outedges])
+        for i in range(len(alph)):
+            outedges[i][2] /= acc
         return outedges
