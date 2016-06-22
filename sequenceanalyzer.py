@@ -65,8 +65,8 @@ class SequenceAnalyzer():
                     current_probs[current_value] += 1
             for key in current_probs.keys():
                 current_probs[key] /= float(len(self.seq))
-            if not sum(current_probs.values()) == 1:
-                dif = (1 - sum(current_probs.values()))/len(current_probs.values())
+            if not sum(current_probs.values()) == 1.0:
+                dif = (1.0 - sum(current_probs.values()))/len(current_probs.values())
                 for k in current_probs.keys():
                     current_probs[k] += dif
             self.probabilities.append(current_probs)
@@ -103,20 +103,19 @@ class SequenceAnalyzer():
                 d = {}
                 l1 = self.probabilities[l]
                 l2 = self.probabilities[l+1]
-                for a in self.alphabet:
+                for s in l1:
                     acc = 0
                     conds = []
-                    for s in l1:
+                    for a in self.alphabet:
                         cond = a + "|" + s
-                        conds.append(cond)
                         t = s + a
                         if t in l2.keys():
                             d[cond] = l2[t]/l1[s]
                             acc += d[cond]
                         else:
                             d[cond] = 0.0
-                    if not acc == 1:
-                        dif = (1 - acc)/len(self.alphabet)
+                    if not acc == 1.0:
+                        dif = (1.0 - acc)/len(self.alphabet)
                         for c in conds:
                             d[c] += dif
                 self.conditional_probabilities.append(d)
