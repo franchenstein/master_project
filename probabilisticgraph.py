@@ -261,7 +261,7 @@ class ProbabilisticGraph(graph.Graph):
             return w[arg]
         else:
             for s in new_last_level:
-                r = self.compare_morphs(s.morph, exp.morph, alpha, test)
+                r = self.compare_morphs(s.morph(), exp.morph(), alpha, test)
                 if r[0]:
                     return s
             return [x[1] for x in results if x[1].name == default_name][0]
