@@ -41,7 +41,17 @@ class ProbabilisticState(state.State):
     The morph is a 2-tuple with only the output letter and the probability that
     it occurs, disregarding the destination state.
     '''     
+    @property
     def morph(self):
+        #extremes = [0.0, 1.0]
+        #i = 0
+        #for e in self.outedges:
+        #    new_edge = e
+        #    for v in extremes:
+        #        if abs(v - float(e[2])) < 1e-5:
+        #            new_edge = (e[0], e[1], str(v))
+        #    self.outedges[i] = new_edge
+        #    i += 1
         m = [(x[0], x[2]) for x in self.outedges]
         return m
 

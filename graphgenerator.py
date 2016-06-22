@@ -140,7 +140,7 @@ class GraphGenerator():
                     for p in partitions:
                         fail_count += 1
                         pmorph = self.partition_morph(p.outedges[0])
-                        result = self.original_graph.compare_morphs(pmorph, c.morph(), alpha, test)
+                        result = self.original_graph.compare_morphs(pmorph, c.morph, alpha, test)
                         if result[0]:
                             p.add_to_partition(c)
                             break

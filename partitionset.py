@@ -29,8 +29,7 @@ class PartitionSet:
     '''
 
     def recover_graph(self, g):
-        states = [g.state_named(p.name[0]) for p in self.partitions]
-        states = [x for x in states if x]  ##Just making sure no invalid states
+        states = [g.state_named(p.name[0]) for p in self.partitions if g.state_named(p.name[0])]
         new_states = []
         for s in states:
             oedge = []
@@ -39,22 +38,26 @@ class PartitionSet:
                 if t:
                     for p in self.partitions:
                         if t.name in p.name:
-                            for e in s.outedges:
-                                if e[0] == a:
-                                    newedge = []
-                                    i = 0
-                                    for element in e:
-                                        if i == 1:
-                                            # The outedges are created pointing just
-                                            # to a name, not to a state:
-                                            newedge.append(p.name[0])
-                                        else:
-                                            newedge.append(element)
-                                        i += 1
-                                    newedge = tuple(newedge)
-                                    oedge.append(newedge)
-                                    break
+                            dest = p.name[0]
                             break
+                        else:
+                            dest = ''
+                else:
+                    dest = ''
+                for e in s.outedges:
+                    if e[0] == a:
+                        newedge = []
+                        i = 0
+                        for element in e:
+                            if i == 1:
+                                # The outedges are created pointing just
+                                # to a name, not to a state:
+                                newedge.append(dest)
+                            else:
+                                newedge.append(element)
+                            i += 1
+                        newedge = tuple(newedge)
+                        oedge.append(newedge)
             u = st.State(s.name, oedge)
             new_states.append(u)
         h = gr.Graph(new_states, g.alphabet)

@@ -65,6 +65,10 @@ class SequenceAnalyzer():
                     current_probs[current_value] += 1
             for key in current_probs.keys():
                 current_probs[key] /= float(len(self.seq))
+            if not sum(current_probs.values()) == 1:
+                dif = (1 - sum(current_probs.values()))/len(current_probs.values())
+                for k in current_probs.keys():
+                    current_probs[k] += dif
             self.probabilities.append(current_probs)
         print "*****************"
         print "Sequence: " + self.sequence_path
