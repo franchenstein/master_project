@@ -104,13 +104,21 @@ class SequenceAnalyzer():
                 l1 = self.probabilities[l]
                 l2 = self.probabilities[l+1]
                 for a in self.alphabet:
+                    acc = 0
+                    conds = []
                     for s in l1:
                         cond = a + "|" + s
+                        conds.append(cond)
                         t = s + a
                         if t in l2.keys():
                             d[cond] = l2[t]/l1[s]
+                            acc += d[cond]
                         else:
                             d[cond] = 0.0
+                    if not acc == 1:
+                        dif = (1 - acc)/len(self.alphabet)
+                        for c in conds:
+                            d[c] += dif
                 self.conditional_probabilities.append(d)
         else:
             print "Probabilities not computed."
