@@ -293,20 +293,22 @@ class SequenceAnalyzer():
                     for name in state_names:
                         outedges = []
                         for a in self.alphabet:
-                            prob = str(level[a + '|' + name])
+                            prob = level[a + '|' + name]
                             dest = name + a
-                            oedge = (a, dest, prob)
+                            oedge = [a, dest, prob]
                             outedges.append(oedge)
-                        state = (name, outedges)
+                        outedges = self.outedges_sum_one(outedges, self.alphabet)
+                        state = [name, outedges]
                         states.append(state)
                 else:
                     name = 'e'
                     outedges = []
                     for k in level.keys():
-                        prob = str(level[k])
-                        oedge = (k, k, prob)
+                        prob = level[k]
+                        oedge = [k, k, prob]
                         outedges.append(oedge)
-                    state = (name, outedges)
+                    outedges = self.outedges_sum_one(outedges, self.alphabet)
+                    state = [name, outedges]
                     states.append(state)
                 i += 1
             with open(path, 'w') as file_:
@@ -318,3 +320,12 @@ class SequenceAnalyzer():
         else:
             print "Conditional probabilities not computed."
             print "Run calc_cond_probs function before this one."            
+
+    @staticmethod
+    def outedges_sum_one(outedges, alph):
+        dif = 1.0 - sum([x[2] for x in outedges])
+        if not dif == 0.0:
+            dif /= len(alph)
+            for e in outedges:
+                e[2] += dif
+        return outedges
