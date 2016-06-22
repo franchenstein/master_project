@@ -55,7 +55,7 @@ class PartitionSet:
                                     break
                             break
                 else:
-                    oedge.append((a, None, '0.0'))
+                    oedge.append((a, '', '0.0'))
             u = st.State(s.name, oedge)
             new_states.append(u)
         h = gr.Graph(new_states, g.alphabet)

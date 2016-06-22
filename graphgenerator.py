@@ -53,8 +53,6 @@ class GraphGenerator():
         reduced_graph = pg.ProbabilisticGraph(reduced_graph.states, reduced_graph.alphabet)
         reduced_graph.reassign_dest_edges(reduced_graph.states)
         reduced_graph = reduced_graph.remove_unreachable_states()
-        reduced_graph = pg.ProbabilisticGraph(reduced_graph.states, reduced_graph.alphabet)
-        reduced_graph.reassign_dest_edges(reduced_graph.states)
         reduced_graph.irreducible(1000000)
         reduced_graph.save_graph_file(self.save_path + '_mk1.yaml')
         return reduced_graph
@@ -105,7 +103,6 @@ class GraphGenerator():
         return new_graph
 
     def mk2_moore(self, test, alpha):
-        self.original_graph = self.mk2()
         init_state = [x for x in self.original_graph.states if x.name == self.synch_words[0].name][0]
         pts = self.create_initial_partition(init_state, alpha, test)
         partition_set = ps.PartitionSet(pts)
@@ -114,8 +111,6 @@ class GraphGenerator():
         reduced_graph = pg.ProbabilisticGraph(reduced_graph.states, reduced_graph.alphabet)
         reduced_graph.reassign_dest_edges(reduced_graph.states)
         reduced_graph = reduced_graph.remove_unreachable_states()
-        reduced_graph = pg.ProbabilisticGraph(reduced_graph.states, reduced_graph.alphabet)
-        reduced_graph.reassign_dest_edges(reduced_graph.states)
         reduced_graph.irreducible(1000000)
         reduced_graph.save_graph_file(self.save_path + '_mk2_moore.yaml')
         return reduced_graph

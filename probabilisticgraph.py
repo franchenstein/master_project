@@ -297,3 +297,8 @@ class ProbabilisticGraph(graph.Graph):
         d, v = self.generate_sequence(seq_len, self.states[0])
         irreducible_states = [s for s in self.states if s.name in v]
         self.states = irreducible_states
+
+    def remove_unreachable_states(self):
+        g = graph.Graph(self.states, self.alphabet)
+        h = g.remove_unreachable_states()
+        return ProbabilisticGraph(h.states, h.alphabet)
