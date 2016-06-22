@@ -103,6 +103,7 @@ class GraphGenerator():
         return new_graph
 
     def mk2_moore(self, test, alpha):
+        self.original_graph = self.mk2()
         init_state = [x for x in self.original_graph.states if x.name == self.synch_words[0].name][0]
         pts = self.create_initial_partition(init_state, alpha, test)
         partition_set = ps.PartitionSet(pts)
