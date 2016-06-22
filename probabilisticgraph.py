@@ -12,7 +12,12 @@ to complete the last level of the graph.
 
 class ProbabilisticGraph(graph.Graph):
     def __init__(self, states=[], alphabet=[], path=''):
-        graph.Graph.__init__(self, states, alphabet, path)
+        p_states = []
+        for s in states:
+            if s:
+                s = pst.ProbabilisticState(s.name, s.outedges)
+                p_states.append(s)
+        graph.Graph.__init__(self, p_states, alphabet, path)
     
     '''
     Name: compare_morphs
@@ -75,10 +80,14 @@ class ProbabilisticGraph(graph.Graph):
     def generate_sequence(length, ini_state):
         data = ''
         s = ini_state
+        visited_states = [s.name]
         for i in range(0, length):
             d, s = s.random_step()
+            if s:
+                if s.name not in visited_states:
+                    visited_states.append(s.name)
             data += d
-        return data   
+        return data, visited_states
     
     '''
     Name: expand_last_level
@@ -283,3 +292,13 @@ class ProbabilisticGraph(graph.Graph):
             ns.outedges = newedges
         self.states = states
         self.alphabet = aux.alphabet
+
+    def irreducible(self, seq_len):
+        d, v = self.generate_sequence(seq_len, self.states[0])
+        irreducible_states = [s for s in self.states if s.name in v]
+        self.states = irreducible_states
+
+    def remove_unreachable_states(self):
+        g = graph.Graph(self.states, self.alphabet)
+        h = g.remove_unreachable_states()
+        return ProbabilisticGraph(h.states, h.alphabet)

@@ -1,3 +1,3 @@
-other_params: {K: 12, L: 14, l1: 12, upto: 14}
+other_params: {K: 230, L: 321, l1: 13, upto: 213}
 to_analyze: {autocorrelation: false, cond_entropy: false, cond_probabilities: false,
-  kld: true, l1metric: true, probabilities: false}
+  kld: false, l1metric: true, probabilities: false}
