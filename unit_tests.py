@@ -76,7 +76,7 @@ class TestPFSACompleteness():
             fail = False
             fail_states = []
             for s in g.states:
-                dests = [e for e in s.outedges if e]
+                dests = [e[1] for e in s.outedges if e[1]]
                 if not dests:
                     fail = True
                     succ = False
