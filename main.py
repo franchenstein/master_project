@@ -75,7 +75,7 @@ def generate_graphs(algorithms, terminations, lrange, alpharange, save_path, syn
                     elif algo == 'mk2_moore':
                         g.mk2_moore(test, alpha)
                     elif algo == 'mk3':
-                        g.equivalence_classes(test, alpha)
+                        g.mk3(test, alpha)
 
 
 def generate_dmarkov(graph_path, drange, lmax):
