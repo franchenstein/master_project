@@ -25,10 +25,14 @@ class GraphGenerator():
     #Initialization:
     def __init__(self, original_path, synch_words, save_path):
         self.original_graph = pg.ProbabilisticGraph(path=original_path)
-        self.synch_words = []
-        for w in synch_words:
-            self.synch_words.append(self.original_graph.state_named(w))
+        self.synch_words = self.set_synch_words(synch_words)
         self.save_path = save_path
+
+    def set_synch_words(self, s_words):
+        synch_words = []
+        for w in s_words:
+            synch_words.append(self.original_graph.state_named(w))
+        return synch_words
 
     '''
     Name: mk1
@@ -136,10 +140,12 @@ class GraphGenerator():
 
     def mk3(self, test, alpha):
         self.original_graph = self.mk2()
-        self.original_graph = self.equivalence_classes(test, alpha)
+        synch_names = [w.name for w in self.synch_words]
+        self.synch_words = self.set_synch_words(synch_names)
+        new_graph = self.equivalence_classes(test, alpha)
         reduced_graph = self.apply_moore(test, alpha)
         reduced_graph.save_graph_file(self.save_path + '_mk3.yaml')
-        return reduced_graph
+        return new_graph
 
     '''
     Name: create_initial_partition
