@@ -1,0 +1,453 @@
+**********
+test_morph_completeness fail: Morphs do not add up to 1
+At PFSA: graphs/even_shift/L6_alpha0.95_new_mk2_moore.json
+At states: 
+['0']
+**********
+**********
+test_morph_completeness fail: Morphs do not add up to 1
+At PFSA: graphs/even_shift/rtp_L6_alpha0.95_new.json
+At states: 
+['0', '00', '000', '0000', '00000', '000000']
+**********
+**********
+test_morph_completeness fail: Morphs do not add up to 1
+At PFSA: graphs/even_shift/rtp_L6_alpha0.95_old.json
+At states: 
+['0', '00', '000', '0000', '00000', '000000']
+**********
+**********
+test_morph_completeness fail: Morphs do not add up to 1
+At PFSA: graphs/even_shift/dmarkov_d8.json
+At states: 
+['00000000']
+**********
+**********
+test_morph_completeness fail: Morphs do not add up to 1
+At PFSA: graphs/even_shift/L8_alpha0.95_new_mk1.json
+At states: 
+['0']
+**********
+**********
+test_morph_completeness fail: Morphs do not add up to 1
+At PFSA: graphs/even_shift/L10_alpha0.95_omega_mk2.json
+At states: 
+['0']
+**********
+**********
+test_morph_completeness fail: Morphs do not add up to 1
+At PFSA: graphs/even_shift/rtp_L9_alpha0.95_new.yaml
+At states: 
+['0', '00', '000', '0000', '00000', '000000', '0000000', '00000000', '000000000']
+**********
+**********
+test_morph_completeness fail: Morphs do not add up to 1
+At PFSA: graphs/even_shift/L10_alpha0.95_dmark_mk2.json
+At states: 
+['0']
+**********
+**********
+test_morph_completeness fail: Morphs do not add up to 1
+At PFSA: graphs/even_shift/rtp_L10_alpha0.95_old.yaml
+At states: 
+['0', '00', '000', '0000', '00000', '000000', '0000000', '00000000', '000000000', '0000000000']
+**********
+**********
+test_morph_completeness fail: Morphs do not add up to 1
+At PFSA: graphs/even_shift/L10_alpha0.95_dmark_mk1.json
+At states: 
+['000000000', '00000000', '0000000', '000000', '00000', '0000', '000', '00', '0']
+**********
+**********
+test_morph_completeness fail: Morphs do not add up to 1
+At PFSA: graphs/even_shift/L6_alpha0.95_old_mk2.json
+At states: 
+['0']
+**********
+**********
+test_morph_completeness fail: Morphs do not add up to 1
+At PFSA: graphs/even_shift/rtp_L8_alpha0.95_dmark.json
+At states: 
+['0', '00', '000', '0000', '00000', '000000', '0000000', '00000000']
+**********
+**********
+test_morph_completeness fail: Morphs do not add up to 1
+At PFSA: graphs/even_shift/rtp_L10_alpha0.95_dmark.json
+At states: 
+['0', '00', '000', '0000', '00000', '000000', '0000000', '00000000', '000000000', '0000000000']
+**********
+**********
+test_morph_completeness fail: Morphs do not add up to 1
+At PFSA: graphs/even_shift/L10_alpha0.95_old_mk1.json
+At states: 
+['0000', '00000', '000000', '0000000', '00000000', '000', '00', '0', '000000000']
+**********
+**********
+test_morph_completeness fail: Morphs do not add up to 1
+At PFSA: graphs/even_shift/L6_alpha0.95_dmark_mk2.json
+At states: 
+['0']
+**********
+**********
+test_morph_completeness fail: Morphs do not add up to 1
+At PFSA: graphs/even_shift/L8_alpha0.95_new_mk2_moore.json
+At states: 
+['0']
+**********
+**********
+test_morph_completeness fail: Morphs do not add up to 1
+At PFSA: graphs/even_shift/L8_alpha0.95_omega_mk1.json
+At states: 
+['0']
+**********
+**********
+test_morph_completeness fail: Morphs do not add up to 1
+At PFSA: graphs/even_shift/rtp_L6_alpha0.95_omega.json
+At states: 
+['0', '00', '000', '0000', '00000', '000000']
+**********
+**********
+test_morph_completeness fail: Morphs do not add up to 1
+At PFSA: graphs/even_shift/L10_alpha0.95_omega_mk1.json
+At states: 
+['0']
+**********
+**********
+test_morph_completeness fail: Morphs do not add up to 1
+At PFSA: graphs/even_shift/rtp_L10_alpha0.95_new.json
+At states: 
+['0', '00', '000', '0000', '00000', '000000', '0000000', '00000000', '000000000', '0000000000']
+**********
+**********
+test_morph_completeness fail: Morphs do not add up to 1
+At PFSA: graphs/even_shift/L10_alpha0.95_new_mk1.json
+At states: 
+['0']
+**********
+**********
+test_morph_completeness fail: Morphs do not add up to 1
+At PFSA: graphs/even_shift/dmark_mk1.json
+At states: 
+['0']
+**********
+**********
+test_morph_completeness fail: Morphs do not add up to 1
+At PFSA: graphs/even_shift/L10_alpha0.95_dmark_mk2_moore.json
+At states: 
+['0']
+**********
+**********
+test_morph_completeness fail: Morphs do not add up to 1
+At PFSA: graphs/even_shift/L4_alpha0.95_old_mk2.json
+At states: 
+['0']
+**********
+**********
+test_morph_completeness fail: Morphs do not add up to 1
+At PFSA: graphs/even_shift/L8_alpha0.95_old_mk2.json
+At states: 
+['0']
+**********
+**********
+test_morph_completeness fail: Morphs do not add up to 1
+At PFSA: graphs/even_shift/L4_alpha0.95_new_mk2.json
+At states: 
+['0']
+**********
+**********
+test_morph_completeness fail: Morphs do not add up to 1
+At PFSA: graphs/even_shift/dmarkov_d6.json
+At states: 
+['000000']
+**********
+**********
+test_morph_completeness fail: Morphs do not add up to 1
+At PFSA: graphs/even_shift/L6_alpha0.95_omega_mk2.json
+At states: 
+['0']
+**********
+**********
+test_morph_completeness fail: Morphs do not add up to 1
+At PFSA: graphs/even_shift/L8_alpha0.95_new_mk2.json
+At states: 
+['0']
+**********
+**********
+test_morph_completeness fail: Morphs do not add up to 1
+At PFSA: graphs/even_shift/L6_alpha0.95_new_mk1.json
+At states: 
+['0']
+**********
+**********
+test_morph_completeness fail: Morphs do not add up to 1
+At PFSA: graphs/even_shift/L6_alpha0.95_old_mk1.json
+At states: 
+['0']
+**********
+**********
+test_morph_completeness fail: Morphs do not add up to 1
+At PFSA: graphs/even_shift/L8_alpha0.95_old_mk1.json
+At states: 
+['0']
+**********
+**********
+test_morph_completeness fail: Morphs do not add up to 1
+At PFSA: graphs/even_shift/rtp_L8_alpha0.95_old.json
+At states: 
+['0', '00', '000', '0000', '00000', '000000', '0000000', '00000000']
+**********
+**********
+test_morph_completeness fail: Morphs do not add up to 1
+At PFSA: graphs/even_shift/dmarkov_d9.json
+At states: 
+['000000000']
+**********
+**********
+test_morph_completeness fail: Morphs do not add up to 1
+At PFSA: graphs/even_shift/mk1_dmark.json_mk1.json
+At states: 
+['0']
+**********
+**********
+test_morph_completeness fail: Morphs do not add up to 1
+At PFSA: graphs/even_shift/L10_alpha0.95_omega_mk2_moore.json
+At states: 
+['0']
+**********
+**********
+test_morph_completeness fail: Morphs do not add up to 1
+At PFSA: graphs/even_shift/L8_alpha0.95_dmark_mk2.json
+At states: 
+['0']
+**********
+**********
+test_morph_completeness fail: Morphs do not add up to 1
+At PFSA: graphs/even_shift/L8_alpha0.95_omega_mk2_moore.json
+At states: 
+['0']
+**********
+**********
+test_morph_completeness fail: Morphs do not add up to 1
+At PFSA: graphs/even_shift/L4_alpha0.95_dmark_mk2.json
+At states: 
+['0']
+**********
+**********
+test_morph_completeness fail: Morphs do not add up to 1
+At PFSA: graphs/even_shift/mk2_dmark.json
+At states: 
+['0', '01']
+**********
+**********
+test_morph_completeness fail: Morphs do not add up to 1
+At PFSA: graphs/even_shift/L6_alpha0.95_dmark_mk2_moore.json
+At states: 
+['0']
+**********
+**********
+test_morph_completeness fail: Morphs do not add up to 1
+At PFSA: graphs/even_shift/rtp_L14.json
+At states: 
+['0', '00', '000', '0000', '00000', '000000', '0000000', '00000000', '000000000', '0000000000', '00000000000', '000000000000', '0000000000000']
+**********
+**********
+test_morph_completeness fail: Morphs do not add up to 1
+At PFSA: graphs/even_shift/rtp_L4_alpha0.95_old.json
+At states: 
+['0', '00', '000', '0000']
+**********
+**********
+test_morph_completeness fail: Morphs do not add up to 1
+At PFSA: graphs/even_shift/L10_alpha0.95_new_mk2.json
+At states: 
+['0']
+**********
+**********
+test_morph_completeness fail: Morphs do not add up to 1
+At PFSA: graphs/even_shift/rtp_L8_alpha0.95_new.json
+At states: 
+['0', '00', '000', '0000', '00000', '000000', '0000000', '00000000']
+**********
+**********
+test_morph_completeness fail: Morphs do not add up to 1
+At PFSA: graphs/even_shift/L4_alpha0.95_new_mk1.json
+At states: 
+['0']
+**********
+**********
+test_morph_completeness fail: Morphs do not add up to 1
+At PFSA: graphs/even_shift/dmarkov_d5.json
+At states: 
+['00000']
+**********
+**********
+test_morph_completeness fail: Morphs do not add up to 1
+At PFSA: graphs/even_shift/dmarkov_d7.json
+At states: 
+['0000000']
+**********
+**********
+test_morph_completeness fail: Morphs do not add up to 1
+At PFSA: graphs/even_shift/L8_alpha0.95_dmark_mk1.json
+At states: 
+['0000000', '000000', '00000', '0000', '000', '00', '0']
+**********
+**********
+test_morph_completeness fail: Morphs do not add up to 1
+At PFSA: graphs/even_shift/L6_alpha0.95_dmark_mk1.json
+At states: 
+['00000', '0000', '000', '00', '0']
+**********
+**********
+test_morph_completeness fail: Morphs do not add up to 1
+At PFSA: graphs/even_shift/rtp_L4_alpha0.95_new.json
+At states: 
+['0', '00', '000', '0000']
+**********
+**********
+test_morph_completeness fail: Morphs do not add up to 1
+At PFSA: graphs/even_shift/rtp_L4_alpha0.95_omega.json
+At states: 
+['0', '00', '000', '0000']
+**********
+**********
+test_morph_completeness fail: Morphs do not add up to 1
+At PFSA: graphs/even_shift/rtp_L10_alpha0.95_old.json
+At states: 
+['0', '00', '000', '0000', '00000', '000000', '0000000', '00000000', '000000000', '0000000000']
+**********
+**********
+test_morph_completeness fail: Morphs do not add up to 1
+At PFSA: graphs/even_shift/dmarkov_d4.json
+At states: 
+['0000']
+**********
+**********
+test_morph_completeness fail: Morphs do not add up to 1
+At PFSA: graphs/even_shift/L4_alpha0.95_omega_mk2_moore.json
+At states: 
+['0']
+**********
+**********
+test_morph_completeness fail: Morphs do not add up to 1
+At PFSA: graphs/even_shift/L4_alpha0.95_new_mk2_moore.json
+At states: 
+['0']
+**********
+**********
+test_morph_completeness fail: Morphs do not add up to 1
+At PFSA: graphs/even_shift/L4_alpha0.95_old_mk1.json
+At states: 
+['0']
+**********
+**********
+test_morph_completeness fail: Morphs do not add up to 1
+At PFSA: graphs/even_shift/L4_alpha0.95_omega_mk1.json
+At states: 
+['0']
+**********
+**********
+test_morph_completeness fail: Morphs do not add up to 1
+At PFSA: graphs/even_shift/L6_alpha0.95_omega_mk1.json
+At states: 
+['0']
+**********
+**********
+test_morph_completeness fail: Morphs do not add up to 1
+At PFSA: graphs/even_shift/L10_alpha0.95_old_mk2.json
+At states: 
+['0']
+**********
+**********
+test_morph_completeness fail: Morphs do not add up to 1
+At PFSA: graphs/even_shift/L6_alpha0.95_new_mk2.json
+At states: 
+['0']
+**********
+**********
+test_morph_completeness fail: Morphs do not add up to 1
+At PFSA: graphs/even_shift/rtp_L6_alpha0.95_dmark.json
+At states: 
+['0', '00', '000', '0000', '00000', '000000']
+**********
+**********
+test_morph_completeness fail: Morphs do not add up to 1
+At PFSA: graphs/even_shift/L8_alpha0.95_omega_mk2.json
+At states: 
+['0']
+**********
+**********
+test_morph_completeness fail: Morphs do not add up to 1
+At PFSA: graphs/even_shift/dmarkov_d10.json
+At states: 
+['0000000000']
+**********
+**********
+test_morph_completeness fail: Morphs do not add up to 1
+At PFSA: graphs/even_shift/rtp_L8_alpha0.95_omega.json
+At states: 
+['0', '00', '000', '0000', '00000', '000000', '0000000', '00000000']
+**********
+**********
+test_morph_completeness fail: Morphs do not add up to 1
+At PFSA: graphs/even_shift/L8_alpha0.95_dmark_mk2_moore.json
+At states: 
+['0']
+**********
+**********
+test_morph_completeness fail: Morphs do not add up to 1
+At PFSA: graphs/even_shift/L4_alpha0.95_omega_mk2.json
+At states: 
+['0']
+**********
+**********
+test_morph_completeness fail: Morphs do not add up to 1
+At PFSA: graphs/even_shift/L6_alpha0.95_omega_mk2_moore.json
+At states: 
+['0']
+**********
+**********
+test_morph_completeness fail: Morphs do not add up to 1
+At PFSA: graphs/even_shift/rtp_L10_alpha0.95_omega.json
+At states: 
+['0', '00', '000', '0000', '00000', '000000', '0000000', '00000000', '000000000', '0000000000']
+**********
+**********
+test_morph_completeness fail: Morphs do not add up to 1
+At PFSA: graphs/even_shift/L4_alpha0.95_dmark_mk2_moore.json
+At states: 
+['0']
+**********
+**********
+test_morph_completeness fail: Morphs do not add up to 1
+At PFSA: graphs/even_shift/L4_alpha0.95_dmark_mk1.json
+At states: 
+['000', '00', '0']
+**********
+**********
+test_morph_completeness fail: Morphs do not add up to 1
+At PFSA: graphs/even_shift/mk1_dmark.json
+At states: 
+['0']
+**********
+**********
+test_morph_completeness fail: Morphs do not add up to 1
+At PFSA: graphs/even_shift/L10_alpha0.95_new_mk2_moore.json
+At states: 
+['0']
+**********
+**********
+test_morph_completeness fail: Morphs do not add up to 1
+At PFSA: graphs/even_shift/rtp_L4_alpha0.95_dmark.json
+At states: 
+['0', '00', '000', '0000']
+**********
+**********
+test_morph_completeness failure!
+**********
+**********
+test_reachable_states success!
+**********
+**********
+test_valid_states success!
+**********

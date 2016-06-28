@@ -1,4 +1,4 @@
-import probabilisticgraph
+import probabilisticgraph as pg
 from os import listdir
 import sys
 import getopt
@@ -7,9 +7,10 @@ class TestPFSACompleteness():
 
     def __init__(self, graphs_path):
         self.graph_list = listdir(graphs_path)
+        self.graph_list = [graphs_path + '/' + p for p in self.graph_list]
         self.graphs = []
-        for p in graphs_path:
-            g = pg.ProbabilistidGraph(path=graphs_path+'/'+p)
+        for p in self.graph_list:
+            g = pg.ProbabilisticGraph(path=p)
             self.graphs.append(g)
 
     def test_morph_completeness(self):
@@ -47,8 +48,9 @@ class TestPFSACompleteness():
             fail = False
             fail_states = []
             for s in g.states:
-                dests = [e[1].name for e in s.outedges if e]
-                if not set(names).issuperset(set(dests)):
+                dests = [e[1] for e in s.outedges if e[1]]
+                dests_names = [d.name for d in dests]
+                if not set(names).issuperset(set(dests_names)):
                     fail = True
                     succ = False
                     fail_states.append(s.name)
@@ -61,11 +63,11 @@ class TestPFSACompleteness():
                 print "**********"
         if succ:
             print "**********"
-            print "test_reachable_states fail success!"
+            print "test_reachable_states success!"
             print "**********"
         else:
             print "**********"
-            print "test_reachable_states fail failure!"
+            print "test_reachable_states failure!"
             print "**********"
 
     def test_valid_states(self):
@@ -88,11 +90,11 @@ class TestPFSACompleteness():
                 print "**********"
         if succ:
             print "**********"
-            print "test_valid_states fail success!"
+            print "test_valid_states success!"
             print "**********"
         else:
             print "**********"
-            print "test_valid_states fail failure!"
+            print "test_valid_states failure!"
             print "**********"
 
     def test_suite(self):
@@ -117,7 +119,7 @@ def read_input(argv):
     return path
 
 
-def main():
+def main(path):
     tester = TestPFSACompleteness(path)
     tester.test_suite()
 
