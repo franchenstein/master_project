@@ -40,6 +40,7 @@ class MasterProject(QtGui.QMainWindow, gui.Ui_projectgui):
         self.algorithms['mk1'] = self.mk1.isChecked()
         self.algorithms['mk2'] = self.mk2.isChecked()
         self.algorithms['mk2_moore'] = self.mk2_moore.isChecked()
+        self.algorithms['mk3'] = self.mk3.isChecked()
         self.drange['ini'] = int(self.d_ini.text())
         self.drange['end'] = int(self.d_end.text())
         self.lrange['ini'] = int(self.l_ini.text())

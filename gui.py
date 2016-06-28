@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'gui.ui'
 #
-# Created: Thu Jun  9 18:11:09 2016
+# Created: Mon Jun 27 17:34:14 2016
 #      by: PyQt4 UI code generator 4.10.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -60,18 +60,21 @@ class Ui_projectgui(object):
         self.groupBox_2.setGeometry(QtCore.QRect(30, 150, 651, 80))
         self.groupBox_2.setObjectName(_fromUtf8("groupBox_2"))
         self.mk1 = QtGui.QCheckBox(self.groupBox_2)
-        self.mk1.setGeometry(QtCore.QRect(30, 30, 97, 22))
+        self.mk1.setGeometry(QtCore.QRect(30, 30, 61, 22))
         self.mk1.setObjectName(_fromUtf8("mk1"))
         self.mk2 = QtGui.QCheckBox(self.groupBox_2)
-        self.mk2.setGeometry(QtCore.QRect(140, 30, 97, 22))
+        self.mk2.setGeometry(QtCore.QRect(110, 30, 61, 22))
         self.mk2.setObjectName(_fromUtf8("mk2"))
         self.dmark = QtGui.QCheckBox(self.groupBox_2)
-        self.dmark.setGeometry(QtCore.QRect(420, 30, 97, 22))
+        self.dmark.setGeometry(QtCore.QRect(340, 30, 97, 22))
         self.dmark.setTristate(False)
         self.dmark.setObjectName(_fromUtf8("dmark"))
         self.mk2_moore = QtGui.QCheckBox(self.groupBox_2)
-        self.mk2_moore.setGeometry(QtCore.QRect(260, 30, 121, 22))
+        self.mk2_moore.setGeometry(QtCore.QRect(190, 30, 121, 22))
         self.mk2_moore.setObjectName(_fromUtf8("mk2_moore"))
+        self.eq_class = QtGui.QCheckBox(self.groupBox_2)
+        self.eq_class.setGeometry(QtCore.QRect(450, 30, 161, 22))
+        self.eq_class.setObjectName(_fromUtf8("eq_class"))
         self.groupBox_3 = QtGui.QGroupBox(self.tab)
         self.groupBox_3.setGeometry(QtCore.QRect(30, 230, 651, 80))
         self.groupBox_3.setObjectName(_fromUtf8("groupBox_3"))
@@ -344,6 +347,7 @@ class Ui_projectgui(object):
         self.mk2.setText(_translate("projectgui", "Mk2", None))
         self.dmark.setText(_translate("projectgui", "D-Markov", None))
         self.mk2_moore.setText(_translate("projectgui", "Mk2 w/ Moore", None))
+        self.mk3.setText(_translate("projectgui", "Mk3", None))
         self.groupBox_3.setTitle(_translate("projectgui", "D-Markov Parameters", None))
         self.label_2.setText(_translate("projectgui", "D from:", None))
         self.label_3.setText(_translate("projectgui", "to:", None))
