@@ -123,9 +123,10 @@ class GraphGenerator():
                             for y in self.original_graph.states:
                                 i = 0
                                 for edge in y.outedges:
-                                    if edge[1] == s:
-                                        new_edge = (edge[0], x, edge[2])
-                                        y.outedges[i] = new_edge
+                                    if edge[1]:
+                                        if edge[1].name == s.name:
+                                            new_edge = (edge[0], x, edge[2])
+                                            y.outedges[i] = new_edge
                                     i += 1
                             found = True
                             break
@@ -135,17 +136,17 @@ class GraphGenerator():
                 if s in self.original_graph.states:
                     self.original_graph.states.remove(s)
             new_states.append(s)
-        new_graph = self.apply_moore(test, alpha)
+        new_graph = self.original_graph
         return new_graph
 
     def mk3(self, test, alpha):
         self.original_graph = self.mk2()
         synch_names = [w.name for w in self.synch_words]
         self.synch_words = self.set_synch_words(synch_names)
-        new_graph = self.equivalence_classes(test, alpha)
+        self.original_graph = self.equivalence_classes(test, alpha)
         reduced_graph = self.apply_moore(test, alpha)
         reduced_graph.save_graph_file(self.save_path + '_mk3.yaml')
-        return new_graph
+        return reduced_graph
 
     '''
     Name: create_initial_partition
