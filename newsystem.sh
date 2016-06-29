@@ -10,3 +10,4 @@ mkdir -p results/$1/probabilities
 mkdir -p plots/$1
 mkdir -p synch_words/$1
 mkdir -p configs/$1
+mkdir -p tests/$1

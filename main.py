@@ -50,12 +50,18 @@ def main(config_file, terminate=False, dmark=False, generate=False, gen_seq=Fals
 
 def terminate_graphs(graph_path, terminations, lrange, lmax, alpharange, test):
     g = pg.ProbabilisticGraph([], [])
+    if 'omega_inverted' in terminations:
+        synch_path = 'synch_words/' + graph_path + '/sw.yaml'
+        with open(synch_path, 'r') as f:
+            synch_words = yaml.load(f)
+    else:
+        synch_words = []
     for t in terminations:
         for l in lrange:
             for alpha in alpharange:
                 p = 'graphs/' + graph_path + '/rtp_L' + str(lmax) + '.yaml'
                 g.open_graph_file(p)
-                h = g.expand_last_level(l, t, alpha, test)
+                h = g.expand_last_level(l, t, alpha, test, synch_words)
                 path = 'graphs/' + graph_path + '/rtp_L' + str(l) + '_alpha' + str(alpha) + '_' + t + '.yaml'
                 h.save_graph_file(path)
 
@@ -76,6 +82,8 @@ def generate_graphs(algorithms, terminations, lrange, alpharange, save_path, syn
                         g.mk2_moore(test, alpha)
                     elif algo == 'mk3':
                         g.mk3(test, alpha)
+                    elif algo == 'crissis':
+                        g.crissis(test, alpha)
 
 
 def generate_dmarkov(graph_path, drange, lmax):

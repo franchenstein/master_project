@@ -173,7 +173,7 @@ class ProbabilisticGraph(graph.Graph):
         an appropriate function to choose between the old and new methods' 
         criteria. 
     '''       
-    def expansion(self, l, alpha, test, method):
+    def expansion(self, l, alpha, test, method, s_words=[]):
         last_level = [x for x in self.states if x.name_length() == l]
         new_last_level = []
         new_states = [x for x in self.states if x.name_length() < l]
@@ -203,6 +203,13 @@ class ProbabilisticGraph(graph.Graph):
                         new_next = self.new_method(results, next_name[1:])
                     elif method == 'omega':
                         new_next = self.omega_method(s, results, new_states + new_last_level, next_name[1:],
+                                                     alpha, test)
+                    elif method == 'omega_inverted':
+                        if s_words:
+                            synch_words = [s for s in self.states if s.name in s_words]
+                        else:
+                            synch_words = []
+                        new_next = self.omega_inverted_method(s, results, synch_words, next_name[1:],
                                                      alpha, test)
                     new_outedge = (a, new_next, edge[2])
                     new_outedges.append(new_outedge)                     
@@ -264,6 +271,20 @@ class ProbabilisticGraph(graph.Graph):
                 r = self.compare_morphs(s.morph(), exp.morph(), alpha, test)
                 if r[0]:
                     return s
+            return [x[1] for x in results if x[1].name == default_name][0]
+
+    def omega__inverted_method(self, exp, results, synch_words, default_name, alpha, test):
+        for s in synch_words:
+            r = self.compare_morphs(s.morph(), exp.morph(), alpha, test)
+            if r[0]:
+                return s
+
+        w = [c[1] for c in results if c[0][0]]
+        if w:
+            lens = [len(y.name) for y in w]
+            arg = lens.index(max(lens))
+            return w[arg]
+        else:
             return [x[1] for x in results if x[1].name == default_name][0]
     
     '''

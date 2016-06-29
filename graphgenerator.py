@@ -203,6 +203,34 @@ class GraphGenerator():
         reduced_graph = reduced_graph.remove_unreachable_states()
         return reduced_graph
 
+    def crissis(self, test, alpha):
+        q = self.synch_words[0]
+        q_tild = []
+        q_tild.extend(q.obtain_children())
+        while True:
+            if q_tild:
+                w = q_tild.pop(0)
+                for s in q:
+                    w_star = None
+                    r = self.original_graph.compare_morphs(s.morph(), w.morph(), alpha, test)
+                    if r[0]:
+                        w_star = s
+                        break
+                if w_star:
+                    for state in q:
+                        for edge in state.outedges:
+                            if edge[1] == w:
+                                newedge = (edge[0], w_star, edge[1])
+                                state.outedges.remove(edge)
+                                state.outedges.append(newedge)
+                else:
+                    q.append(w)
+                    q_tild.extend(q.obtain_children())
+            else:
+                break
+        final_graph = pg.ProbabilisticGraph(q, self.original_graph.alphabet)
+        return final_graph
+
     '''
     Name: is_suffix
     Inputs:
