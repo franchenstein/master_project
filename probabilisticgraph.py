@@ -109,11 +109,11 @@ class ProbabilisticGraph(graph.Graph):
             *New: Similar to the old method, but checks only if the suffixes 
              pass the statistical test and return the one with the longest label 
     '''            
-    def expand_last_level(self, l, method, alpha=0.95, test='chi-squared'):
+    def expand_last_level(self, l, method, alpha=0.95, test='chi-squared', synch_words=[]):
         if method == "dmark":
             h = self.dmark_expansion(l)
         else:
-            h = self.expansion(l, alpha, test, method)
+            h = self.expansion(l, alpha, test, method, synch_words)
         return h         
     
     '''
@@ -202,15 +202,15 @@ class ProbabilisticGraph(graph.Graph):
                     elif method == 'new':
                         new_next = self.new_method(results, next_name[1:])
                     elif method == 'omega':
-                        new_next = self.omega_method(s, results, new_states + new_last_level, next_name[1:],
+                        new_next = self.omega_method(true_next, results, new_states + new_last_level, next_name[1:],
                                                      alpha, test)
                     elif method == 'omega_inverted':
                         if s_words:
                             synch_words = [s for s in self.states if s.name in s_words]
                         else:
                             synch_words = []
-                        new_next = self.omega_inverted_method(s, results, synch_words, next_name[1:],
-                                                     alpha, test)
+                        new_next = self.omega_inverted_method(true_next, results, synch_words, next_name[1:],
+                                                              alpha, test)
                     new_outedge = (a, new_next, edge[2])
                     new_outedges.append(new_outedge)                     
                 else:
@@ -273,12 +273,11 @@ class ProbabilisticGraph(graph.Graph):
                     return s
             return [x[1] for x in results if x[1].name == default_name][0]
 
-    def omega__inverted_method(self, exp, results, synch_words, default_name, alpha, test):
+    def omega_inverted_method(self, exp, results, synch_words, default_name, alpha, test):
         for s in synch_words:
             r = self.compare_morphs(s.morph(), exp.morph(), alpha, test)
             if r[0]:
                 return s
-
         w = [c[1] for c in results if c[0][0]]
         if w:
             lens = [len(y.name) for y in w]

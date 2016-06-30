@@ -25,7 +25,8 @@ def main(config_file, terminate=False, dmark=False, generate=False, gen_seq=Fals
     if dmark:
         generate_dmarkov(graph_path, drange, lmax)
     if generate:
-        generate_graphs(algorithms, terminations, lrange, alpharange, graph_path, synch_words, test)
+        seq_path = 'sequences/' + graph_path + '/original_length_' + str(seq_len) + '.yaml'
+        generate_graphs(algorithms, terminations, lrange, alpharange, graph_path, synch_words, test, seq_path)
     if gen_seq:
         generate_sequences(graph_path, algorithms, drange, terminations, lrange, alpharange, seq_len)
     if an_seq:
@@ -66,13 +67,13 @@ def terminate_graphs(graph_path, terminations, lrange, lmax, alpharange, test):
                 h.save_graph_file(path)
 
 
-def generate_graphs(algorithms, terminations, lrange, alpharange, save_path, synch_words, test):
+def generate_graphs(algorithms, terminations, lrange, alpharange, save_path, synch_words, test, seq_path):
     for t in terminations:
         for l in lrange:
             for alpha in alpharange:
                 p1 = 'graphs/' + save_path + '/rtp_L' + str(l) + '_alpha' + str(alpha) + '_' + t + '.yaml'
                 p2 = 'graphs/' + save_path + '/L' + str(l) + '_alpha' + str(alpha) + '_' + t
-                g = gg.GraphGenerator(p1, synch_words, p2)
+                g = gg.GraphGenerator(p1, synch_words, p2, seq_path)
                 for algo in algorithms:
                     if algo == 'mk1':
                         g.mk1(test, alpha)

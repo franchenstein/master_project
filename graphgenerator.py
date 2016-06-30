@@ -4,6 +4,7 @@ import partition as pt
 import partitionset as ps
 import moore as mr
 import probabilisticstate as pst
+import yaml
 
 '''
 This class contains the methods for creating the final model for the original
@@ -23,10 +24,12 @@ III - A D-Markov termination.
 '''
 class GraphGenerator():
     #Initialization:
-    def __init__(self, original_path, synch_words, save_path):
+    def __init__(self, original_path, synch_words, save_path, seq_path):
         self.original_graph = pg.ProbabilisticGraph(path=original_path)
         self.synch_words = self.set_synch_words(synch_words)
         self.save_path = save_path
+        with open(seq_path, 'r') as f:
+            self.sequence = yaml.load(f)
 
     def set_synch_words(self, s_words):
         synch_words = []
@@ -51,6 +54,8 @@ class GraphGenerator():
     '''
     def mk1(self, test, alpha):
         reduced_graph = self.apply_moore(test, alpha)
+        #self.original_graph = reduced_graph
+        #reduced_graph = self.renorm()
         reduced_graph.save_graph_file(self.save_path + '_mk1.yaml')
         return reduced_graph
 
@@ -95,12 +100,16 @@ class GraphGenerator():
                 new_children = [x for x in new_children if x.name not in states_names]
                 s.extend(new_children)
         new_graph = pg.ProbabilisticGraph(newstates, self.original_graph.alphabet)
+        #self.original_graph = new_graph
+        #new_graph = self.renorm()
         new_graph.save_graph_file(self.save_path + '_mk2.yaml')
         return new_graph
 
     def mk2_moore(self, test, alpha):
         self.original_graph = self.mk2()
         reduced_graph = self.apply_moore(test, alpha)
+        #self.original_graph = reduced_graph
+        #reduced_graph = self.renorm()
         reduced_graph.save_graph_file(self.save_path + '_mk2_moore.yaml')
         return reduced_graph
 
@@ -145,6 +154,8 @@ class GraphGenerator():
         self.synch_words = self.set_synch_words(synch_names)
         self.original_graph = self.equivalence_classes(test, alpha)
         reduced_graph = self.apply_moore(test, alpha)
+        #self.original_graph = reduced_graph
+        #reduced_graph = self.renorm()
         reduced_graph.save_graph_file(self.save_path + '_mk3.yaml')
         return reduced_graph
 
@@ -204,9 +215,9 @@ class GraphGenerator():
         return reduced_graph
 
     def crissis(self, test, alpha):
-        q = self.synch_words[0]
+        q = [self.synch_words[0]]
         q_tild = []
-        q_tild.extend(q.obtain_children())
+        q_tild.extend(q[0].obtain_children())
         while True:
             if q_tild:
                 w = q_tild.pop(0)
@@ -220,16 +231,55 @@ class GraphGenerator():
                     for state in q:
                         for edge in state.outedges:
                             if edge[1] == w:
-                                newedge = (edge[0], w_star, edge[1])
+                                newedge = (edge[0], w_star, edge[2])
                                 state.outedges.remove(edge)
                                 state.outedges.append(newedge)
                 else:
                     q.append(w)
-                    q_tild.extend(q.obtain_children())
+                    for s in q:
+                        q_tild.extend(s.obtain_children())
             else:
                 break
         final_graph = pg.ProbabilisticGraph(q, self.original_graph.alphabet)
+        #self.original_graph = final_graph
+        #final_graph = self.renorm()
+        final_graph.save_graph_file(self.save_path + '_crissis.yaml')
         return final_graph
+
+    def renorm(self):
+        ini_seq = self.synch_words[0].name
+        ini_state = self.original_graph.state_named(ini_seq)
+        ini_pos = self.sequence.find(ini_seq)
+        seq = self.sequence[ini_pos + len(ini_seq):]
+        new_morphs = {ini_state.name: {}}
+        curr_state = ini_state
+        visited_states = [ini_state]
+        for a in seq:
+            dest = [[e[0], e[1]] for e in curr_state.outedges if e[0] == a][0]
+            if a in new_morphs[curr_state.name].keys():
+                new_morphs[curr_state.name][a] += 1
+            else:
+                new_morphs[curr_state.name][a] = 1
+            curr_state = dest[1]
+            if curr_state.name not in new_morphs.keys():
+                new_morphs[curr_state.name] = {}
+            visited_states.append(curr_state.name)
+        for key in new_morphs.keys():
+            curr_morph = new_morphs[key]
+            total = sum([v for v in curr_morph.values()])
+            for key2 in curr_morph.keys():
+                curr_morph[key2] /= total
+            s = self.original_graph.state_named(key)
+            new_outedges = []
+            for edge in s.outedges:
+                new_edge = edge
+                if edge[0] in curr_morph.keys():
+                    new_edge = (edge[0], edge[1], curr_morph[edge[0]])
+                new_outedges.append(new_edge)
+            s.outedges = new_outedges
+        new_states = [s for s in self.original_graph.states if s.name in visited_states]
+        self.original_graph.states = new_states
+        return self.original_graph
 
     '''
     Name: is_suffix
@@ -240,7 +290,7 @@ class GraphGenerator():
         *P: true if w is suffix of n, false otherwise.
     '''
     @staticmethod
-    def is_suffix(w,n):
+    def is_suffix(w, n):
         if len(w) > len(n):
             return False
         else:
