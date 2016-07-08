@@ -7,7 +7,7 @@ class TestPFSACompleteness():
 
     def __init__(self, graphs_path):
         self.graph_list = listdir(graphs_path)
-        self.graph_list = [graphs_path + '/' + p for p in self.graph_list]
+        self.graph_list = [graphs_path + '/' + p for p in self.graph_list if 'rtp' not in p]
         self.graphs = []
         for p in self.graph_list:
             g = pg.ProbabilisticGraph(path=p)
@@ -97,10 +97,40 @@ class TestPFSACompleteness():
             print "test_valid_states failure!"
             print "**********"
 
+
+    def test_valid_morphs(self):
+        succ = True
+        for g in self.graphs:
+            fail = False
+            fail_states = []
+            for s in g.states:
+                dests = [e[1] for e in s.outedges if float(e[2]) > 0.0]
+                for d in dests:
+                    if not d:
+                        succ = False
+                        fail = True
+                        fail_states.append(s)
+            if fail:
+                print "**********"
+                print "test_valid_morphs fail: States with non zero probability to Nowhere."
+                print "At PFSA: " + self.graph_list[self.graphs.index(g)]
+                print "At states: "
+                print fail_states
+                print "**********"
+        if succ:
+            print "**********"
+            print "test_valid_morphs success!"
+            print "**********"
+        else:
+            print "**********"
+            print "test_valid_morphs failure!"
+            print "**********"
+
     def test_suite(self):
         self.test_morph_completeness()
         self.test_reachable_states()
         self.test_valid_states()
+        self.test_valid_morphs()
 
 
 def read_input(argv):

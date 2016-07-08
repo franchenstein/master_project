@@ -205,11 +205,16 @@ class ProbabilisticGraph(graph.Graph):
                         new_next = self.omega_method(true_next, results, new_states + new_last_level, next_name[1:],
                                                      alpha, test)
                     elif method == 'omega_inverted':
+                        synch_n_ext = []
                         if s_words:
-                            synch_words = [s for s in self.states if s.name in s_words]
-                        else:
-                            synch_words = []
-                        new_next = self.omega_inverted_method(true_next, results, synch_words, next_name[1:],
+                            for word in new_states + last_level:
+                                for syn in s_words:
+                                    s_len = len(syn)
+                                    prefix = word.name[:s_len]
+                                    if syn == prefix:
+                                        synch_n_ext.append(word)
+                                        break
+                        new_next = self.omega_inverted_method(true_next, results, synch_n_ext, next_name[1:],
                                                               alpha, test)
                     new_outedge = (a, new_next, edge[2])
                     new_outedges.append(new_outedge)                     
