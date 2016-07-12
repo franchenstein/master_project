@@ -37,6 +37,17 @@ class GraphGenerator():
             synch_words.append(self.original_graph.state_named(w))
         return synch_words
 
+    def reconnect(self):
+        for s in self.original_graph.states:
+            new_outedges = []
+            for e in s.outedges:
+                if e[1]:
+                    ns = self.original_graph.state_named(e[1].name)
+                else:
+                    ns = None
+                new_outedges.append((e[0], ns, e[2]))
+            s.outedges = new_outedges
+
     '''
     Name: mk1
     Inputs:
@@ -54,6 +65,7 @@ class GraphGenerator():
     '''
     def mk1(self, test, alpha):
         reduced_graph = self.apply_moore(test, alpha)
+        self.reconnect()
         #self.original_graph = reduced_graph
         #reduced_graph = self.renorm()
         reduced_graph.save_graph_file(self.save_path + '_mk1.yaml')
@@ -107,7 +119,10 @@ class GraphGenerator():
 
     def mk2_moore(self, test, alpha):
         self.original_graph = self.mk2()
+        self.reconnect()
+        self.synch_words = self.set_synch_words([x.name for x in self.synch_words])
         reduced_graph = self.apply_moore(test, alpha)
+        self.reconnect()
         #self.original_graph = reduced_graph
         #reduced_graph = self.renorm()
         reduced_graph.save_graph_file(self.save_path + '_mk2_moore.yaml')
