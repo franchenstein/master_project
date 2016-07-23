@@ -34,7 +34,9 @@ class GraphGenerator():
     def set_synch_words(self, s_words):
         synch_words = []
         for w in s_words:
-            synch_words.append(self.original_graph.state_named(w))
+            sw = self.original_graph.state_named(w)
+            if sw: 
+                synch_words.append(sw)
         return synch_words
 
     def reconnect(self):
