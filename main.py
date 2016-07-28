@@ -5,9 +5,9 @@ import dmarkov as dm
 import sequenceanalyzer as sa
 import yaml
 import matplotlib.pyplot as plt
+import synchwordfinder as swf
 
-
-def main(config_file, terminate=False, dmark=False, generate=False, gen_seq=False, an_seq=False, plot=False,
+def main(config_file, fsw=False, terminate=False, dmark=False, generate=False, gen_seq=False, an_seq=False, plot=False,
          seq_len=10000000, tag='default'):
     with open(config_file, 'r') as f:
         configs = yaml.load(f)
@@ -20,6 +20,8 @@ def main(config_file, terminate=False, dmark=False, generate=False, gen_seq=Fals
     drange = configs['drange']
     test = configs['test']
     synch_words = configs['synch_words']
+    if fsw:
+        find_synch_words(graph_path, w, lmax, alpha, test_fsw)
     if terminate:
         terminate_graphs(graph_path, terminations, lrange, lmax, alpharange, test)
     if dmark:
@@ -48,6 +50,13 @@ def main(config_file, terminate=False, dmark=False, generate=False, gen_seq=Fals
         if params['l1metric']:
             plot_others('l1metric', graph_path, algorithms, terminations, drange, lrange, alpharange, tag)
 
+
+def find_synch_words(graph_path, w, l, alpha, test):
+    s = swf.SynchWordFinder(graph_path, w, l, alpha, test)
+    sw = s.find_synch_words()
+    path = "synch_words/" + graph_path + "/sw.yaml"
+    with open(path, "w") as f:
+        yaml.dump(sw, f)
 
 def terminate_graphs(graph_path, terminations, lrange, lmax, alpharange, test):
     g = pg.ProbabilisticGraph([], [])
