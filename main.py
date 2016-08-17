@@ -7,6 +7,7 @@ import yaml
 import matplotlib.pyplot as plt
 import synchwordfinder as swf
 
+
 def main(config_file, fsw=False, terminate=False, dmark=False, generate=False, gen_seq=False, an_seq=False, plot=False,
          seq_len=10000000, tag='default'):
     with open(config_file, 'r') as f:
@@ -21,7 +22,10 @@ def main(config_file, fsw=False, terminate=False, dmark=False, generate=False, g
     test = configs['test']
     synch_words = configs['synch_words']
     if fsw:
-        find_synch_words(graph_path, w, lmax, alpha, test_fsw)
+        p = 'configs/' + graph_path + '/fsw_params.yaml'
+        with open(p, 'r') as f:
+            fsw_params = yaml.load(f)
+        find_synch_words(graph_path, fsw_params['w'], lmax, fsw_params['alpha'], fsw_params['test'])
     if terminate:
         terminate_graphs(graph_path, terminations, lrange, lmax, alpharange, test)
     if dmark:

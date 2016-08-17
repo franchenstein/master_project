@@ -8,7 +8,7 @@ import numpy as np
 
 class MasterProject(QtGui.QMainWindow, gui.Ui_projectgui):
     def __init__(self, parent=None):
-        super(MasterProject, self).__init__(parent)
+        super(MasterProject, self).__init__(parent) 
         self.setupUi(self)
         #Configuration parameters:
         self.configs = {}
@@ -28,6 +28,7 @@ class MasterProject(QtGui.QMainWindow, gui.Ui_projectgui):
         self.gen_seq.clicked.connect(self.call_gen_seq)
         self.analyze.clicked.connect(self.call_analyze_seq)
         self.plot.clicked.connect(self.call_plot)
+        self.find_synch_words.clicked.connect(self.call_fsw)
 
     def save(self):
         self.configs['graph_path'] = str(self.graph_path.text())
@@ -80,6 +81,20 @@ class MasterProject(QtGui.QMainWindow, gui.Ui_projectgui):
         self.configs['graph_path'] = str(self.graph_path.text())
         self.config_tag = str(self.tag.text())
         self.config_file_path = 'configs/' + self.configs['graph_path'] + '/config_file_' + self.config_tag + '.yaml'
+
+    def call_fsw(self):
+        self.fsw_bar.setValue(0)
+        fsw_params = {}
+        fsw_params['w'] = int(self.fsw_w.text())
+        fsw_params['alpha'] = float(self.fsw_alpha.text())
+        fsw_params['test'] = self.fsw_test.text()
+
+        p = 'configs/' + self.configs['graph_path'] + '/fsw_params.yaml'
+        with open(p, 'w') as f:
+            yaml.dump(fsw_params, f)
+
+        mn.main(self.config_file_path, fsw=True, tag=self.config_tag)
+        self.fsw_bar.setValue(100)
 
     def call_create_term(self):
         self.create_term_bar.value = 0
