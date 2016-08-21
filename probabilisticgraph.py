@@ -54,6 +54,14 @@ class ProbabilisticGraph(graph.Graph):
                 probs2.append(0.0)
         if probs1 == probs2:
             return [True, 1.0]
+        i = 0
+        for p in probs1:
+            if probs1[i] == 0.0:
+                if probs1[i] == probs2[i]:
+                    del probs1[i]
+                    del probs2[i]
+            else:
+                i += 1
         else: 
             if test == "chi-squared":
                 [X, p] = stats.chisquare(probs1, probs2)         

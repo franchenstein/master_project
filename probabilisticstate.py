@@ -45,6 +45,21 @@ class ProbabilisticState(state.State):
         m = [(x[0], x[2]) for x in self.outedges]
         return m
 
+    def extended_morph(self, n):
+        if n == 1:
+            return self.morph()
+        else:
+            m = []
+            for edge in self.outedges:
+                if edge[1]:
+                    branch = edge[1].extended_morph(n-1)
+                else:
+                    branch = [('',0.0)]
+                newedge = [(edge[0] + b[0],edge[2]*b[1]) for b in branch]
+                m.extend(newedge)
+            return m
+
+
     '''
     Name: randomstep
     Input:
