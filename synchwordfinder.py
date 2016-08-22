@@ -19,7 +19,7 @@ class SynchWordFinder:
         self.psi = []
 
     def next_valid_state(self):
-        candidates = [x for x in self.gamma if x[1] == True and x[2] == False]
+        candidates = [x for x in self.gamma if x[1] is True and x[2] is False]
         if candidates:
             return candidates[0]
         else:
@@ -47,29 +47,38 @@ class SynchWordFinder:
                             else:
                                 c[1] = False
                                 self.expand_trees(c[0])
+                                self.gamma.remove(c)
                                 for g in self.gamma:
                                     g[2] = False
                                 self.psi = []
                                 break
+                        count += 1
+                        if count == len(lamda):
+                            c[2] = True
+                else:
+                    self.gamma.remove(c)
             else:
-                self.omega_syn = [x for x in self.gamma if x[1] == True]
+                self.omega_syn = [x[0].name for x in self.gamma if x[1] is True]
                 return self.omega_syn
 
     def is_suffix(self, candidate, full):
         if candidate == 'e':
             return True
         else:
-            partial = full[::-1]
+            partial = full
             aux = self.s.root()
             for i in range(len(candidate)):
                 aux = aux.next_state_from_edge(partial[i])
                 if not aux:
                     return False
-            n = [x for x in self.gamma if x[0].name == aux.name][0]
-            return (aux.name is candidate) and (n[1])
+            n = [x for x in self.gamma if x[0].name == aux.name]
+            if n:
+                return (aux.name is candidate) and (n[0][1])
+            else:
+                return False
 
     def shortest_valid_suffix(self, name):
-        n = name[::-1]
+        n = name
         aux = self.gamma[0]
         i = 0
         while (aux[1] == False) and (i < len(n)):
