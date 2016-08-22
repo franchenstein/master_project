@@ -21,6 +21,7 @@ def main(config_file, fsw=False, terminate=False, dmark=False, generate=False, g
     drange = configs['drange']
     test = configs['test']
     synch_words = configs['synch_words']
+    l2range = configs['l2range']
     if fsw:
         p = 'configs/' + graph_path + '/fsw_params.yaml'
         with open(p, 'r') as f:
@@ -32,7 +33,8 @@ def main(config_file, fsw=False, terminate=False, dmark=False, generate=False, g
         generate_dmarkov(graph_path, drange, lmax)
     if generate:
         seq_path = 'sequences/' + graph_path + '/original_length_' + str(seq_len) + '.yaml'
-        generate_graphs(algorithms, terminations, lrange, alpharange, graph_path, synch_words, test, seq_path)
+        generate_graphs(algorithms, terminations, lmax, lrange, l2range, alpharange, graph_path, synch_words, test,
+                        seq_path)
     if gen_seq:
         generate_sequences(graph_path, algorithms, drange, terminations, lrange, alpharange, seq_len)
     if an_seq:
@@ -42,7 +44,7 @@ def main(config_file, fsw=False, terminate=False, dmark=False, generate=False, g
         analyze_sequences(graph_path, algorithms, drange, terminations, lrange, alpharange, seq_len,
                           params['to_analyze'], params['other_params'])
     if plot:
-        p = 'configs/' +  graph_path + '/plotconfigs.yaml'
+        p = 'configs/' + graph_path + '/plotconfigs.yaml'
         with open(p, 'r') as f:
             params = yaml.load(f)
         if params['cond_entropy']:
@@ -80,7 +82,8 @@ def terminate_graphs(graph_path, terminations, lrange, lmax, alpharange, test):
                 h.save_graph_file(path)
 
 
-def generate_graphs(algorithms, terminations, lrange, alpharange, save_path, synch_words, test, seq_path):
+def generate_graphs(algorithms, terminations, maxl, lrange, l2range, alpharange, save_path, synch_words, test,
+                    seq_path):
     for t in terminations:
         for l in lrange:
             for alpha in alpharange:
@@ -96,8 +99,14 @@ def generate_graphs(algorithms, terminations, lrange, alpharange, save_path, syn
                         g.mk2_moore(test, alpha)
                     elif algo == 'mk3':
                         g.mk3(test, alpha)
-                    elif algo == 'crissis':
-                        g.crissis(test, alpha)
+    if 'crissis' in algorithms:
+        p1 = 'graphs/' + save_path + '/rtp_L' + str(maxl) + '.yaml'
+        for l2 in l2range:
+            for alpha in alpharange:
+                p2 = 'graphs/' + save_path + '/L_2_' + str(l2) + '_alpha' + str(alpha)
+                g = gg.GraphGenerator(p1, synch_words, p2, seq_path)
+                g.crissis(test, alpha, l2)
+
 
 
 def generate_dmarkov(graph_path, drange, lmax):

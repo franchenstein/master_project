@@ -16,6 +16,7 @@ class MasterProject(QtGui.QMainWindow, gui.Ui_projectgui):
         self.drange = {}
         self.algorithms = {}
         self.lrange = {}
+        self.l2range = {}
         self.alpharange = {}
         self.config_file_path = ''
         self.config_tag = ''
@@ -48,12 +49,15 @@ class MasterProject(QtGui.QMainWindow, gui.Ui_projectgui):
         self.drange['end'] = int(self.d_end.text())
         self.lrange['ini'] = int(self.l_ini.text())
         self.lrange['end'] = int(self.l_end.text())
+        self.l2range['ini'] = int(self.l2_ini.text())
+        self.l2range['end'] = int(self.l2_end.text())
         self.alpharange['ini'] = float(self.alpha_ini.text())
         self.alpharange['end'] = float(self.alpha_end.text())
         self.config_tag = str(self.tag.text())
         self.config_file_path = 'configs/' + self.configs['graph_path'] + '/config_file_' + self.config_tag + '.yaml'
         lrange = range(self.lrange['ini'], self.lrange['end'] + 2, 2)
         drange = range(self.drange['ini'], self.drange['end'] + 1)
+        l2range = range(self.l2range['ini'], self.l2range['end'] + 1)
         if self.alpharange['ini'] ==  self.alpharange['end']:
             alpharange = [self.alpharange['ini']]
         else:
@@ -66,6 +70,7 @@ class MasterProject(QtGui.QMainWindow, gui.Ui_projectgui):
                 else:
                     alpharange = list(np.arange(self.alpharange['ini'], self.alpharange['end'] + 0.05, 0.05))
         self.configs['lrange'] = lrange
+        self.configs['l2range'] = l2range
         self.configs['alpharange'] = alpharange
         self.configs['algorithms'] = [x for x in self.algorithms.keys() if self.algorithms[x]]
         self.configs['terminations'] = [x for x in self.terminations.keys() if self.terminations[x]]

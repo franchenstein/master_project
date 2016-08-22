@@ -54,7 +54,7 @@ class ProbabilisticState(state.State):
                 if edge[1]:
                     branch = edge[1].extended_morph(n-1)
                 else:
-                    branch = [('',0.0)]
+                    branch = [('',0.0   )]
                 newedge = [(edge[0] + b[0],edge[2]*b[1]) for b in branch]
                 m.extend(newedge)
             return m
