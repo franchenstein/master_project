@@ -41,7 +41,7 @@ def main(config_file, fsw=False, terminate=False, dmark=False, generate=False, g
         p = 'configs/' + graph_path + '/params.yaml'
         with open(p, 'r') as f:
             params = yaml.load(f)
-        analyze_sequences(graph_path, algorithms, drange, terminations, lrange, alpharange, seq_len,
+        analyze_sequences(graph_path, algorithms, drange, terminations, lrange, l2range, alpharange, seq_len,
                           params['to_analyze'], params['other_params'])
     if plot:
         p = 'configs/' + graph_path + '/plotconfigs.yaml'
