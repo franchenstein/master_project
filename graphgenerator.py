@@ -231,7 +231,7 @@ class GraphGenerator():
         reduced_graph = reduced_graph.remove_unreachable_states()
         return reduced_graph
 
-    def crissis(self, test, alpha):
+    def crissis(self, test='chi-squared', alpha='0.95', L2=1):
         q = [self.synch_words[0]]
         q_tild = []
         q_tild.extend(q[0].obtain_children())
@@ -240,7 +240,11 @@ class GraphGenerator():
                 w = q_tild.pop(0)
                 for s in q:
                     w_star = None
-                    r = self.original_graph.compare_morphs(s.morph(), w.morph(), alpha, test)
+                    for l2 in range(1,L2+1):
+                        r = self.original_graph.compare_morphs(s.extended_morph(l2),
+                                                               w.extended_morph(l2), alpha, test)
+                        if r[0] == False:
+                            break
                     if r[0]:
                         w_star = s
                         break
