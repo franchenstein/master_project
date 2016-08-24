@@ -36,7 +36,7 @@ def main(config_file, fsw=False, terminate=False, dmark=False, generate=False, g
         generate_graphs(algorithms, terminations, lmax, lrange, l2range, alpharange, graph_path, synch_words, test,
                         seq_path)
     if gen_seq:
-        generate_sequences(graph_path, algorithms, drange, terminations, lrange, alpharange, seq_len)
+        generate_sequences(graph_path, algorithms, drange, terminations, lrange, l2range, alpharange, seq_len)
     if an_seq:
         p = 'configs/' + graph_path + '/params.yaml'
         with open(p, 'r') as f:
@@ -119,12 +119,17 @@ def generate_dmarkov(graph_path, drange, lmax):
         h.save_graph_file(path)
 
 
-def generate_sequences(graph_path, algorithms, drange, terminations, lrange, alpharange, seq_len):
+def generate_sequences(graph_path, algorithms, drange, terminations, lrange, l2range, alpharange, seq_len):
     g = pg.ProbabilisticGraph([], [])
     for algo in algorithms:
         if algo == 'dmark':
             for d in drange:
                 p = 'dmarkov_d' + str(d) + '.yaml'
+                path = 'graphs/' + graph_path + '/' + p
+                generate_sequences_core(g, graph_path, path, p, seq_len)
+        elif algo == 'crissis':
+            for l2 in l2range:
+                p = 'L_2_' + str(l2) + '_crissis.yaml'
                 path = 'graphs/' + graph_path + '/' + p
                 generate_sequences_core(g, graph_path, path, p, seq_len)
         else:
