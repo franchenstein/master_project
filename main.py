@@ -129,9 +129,10 @@ def generate_sequences(graph_path, algorithms, drange, terminations, lrange, l2r
                 generate_sequences_core(g, graph_path, path, p, seq_len)
         elif algo == 'crissis':
             for l2 in l2range:
-                p = 'L_2_' + str(l2) + '_crissis.yaml'
-                path = 'graphs/' + graph_path + '/' + p
-                generate_sequences_core(g, graph_path, path, p, seq_len)
+                for alpha in alpharange:
+                    p = 'L_2_' + str(l2) + '_alpha' + str(alpha) + '_crissis.yaml'
+                    path = 'graphs/' + graph_path + '/' + p
+                    generate_sequences_core(g, graph_path, path, p, seq_len)
         else:
             for t in terminations:
                 for l in lrange:
@@ -174,12 +175,13 @@ def analyze_sequences(graph_path, algorithms, drange, terminations,
             kld = []
             l1 = []
             for l2 in l2range:
-                p = 'L_2_' + str(l2) + '_crissis.yaml'
-                path = 'sequences/' + graph_path + '/len_' +str(seq_len) + '_' + p
-                seq_an = sa.SequenceAnalyzer(path)
-                kld_step, l1_step = analyze_sequences_core_1(graph_path, p, to_analyze, params, seq_an)
-                kld.append(kld_step)
-                l1.append(l1_step)
+                for alpha in alpharange:
+                    p = 'L_2_' + str(l2) + 'alpha' + str(alpha) + '_crissis.yaml'
+                    path = 'sequences/' + graph_path + '/len_' +str(seq_len) + '_' + p
+                    seq_an = sa.SequenceAnalyzer(path)
+                    kld_step, l1_step = analyze_sequences_core_1(graph_path, p, to_analyze, params, seq_an)
+                    kld.append(kld_step)
+                    l1.append(l1_step)
             if to_analyze['kld']:
                 k_path = 'results/' + graph_path + '/kld/dmarkov.yaml'
                 with open(k_path, 'w') as f:
