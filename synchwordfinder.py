@@ -64,7 +64,8 @@ class SynchWordFinder:
                 else:
                     self.gamma.remove(c)
             else:
-                self.omega_syn = [x[0].name for x in self.gamma if x[1] is True]
+                self.omega_syn = [x[0].name for x in self.gamma if self.candidacy_flags[x[0].name] is True and
+                                  self.tested_flags[x[0].name] is True]
                 return self.omega_syn
 
     def is_suffix(self, candidate, full):
