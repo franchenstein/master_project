@@ -149,13 +149,32 @@ def generate_sequences_core(g, graph_path, path, p, seq_len):
         yaml.dump(seq, f)
 
 
-def analyze_sequences(graph_path, algorithms, drange, terminations, lrange, alpharange, seq_len, to_analyze, params):
+def analyze_sequences(graph_path, algorithms, drange, terminations,
+                      lrange, l2range, alpharange, seq_len, to_analyze, params):
     for algo in algorithms:
         if algo == 'dmark':
             kld = []
             l1 = []
             for d in drange:
                 p = 'dmarkov_d' + str(d) + '.yaml'
+                path = 'sequences/' + graph_path + '/len_' +str(seq_len) + '_' + p
+                seq_an = sa.SequenceAnalyzer(path)
+                kld_step, l1_step = analyze_sequences_core_1(graph_path, p, to_analyze, params, seq_an)
+                kld.append(kld_step)
+                l1.append(l1_step)
+            if to_analyze['kld']:
+                k_path = 'results/' + graph_path + '/kld/dmarkov.yaml'
+                with open(k_path, 'w') as f:
+                    yaml.dump(kld, f)
+            if to_analyze['l1metric']:
+                l_path = 'results/' + graph_path + '/l1metric/dmarkov.yaml'
+                with open(l_path, 'w') as f:
+                    yaml.dump(l1, f)
+        elif algo == 'crissis':
+            kld = []
+            l1 = []
+            for l2 in l2range:
+                p = 'L_2_' + str(l2) + '_crissis.yaml'
                 path = 'sequences/' + graph_path + '/len_' +str(seq_len) + '_' + p
                 seq_an = sa.SequenceAnalyzer(path)
                 kld_step, l1_step = analyze_sequences_core_1(graph_path, p, to_analyze, params, seq_an)
