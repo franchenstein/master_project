@@ -12,8 +12,10 @@ class SynchWordFinder:
         self.candidacy_flags = {}
         self.tested_flags = {}
         self.t = copy.deepcopy(self.s)
+        self.psi = {}
         for state in self.t.states:
             state.name = state.name[::-1]
+            self.psi[state.name] = []
             self.candidacy_flags[state.name] = True
             self.tested_flags[state.name] = False
         e = self.s.root()
@@ -21,7 +23,6 @@ class SynchWordFinder:
         self.delta = [self.t.root()] + self.t.root().obtain_children()
         self.omega_syn = []
         self.theta = []
-        self.psi = []
 
     def next_valid_state(self):
         candidates = [x for x in self.gamma
@@ -38,13 +39,13 @@ class SynchWordFinder:
                 l = c[0].name_length()
                 if l < self.w:
                     lamda = [s for s in self.delta if s.name_length() > l and
-                                                      s.name not in self.psi and
+                                                      c[0].name not in self.psi[s.name] and
                                                       (c[0].name, s.name) not in self.theta]
                     count = 0
                     for el in lamda:
                         suf = self.is_suffix(c[0].name, el.name)
                         if suf:
-                            self.psi.append(el.name)
+                            self.psi[el.name].append(c[0].name)
                             p = self.s.compare_morphs(c[0].morph(), el.morph(), self.alpha, self.test)
                             self.theta.append((c[0].name, el.name))
                             if p[0]:
@@ -56,7 +57,6 @@ class SynchWordFinder:
                                 self.gamma.remove(c)
                                 for g in self.gamma:
                                     self.tested_flags[g[0].name] = False
-                                self.psi = []
                                 break
                         count += 1
                         if count == len(lamda):
