@@ -86,7 +86,7 @@ class SynchWordFinder:
 
     def shortest_valid_suffix(self, name):
         n = name[::-1]
-        aux = self.s.root()
+        aux = self.t.root()
         i = 0
         while (self.candidacy_flags[aux.name] == False) and (i < len(n)):
             aux = aux.next_state_from_edge(n[i])
@@ -98,7 +98,7 @@ class SynchWordFinder:
     def expand_trees(self, c):
         children = c.obtain_children()
         new_nodes = [[x, self.candidacy_flags[x.name], self.tested_flags[x.name]] for x in children
-                     if x.name is self.shortest_valid_suffix(x.name)]
+                     if x.name == self.shortest_valid_suffix(x.name)]
         self.gamma.extend(new_nodes)
         rev = [x[0].name[::-1] for x in new_nodes]
         for r in rev:
