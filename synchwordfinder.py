@@ -43,7 +43,8 @@ class SynchWordFinder:
                                                       (c[0].name, s.name) not in self.theta]
                     count = 0
                     for el in lamda:
-                        suf = self.is_suffix(c[0].name, el.name)
+                        candidate = c[0].name
+                        suf = self.is_suffix(candidate, el.name[0:len(candidate)], self.t.root())
                         if suf:
                             self.psi[el.name].append(c[0].name)
                             p = self.s.compare_morphs(c[0].morph(), el.morph(), self.alpha, self.test)
@@ -68,21 +69,17 @@ class SynchWordFinder:
                                   self.tested_flags[x[0].name] is True]
                 return self.omega_syn
 
-    def is_suffix(self, candidate, full):
+    def is_suffix(self, candidate, string, state):
         if candidate == 'e':
             return True
+        elif not state:
+            return False
+        elif string == '':
+            return state.name == candidate
         else:
-            partial = full
-            aux = self.s.root()
-            for i in range(len(candidate)):
-                aux = aux.next_state_from_edge(partial[i])
-                if not aux:
-                    return False
-            n = [x for x in self.gamma if x[0].name == aux.name]
-            if n:
-                return (aux.name is candidate) and (n[0][1])
-            else:
-                return False
+            nxt = state.next_state_from_edge(string[0])
+            rest = string[1:]
+            return self.is_suffix(candidate, rest, nxt)
 
     def shortest_valid_suffix(self, name):
         n = name[::-1]
