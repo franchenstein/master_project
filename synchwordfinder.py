@@ -81,24 +81,26 @@ class SynchWordFinder:
             rest = string[1:]
             return self.is_suffix(candidate, rest, nxt)
 
-    def shortest_valid_suffix(self, name):
-        n = name[::-1]
-        aux = self.t.root()
-        i = 0
-        while (self.candidacy_flags[aux.name] == False) and (i < len(n)):
-            aux = aux.next_state_from_edge(n[i])
-            i += 1
-            if not aux:
-                return aux
-        return aux.name
+    def shortest_valid_suffix(self, state, name):
+        if not state:
+            return None
+        elif self.candidacy_flags[state.name]:
+            return state
+        else:
+            nxt = state.next_state_from_edge(name[0])
+            rst = name[1:]
+            return self.shortest_valid_suffix(nxt, rst)
 
     def expand_trees(self, c):
-        children = c.obtain_children()
-        new_nodes = [[x, self.candidacy_flags[x.name], self.tested_flags[x.name]] for x in children
-                     if x.name == self.shortest_valid_suffix(x.name)]
-        self.gamma.extend(new_nodes)
-        rev = [x[0].name[::-1] for x in new_nodes]
+        rev = []
+        gamma_children_states = c.obtain_children()
+        for gcs in gamma_children_states:
+            short = self.shortest_valid_suffix(self.t.root(), gcs.name[::-1])
+            if short and short.name == gcs.name:
+                self.gamma.append([gcs, self.candidacy_flags[gcs.name], self.tested_flags[gcs.name]])
+                rev.append(gcs.name[::-1])
         for r in rev:
             d = self.t.state_named(r)
             self.delta.extend(d.obtain_children())
+
 

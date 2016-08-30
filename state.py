@@ -23,8 +23,11 @@ class State:
     '''        
     def next_state_from_edge(self, label):    
         #Finds and returns a state name from outedges based on a letter.
-        match = [x[1] for x in self.outedges if x[0] == label][0]
-        return match
+        match = [x[1] for x in self.outedges if x[0] == label]
+        if match:
+            return match[0]
+        else:
+            return None
     
     '''
     Input: Destination state's name.
