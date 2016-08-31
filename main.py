@@ -176,7 +176,7 @@ def analyze_sequences(graph_path, algorithms, drange, terminations,
             l1 = []
             for l2 in l2range:
                 for alpha in alpharange:
-                    p = 'L_2_' + str(l2) + 'alpha' + str(alpha) + '_crissis.yaml'
+                    p = 'L_2_' + str(l2) + '_alpha' + str(alpha) + '_crissis.yaml'
                     path = 'sequences/' + graph_path + '/len_' +str(seq_len) + '_' + p
                     seq_an = sa.SequenceAnalyzer(path)
                     kld_step, l1_step = analyze_sequences_core_1(graph_path, p, to_analyze, params, seq_an)

@@ -93,14 +93,22 @@ class SynchWordFinder:
 
     def expand_trees(self, c):
         rev = []
+        gamma_names = [x[0].name for x in self.gamma]
+        for a in self.s.alphabet:
+            cand = a + c.name
+            if cand not in gamma_names:
+                suf = self.shortest_valid_suffix(self.t.root(), cand)
+                if suf and suf.name == cand:
+                    self.gamma.append([suf, self.candidacy_flags[suf.name], self.tested_flags[suf.name]])
+                    gamma_names.append(suf.name)
+                    rev.append(suf.name[::-1])
         gamma_children_states = c.obtain_children()
         for gcs in gamma_children_states:
-            short = self.shortest_valid_suffix(self.t.root(), gcs.name[::-1])
-            if short and short.name == gcs.name:
-                self.gamma.append([gcs, self.candidacy_flags[gcs.name], self.tested_flags[gcs.name]])
-                rev.append(gcs.name[::-1])
+            short = self.shortest_valid_suffix(self.t.root(), gcs.name)
+            if short and short.name[::-1] not in gamma_names:
+                if short.name[::-1] == gcs.name:
+                    self.gamma.append([gcs, self.candidacy_flags[gcs.name], self.tested_flags[gcs.name]])
+                    rev.append(gcs.name[::-1])
         for r in rev:
             d = self.t.state_named(r)
             self.delta.extend(d.obtain_children())
-
-
