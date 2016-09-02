@@ -23,6 +23,7 @@ class SynchWordFinder:
         self.delta = [self.t.root()] + self.t.root().obtain_children()
         self.omega_syn = []
         self.theta = []
+        self.suffixes = {}
 
     def next_valid_state(self):
         candidates = [x for x in self.gamma
@@ -94,21 +95,21 @@ class SynchWordFinder:
     def expand_trees(self, c):
         rev = []
         gamma_names = [x[0].name for x in self.gamma]
-        for a in self.s.alphabet:
-            cand = a + c.name
-            if cand not in gamma_names:
-                suf = self.shortest_valid_suffix(self.t.root(), cand)
-                if suf and suf.name == cand:
-                    self.gamma.append([suf, self.candidacy_flags[suf.name], self.tested_flags[suf.name]])
-                    gamma_names.append(suf.name)
-                    rev.append(suf.name[::-1])
         gamma_children_states = c.obtain_children()
+        if c.name in self.suffixes.keys():
+            gamma_children_states.extend(self.suffixes[c.name])
+            del self.suffixes[c.name]
         for gcs in gamma_children_states:
-            short = self.shortest_valid_suffix(self.t.root(), gcs.name)
-            if short and short.name[::-1] not in gamma_names:
-                if short.name[::-1] == gcs.name:
+            short = self.shortest_valid_suffix(self.t.root(), gcs.name[::-1])
+            if short:
+                if short.name == gcs.name:
                     self.gamma.append([gcs, self.candidacy_flags[gcs.name], self.tested_flags[gcs.name]])
                     rev.append(gcs.name[::-1])
+                else:
+                    if short.name in self.suffixes.keys():
+                        self.suffixes[short.name].append(gcs)
+                    else:
+                        self.suffixes[short.name] = [gcs]
         for r in rev:
             d = self.t.state_named(r)
             self.delta.extend(d.obtain_children())
