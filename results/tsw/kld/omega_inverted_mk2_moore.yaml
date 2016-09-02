@@ -3,22 +3,28 @@
     args: [f8, 0, 1]
     state: !!python/tuple [3, <, null, null, null, -1, -1, 0]
   - !!binary |
-    yTRZbA/PRUA=
+    7huCRrMoRUA=
 - !!python/object/apply:numpy.core.multiarray.scalar
   - !!python/object/apply:numpy.dtype
     args: [f8, 0, 1]
     state: !!python/tuple [3, <, null, null, null, -1, -1, 0]
   - !!binary |
-    XOE55PyjEkA=
+    mujRK0reDT8=
 - !!python/object/apply:numpy.core.multiarray.scalar
   - !!python/object/apply:numpy.dtype
     args: [f8, 0, 1]
     state: !!python/tuple [3, <, null, null, null, -1, -1, 0]
   - !!binary |
-    4OQeYfrw0T4=
+    PplE1/HBEj8=
 - !!python/object/apply:numpy.core.multiarray.scalar
   - !!python/object/apply:numpy.dtype
     args: [f8, 0, 1]
     state: !!python/tuple [3, <, null, null, null, -1, -1, 0]
   - !!binary |
-    sKTOwM/b0D4=
+    MQqLic8nFj8=
+- !!python/object/apply:numpy.core.multiarray.scalar
+  - !!python/object/apply:numpy.dtype
+    args: [f8, 0, 1]
+    state: !!python/tuple [3, <, null, null, null, -1, -1, 0]
+  - !!binary |
+    Hvf6iFMfFj8=
