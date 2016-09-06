@@ -3,4 +3,4 @@ test: !!python/object/apply:sip._unpickle_type
 - PyQt4.QtCore
 - QString
 - !!python/tuple [!!python/unicode 'chi-squared']
-w: 12
+w: 10

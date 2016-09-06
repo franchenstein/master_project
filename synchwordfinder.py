@@ -46,8 +46,8 @@ class SynchWordFinder:
                     for el in lamda:
                         candidate = c[0].name
                         suf = self.is_suffix(candidate, el.name[0:len(candidate)], self.t.root())
+                        self.psi[el.name].append(c[0].name)
                         if suf:
-                            self.psi[el.name].append(c[0].name)
                             p = self.s.compare_morphs(c[0].morph(), el.morph(), self.alpha, self.test)
                             self.theta.append((c[0].name, el.name))
                             if p[0]:
@@ -94,7 +94,6 @@ class SynchWordFinder:
 
     def expand_trees(self, c):
         rev = []
-        gamma_names = [x[0].name for x in self.gamma]
         gamma_children_states = c.obtain_children()
         if c.name in self.suffixes.keys():
             gamma_children_states.extend(self.suffixes[c.name])
