@@ -45,23 +45,23 @@ class ProbabilisticGraph(graph.Graph):
         probs2 = []
         symbols_2 = [x[0] for x in morph2]
         #Loop to guarantee the probability distributions are in the same order:
-        for a in [x[0] for x in morph1]:
-            if a in symbols_2:
+        to_del = []
+        i = 0
+        for a in morph1:
+            if a[0] in symbols_2:
                 for b in morph2:
-                    if b[0] == a:
-                        probs2.append(float(b[1]))
+                    if b[0] == a[0]:
+                        if float(b[1]) == float(a[1]) == 0.0:
+                            to_del.append(i)
+                        else:
+                            probs2.append(float(b[1]))
             else:
                 probs2.append(0.0)
+            i += 1
+        for d in to_del[::-1]:
+            del probs1[d]
         if probs1 == probs2:
             return [True, 1.0]
-        i = 0
-        for p in probs1:
-            if probs1[i] == 0.0:
-                if probs1[i] == probs2[i]:
-                    del probs1[i]
-                    del probs2[i]
-            else:
-                i += 1
         else: 
             if test == "chi-squared":
                 [X, p] = stats.chisquare(probs1, probs2)         

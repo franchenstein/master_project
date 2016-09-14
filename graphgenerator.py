@@ -250,15 +250,17 @@ class GraphGenerator():
                         break
                 if w_star:
                     for state in q:
+                        newedges = []
                         for edge in state.outedges:
-                            if edge[1] == w:
+                            if edge[1] and edge[1].name == w.name:
                                 newedge = (edge[0], w_star, edge[2])
-                                state.outedges.remove(edge)
-                                state.outedges.append(newedge)
+                                newedges.append(newedge)
+                            else:
+                                newedges.append(edge)
+                        state.outedges = newedges
                 else:
                     q.append(w)
-                    for s in q:
-                        q_tild.extend(s.obtain_children())
+                    q_tild.extend(w.obtain_children())
             else:
                 break
         final_graph = pg.ProbabilisticGraph(q, self.original_graph.alphabet)
