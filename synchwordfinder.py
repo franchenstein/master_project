@@ -3,10 +3,11 @@ import copy
 
 
 class SynchWordFinder:
-    def __init__(self, graph_path, w, l, alpha, test):
+    def __init__(self, graph_path, w, l, alpha, test, l2range=[1]):
         self.w = w
         self.alpha = alpha
         self.test = test
+        self.l2range = l2range
         self.path = graph_path
         self.s = pg.ProbabilisticGraph(path='graphs/' + graph_path + '/rtp_L' + str(l) + '.yaml')
         self.candidacy_flags = {}
@@ -48,7 +49,11 @@ class SynchWordFinder:
                         suf = self.is_suffix(candidate, el.name[0:len(candidate)], self.t.root())
                         self.psi[el.name].append(c[0].name)
                         if suf:
-                            p = self.s.compare_morphs(c[0].morph(), el.morph(), self.alpha, self.test)
+                            for l2 in self.l2range:
+                                p = self.s.compare_morphs(c[0].extended_morph(l2), el.extended_morph(l2),
+                                                          self.alpha, self.test)
+                                if p[0] == False:
+                                    break
                             self.theta.append((c[0].name, el.name))
                             if p[0]:
                                 if count >= len(lamda):

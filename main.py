@@ -26,7 +26,7 @@ def main(config_file, fsw=False, terminate=False, dmark=False, generate=False, g
         p = 'configs/' + graph_path + '/fsw_params.yaml'
         with open(p, 'r') as f:
             fsw_params = yaml.load(f)
-        find_synch_words(graph_path, fsw_params['w'], lmax, fsw_params['alpha'], fsw_params['test'])
+        find_synch_words(graph_path, fsw_params['w'], lmax, fsw_params['alpha'], fsw_params['test'], l2range)
     if terminate:
         terminate_graphs(graph_path, terminations, lrange, lmax, alpharange, test)
     if dmark:
@@ -57,8 +57,8 @@ def main(config_file, fsw=False, terminate=False, dmark=False, generate=False, g
             plot_others('l1metric', graph_path, algorithms, terminations, drange, lrange, alpharange, tag)
 
 
-def find_synch_words(graph_path, w, l, alpha, test):
-    s = swf.SynchWordFinder(graph_path, w, l, alpha, test)
+def find_synch_words(graph_path, w, l, alpha, test, l2range=[1]):
+    s = swf.SynchWordFinder(graph_path, w, l, alpha, test, l2range)
     sw = s.find_synch_words()
     path = "synch_words/" + graph_path + "/sw.yaml"
     with open(path, "w") as f:
