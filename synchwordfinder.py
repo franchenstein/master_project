@@ -11,66 +11,45 @@ class SynchWordFinder:
         self.path = graph_path
         self.s = pg.ProbabilisticGraph(path='graphs/' + graph_path + '/rtp_L' + str(l) + '.yaml')
         self.candidacy_flags = {}
-        self.tested_flags = {}
+        self.tested = []
         self.t = copy.deepcopy(self.s)
         for state in self.t.states:
             state.name = state.name[::-1]
             self.candidacy_flags[state.name] = True
-            self.tested_flags[state.name] = False
         self.gamma = [self.s.root()]
         self.delta = [self.t.root()] + self.t.root().obtain_children()
-        self.omega_syn = []
         self.valid_suffixes = {}
         self.suffixes = {}
         self.suffixes['e'] = self.t.root().obtain_children()
 
-    def next_valid_state(self):
-        candidates = [x for x in self.gamma
-                      if self.candidacy_flags[x.name] is True and self.tested_flags[x.name] is False]
-        if candidates:
-            return candidates[0]
-        else:
-            return []
-
     def find_synch_words(self):
-        while True:
-            c = self.next_valid_state()
-            if c:
-                l = c.name_length()
-                if l < self.w:
-                    candidate = c.name
-                    lamda = self.suffixes[candidate] if candidate in self.suffixes.keys() else []
-                    if not lamda:
-                            self.tested_flags[candidate] = True
-                    else:
-                        count = 0
-                        final = len(lamda)
-                        for el in lamda:
-                            for l2 in self.l2range:
-                                p = self.s.compare_morphs(c.extended_morph(l2), el.extended_morph(l2),
-                                                          self.alpha, self.test)
-                                if p[0] == False:
-                                    break
-                            self.suffixes[candidate].remove(el)
-                            if p[0]:
-                                if count >= final:
-                                    self.tested_flags[c.name] = True
-                            else:
-                                self.candidacy_flags[c.name] = False
-                                self.expand_trees(c)
-                                self.gamma.remove(c)
-                                for g in self.gamma:
-                                    self.tested_flags[g.name] = False
-                                break
-                            count += 1
-                            if count == final:
-                                self.tested_flags[c.name] = True
+        while self.gamma:
+            c = self.gamma.pop(0)
+            l = c.name_length()
+            if l < self.w:
+                candidate = c.name
+                lamda = self.suffixes[candidate] if candidate in self.suffixes.keys() else []
+                if not lamda:
+                        self.tested.append(c)
                 else:
-                    self.gamma.remove(c)
-            else:
-                self.omega_syn = [x.name for x in self.gamma if self.candidacy_flags[x.name] is True and
-                                  self.tested_flags[x.name] is True]
-                return self.omega_syn
+                    count = 0
+                    for el in lamda:
+                        for l2 in self.l2range:
+                            p = self.s.compare_morphs(c.extended_morph(l2), el.extended_morph(l2),
+                                                      self.alpha, self.test)
+                            if p[0] == False:
+                                break
+                        if not p[0]:
+                            self.candidacy_flags[c.name] = False
+                            self.expand_trees(c)
+                            self.gamma += self.tested
+                            self.tested = []
+                            break
+                        count += 1
+                    if count == len(lamda):
+                        self.suffixes[candidate] = []
+                        self.tested.append(c)
+        return [x.name for x in self.tested]
 
     def shortest_valid_suffix(self, state, name):
         if not state:
@@ -83,6 +62,10 @@ class SynchWordFinder:
             return self.shortest_valid_suffix(nxt, rst)
 
     def expand_trees(self, c):
+        rev = self.expand_gamma(c)
+        self.expand_delta(rev)
+
+    def expand_gamma(self, c):
         rev = []
         gamma_children_states = c.obtain_children()
         if c.name in self.valid_suffixes.keys():
@@ -99,6 +82,9 @@ class SynchWordFinder:
                         self.valid_suffixes[short.name].append(gcs)
                     else:
                         self.valid_suffixes[short.name] = [gcs]
+        return rev
+
+    def expand_delta(self, rev):
         for r in rev:
             d = self.t.state_named(r)
             d_children = d.obtain_children()
