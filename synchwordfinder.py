@@ -10,7 +10,7 @@ class SynchWordFinder:
         self.l2range = l2range
         self.path = graph_path
         self.s = pg.ProbabilisticGraph(path='graphs/' + graph_path + '/rtp_L' + str(l) + '.yaml')
-        self.candidacy_flags = {}
+        self.candidacy_flags = dict()
         self.tested = []
         self.t = copy.deepcopy(self.s)
         for state in self.t.states:
@@ -18,8 +18,8 @@ class SynchWordFinder:
             self.candidacy_flags[state.name] = True
         self.gamma = [self.s.root()]
         self.delta = [self.t.root()] + self.t.root().obtain_children()
-        self.valid_suffixes = {}
-        self.suffixes = {}
+        self.valid_suffixes = dict()
+        self.suffixes = dict()
         self.suffixes['e'] = self.t.root().obtain_children()
 
     def find_synch_words(self):
@@ -68,22 +68,18 @@ class SynchWordFinder:
     def expand_gamma(self, c):
         rev = []
         gamma_children_states = c.obtain_children()
+        #Adds previously un-added delta nodes:
         if c.name in self.valid_suffixes.keys():
             gamma_children_states.extend(self.valid_suffixes[c.name])
             del self.valid_suffixes[c.name]
-        for el in self.suffixes[c.name]:
-            new_suf = self.shortest_valid_suffix(self.t.root(), el.name)
-            if new_suf and new_suf.name != el.name:
-                if new_suf.name in self.suffixes.keys():
-                    self.suffixes[new_suf.name].append(el)
-                else:
-                    self.suffixes[new_suf.name] = [el]
+        #Checks whether the new expanded nodes are their own shorter valid suffix (svs):
         for gcs in gamma_children_states:
             short = self.shortest_valid_suffix(self.t.root(), gcs.name[::-1])
             if short:
                 if short.name == gcs.name:
                     self.gamma.append(gcs)
                     rev.append(gcs.name[::-1])
+                #If they are not their own svs, they are added to the suffix entry in valid_suffixes:
                 else:
                     if short.name in self.valid_suffixes.keys():
                         self.valid_suffixes[short.name].append(gcs)
