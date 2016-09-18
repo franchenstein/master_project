@@ -13,7 +13,6 @@ class SynchWordFinder:
         self.candidacy_flags = {}
         self.tested_flags = {}
         self.t = copy.deepcopy(self.s)
-        self.psi = {}
         for state in self.t.states:
             state.name = state.name[::-1]
             self.psi[state.name] = []
@@ -23,8 +22,9 @@ class SynchWordFinder:
         self.gamma = [[e, self.candidacy_flags[e.name], self.tested_flags[e.name]]]
         self.delta = [self.t.root()] + self.t.root().obtain_children()
         self.omega_syn = []
-        self.theta = []
+        self.valid_suffixes = {}
         self.suffixes = {}
+        self.suffixes['e'] = self.t.root().obtain_children()
 
     def next_valid_state(self):
         candidates = [x for x in self.gamma
@@ -40,23 +40,22 @@ class SynchWordFinder:
             if c:
                 l = c[0].name_length()
                 if l < self.w:
-                    lamda = [s for s in self.delta if s.name_length() > l and
-                                                      c[0].name not in self.psi[s.name] and
-                                                      (c[0].name, s.name) not in self.theta]
-                    count = 0
-                    for el in lamda:
-                        candidate = c[0].name
-                        suf = self.is_suffix(candidate, el.name[0:len(candidate)], self.t.root())
-                        self.psi[el.name].append(c[0].name)
-                        if suf:
+                    candidate = c[0].name
+                    lamda = self.suffixes[candidate] if candidate in self.suffixes.keys() else []
+                    if not lamda:
+                            self.tested_flags[candidate] = True
+                    else:
+                        count = 0
+                        final = len(lamda)
+                        for el in lamda:
                             for l2 in self.l2range:
                                 p = self.s.compare_morphs(c[0].extended_morph(l2), el.extended_morph(l2),
                                                           self.alpha, self.test)
                                 if p[0] == False:
                                     break
-                            self.theta.append((c[0].name, el.name))
+                            self.suffixes[candidate].remove(el)
                             if p[0]:
-                                if count >= len(lamda):
+                                if count >= final:
                                     self.tested_flags[c[0].name] = True
                             else:
                                 self.candidacy_flags[c[0].name] = False
@@ -65,9 +64,9 @@ class SynchWordFinder:
                                 for g in self.gamma:
                                     self.tested_flags[g[0].name] = False
                                 break
-                        count += 1
-                        if count == len(lamda):
-                            self.tested_flags[c[0].name] = True
+                            count += 1
+                            if count == final:
+                                self.tested_flags[c[0].name] = True
                 else:
                     self.gamma.remove(c)
             else:
@@ -100,9 +99,9 @@ class SynchWordFinder:
     def expand_trees(self, c):
         rev = []
         gamma_children_states = c.obtain_children()
-        if c.name in self.suffixes.keys():
-            gamma_children_states.extend(self.suffixes[c.name])
-            del self.suffixes[c.name]
+        if c.name in self.valid_suffixes.keys():
+            gamma_children_states.extend(self.valid_suffixes[c.name])
+            del self.valid_suffixes[c.name]
         for gcs in gamma_children_states:
             short = self.shortest_valid_suffix(self.t.root(), gcs.name[::-1])
             if short:
@@ -110,10 +109,18 @@ class SynchWordFinder:
                     self.gamma.append([gcs, self.candidacy_flags[gcs.name], self.tested_flags[gcs.name]])
                     rev.append(gcs.name[::-1])
                 else:
-                    if short.name in self.suffixes.keys():
-                        self.suffixes[short.name].append(gcs)
+                    if short.name in self.valid_suffixes.keys():
+                        self.valid_suffixes[short.name].append(gcs)
                     else:
-                        self.suffixes[short.name] = [gcs]
+                        self.valid_suffixes[short.name] = [gcs]
         for r in rev:
             d = self.t.state_named(r)
-            self.delta.extend(d.obtain_children())
+            d_children = d.obtain_children()
+            self.delta.extend(d_children)
+            for d_c in d_children:
+                suf = self.shortest_valid_suffix(self.t.root(), d_c.name)
+                if suf:
+                    if suf.name in self.suffixes.keys():
+                        self.suffixes[suf.name].append(d_c)
+                    else:
+                        self.suffixes[suf.name] = [d_c]
