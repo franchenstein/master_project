@@ -71,6 +71,13 @@ class SynchWordFinder:
         if c.name in self.valid_suffixes.keys():
             gamma_children_states.extend(self.valid_suffixes[c.name])
             del self.valid_suffixes[c.name]
+        for el in self.suffixes[c.name]:
+            new_suf = self.shortest_valid_suffix(self.t.root(), el.name)
+            if new_suf and new_suf.name != el.name:
+                if new_suf.name in self.suffixes.keys():
+                    self.suffixes[new_suf.name].append(el)
+                else:
+                    self.suffixes[new_suf.name] = [el]
         for gcs in gamma_children_states:
             short = self.shortest_valid_suffix(self.t.root(), gcs.name[::-1])
             if short:
