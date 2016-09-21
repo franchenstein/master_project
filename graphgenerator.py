@@ -190,10 +190,11 @@ class GraphGenerator():
     available partitions and add the child to it if the test is succesful, but
     create a new partition for it if is not succesful for any partition.
     '''
-    def create_initial_partition(self, init_state, alpha, test):
+    def create_initial_partition(self, init_state, alpha, test, l2=1):
         partition_0 = pt.Partition(init_state)
         children = init_state.obtain_children()
         partitions = [partition_0]
+        l2range = range(1, l2)
         while True:
             if children:
                 c = children.pop(0)
