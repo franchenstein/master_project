@@ -183,11 +183,11 @@ def analyze_sequences(graph_path, algorithms, drange, terminations,
                     kld.append(kld_step)
                     l1.append(l1_step)
             if to_analyze['kld']:
-                k_path = 'results/' + graph_path + '/kld/dmarkov.yaml'
+                k_path = 'results/' + graph_path + '/kld/crissis.yaml'
                 with open(k_path, 'w') as f:
                     yaml.dump(kld, f)
             if to_analyze['l1metric']:
-                l_path = 'results/' + graph_path + '/l1metric/dmarkov.yaml'
+                l_path = 'results/' + graph_path + '/l1metric/crissis.yaml'
                 with open(l_path, 'w') as f:
                     yaml.dump(l1, f)
         else:
