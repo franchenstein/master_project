@@ -1,0 +1,10 @@
+algorithms: [mk2_moore, dmark, mk1, crissis]
+alpharange: [0.95]
+drange: [4, 5, 6, 7, 8, 9, 10]
+graph_path: henon
+l2range: [1, 2, 3, 4]
+lmax: 12
+lrange: [4, 6, 8, 10]
+synch_words: ['000', '1111']
+terminations: [dmark, omega_inverted]
+test: chi-squared

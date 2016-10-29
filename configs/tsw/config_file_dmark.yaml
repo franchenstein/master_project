@@ -1,0 +1,10 @@
+algorithms: [dmark]
+alpharange: [0.95]
+drange: [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+graph_path: tsw
+l2range: [1]
+lmax: 18
+lrange: [1]
+synch_words: ['01', '00', '10', '1111']
+terminations: []
+test: chi-squared

@@ -1,0 +1,10 @@
+algorithms: []
+alpharange: [0.95]
+drange: [1]
+graph_path: balanced_tri_shift
+l2range: [1]
+lmax: 15
+lrange: [1]
+synch_words: ['00', '0110']
+terminations: []
+test: chi-squared

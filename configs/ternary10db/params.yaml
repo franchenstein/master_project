@@ -1,0 +1,3 @@
+other_params: {K: 9, L: 10, l1: 9, upto: 1}
+to_analyze: {autocorrelation: false, cond_entropy: true, cond_probabilities: true,
+  kld: true, l1metric: true, probabilities: false}

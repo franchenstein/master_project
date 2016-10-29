@@ -1,0 +1,6 @@
+alpha: 0.95
+test: !!python/object/apply:sip._unpickle_type
+- PyQt4.QtCore
+- QString
+- !!python/tuple [!!python/unicode 'chi-squared']
+w: 10

@@ -1,0 +1,10 @@
+algorithms: [mk2_moore, mk1]
+alpharange: [0.99]
+drange: [4]
+graph_path: logisticmap
+l2range: [1]
+lmax: 10
+lrange: [4, 6, 8]
+synch_words: ['2', '00', '01', '10']
+terminations: [dmark, omega_inverted]
+test: chi-squared

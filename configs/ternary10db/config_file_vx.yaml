@@ -1,0 +1,10 @@
+algorithms: [mk2_moore, dmark, mk1, crissis]
+alpharange: [0.95]
+drange: [4, 5, 6, 7, 8, 9]
+graph_path: ternary10db
+l2range: [1]
+lmax: 10
+lrange: [4, 6, 8]
+synch_words: ['2', '11', '01', '10', '000']
+terminations: [dmark, omega_inverted]
+test: chi-squared

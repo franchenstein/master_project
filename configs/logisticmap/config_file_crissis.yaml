@@ -1,0 +1,10 @@
+algorithms: [crissis]
+alpharange: [0.99]
+drange: [1]
+graph_path: logisticmap
+l2range: [1, 2, 3]
+lmax: 10
+lrange: [1]
+synch_words: [e]
+terminations: []
+test: chi-squared
