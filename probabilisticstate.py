@@ -2,45 +2,45 @@ import state
 import random as rnd
 '''
 Probabilistic version of state class. The outedges include a third parameter,
-which reflects the probability of that outgoing edge being taken. Methods 
+which reflects the probability of that outgoing edge being taken. Methods
 regarding this new parameter are added.
 '''
 class ProbabilisticState(state.State):
-    
+
     def __init__(self, name, outedges):
         state.State.__init__(self, name, outedges)
-    
+
     '''
     Name: prob_to_next_state
-    Input: 
+    Input:
         *state_name: The destination state's label.
-    Output: 
+    Output:
         *match: probability of reaching this state from the current state.
-    '''     
+    '''
     def prob_to_next_state(self, state_name):
         match = [x[2] for x in self.outedges if x[1] == state_name][0]
         return float(match)
-    
+
     '''
     Name: prob_to_next_letter
     Input:
         *letter: letter from the graph's alphabet.
     Output:
         *match: probability of outputing the input letter.
-    '''     
+    '''
     def prob_to_next_letter(self, letter):
         match = [x[2] for x in self.outedges if x[0] == letter][0]
         return float(match)
-    
+
     '''
     Name: morph
-    Input: 
-    Output: 
+    Input:
+    Output:
         *m: The state's morph, i.e. the probability distribution of its outputs.
     Description: Statistically comparing state's morphs will be used many times.
     The morph is a 2-tuple with only the output letter and the probability that
     it occurs, disregarding the destination state.
-    '''     
+    '''
     def morph(self):
         m = [(x[0], x[2]) for x in self.outedges]
         return m
@@ -54,8 +54,8 @@ class ProbabilisticState(state.State):
                 if edge[1]:
                     branch = edge[1].extended_morph(n-1)
                 else:
-                    branch = [('',0.0   )]
-                newedge = [(edge[0] + b[0],edge[2]*b[1]) for b in branch]
+                    branch = [('',0.0)]
+                newedge = [(edge[0] + b[0],float(edge[2])*float(b[1])) for b in branch]
                 m.extend(newedge)
             return m
 

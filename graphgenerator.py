@@ -1,4 +1,4 @@
-#!/usr/bin/env
+    #!/usr/bin/env
 import probabilisticgraph as pg
 import partition as pt
 import partitionset as ps
@@ -28,14 +28,14 @@ class GraphGenerator():
         self.original_graph = pg.ProbabilisticGraph(path=original_path)
         self.synch_words = self.set_synch_words(synch_words)
         self.save_path = save_path
-        with open(seq_path, 'r') as f:
-            self.sequence = yaml.load(f)
+        #with open(seq_path, 'r') as f:
+        #    self.sequence = yaml.load(f)
 
     def set_synch_words(self, s_words):
         synch_words = []
         for w in s_words:
             sw = self.original_graph.state_named(w)
-            if sw: 
+            if sw:
                 synch_words.append(sw)
         return synch_words
 
@@ -65,8 +65,8 @@ class GraphGenerator():
     state. After this is done for all states, a graph reduction technique is
     applied to the partition set and a minimal graph is returned.
     '''
-    def mk1(self, test, alpha):
-        reduced_graph = self.apply_moore(test, alpha)
+    def mk1(self, test, alpha, l2=1):
+        reduced_graph = self.apply_moore(test, alpha, l2)
         self.reconnect()
         #self.original_graph = reduced_graph
         #reduced_graph = self.renorm()
@@ -119,11 +119,11 @@ class GraphGenerator():
         new_graph.save_graph_file(self.save_path + '_mk2.yaml')
         return new_graph
 
-    def mk2_moore(self, test, alpha):
+    def mk2_moore(self, test, alpha, l2=1):
         self.original_graph = self.mk2()
         self.reconnect()
         self.synch_words = self.set_synch_words([x.name for x in self.synch_words])
-        reduced_graph = self.apply_moore(test, alpha)
+        reduced_graph = self.apply_moore(test, alpha, l2)
         self.reconnect()
         #self.original_graph = reduced_graph
         #reduced_graph = self.renorm()
@@ -194,7 +194,7 @@ class GraphGenerator():
         partition_0 = pt.Partition(init_state)
         children = init_state.obtain_children()
         partitions = [partition_0]
-        l2range = range(1, l2)
+        l2range = range(1, l2+1)
         while True:
             if children:
                 c = children.pop(0)
@@ -202,8 +202,11 @@ class GraphGenerator():
                     fail_count = 0
                     for p in partitions:
                         fail_count += 1
-                        pmorph = self.partition_morph(p.outedges[0])
-                        result = self.original_graph.compare_morphs(pmorph, c.morph(), alpha, test)
+                        for l in l2range:
+                            pmorph = self.original_graph.state_named(p.name[0]).extended_morph(l)
+                            result = self.original_graph.compare_morphs(pmorph, c.extended_morph(l), alpha, test)
+                            if not result[0]:
+                                break
                         if result[0]:
                             p.add_to_partition(c)
                             break
@@ -222,8 +225,8 @@ class GraphGenerator():
             else:
                 return partitions
 
-    def apply_moore(self, test, alpha):
-        p = self.create_initial_partition(self.synch_words[0], alpha, test)
+    def apply_moore(self, test, alpha,l2=1):
+        p = self.create_initial_partition(self.synch_words[0], alpha, test, l2)
         partition_set = ps.PartitionSet(p)
         reduced_classes = mr.moore(partition_set, self.original_graph)
         reduced_graph = reduced_classes.recover_graph(self.original_graph)

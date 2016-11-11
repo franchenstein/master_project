@@ -92,11 +92,11 @@ def generate_graphs(algorithms, terminations, maxl, lrange, l2range, alpharange,
                 g = gg.GraphGenerator(p1, synch_words, p2, seq_path)
                 for algo in algorithms:
                     if algo == 'mk1':
-                        g.mk1(test, alpha)
+                        g.mk1(test, alpha, l2range[-1])
                     elif algo == 'mk2':
                         g.mk2()
                     elif algo == 'mk2_moore':
-                        g.mk2_moore(test, alpha)
+                        g.mk2_moore(test, alpha, l2range[-1])
                     elif algo == 'mk3':
                         g.mk3(test, alpha)
     if 'crissis' in algorithms:
