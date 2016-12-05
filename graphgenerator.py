@@ -226,6 +226,7 @@ class GraphGenerator():
                 return partitions
 
     def apply_moore(self, test, alpha,l2=1):
+        self.original_graph = self.original_graph.remove_unreachable_states()
         p = self.create_initial_partition(self.synch_words[0], alpha, test, l2)
         partition_set = ps.PartitionSet(p)
         reduced_classes = mr.moore(partition_set, self.original_graph)
