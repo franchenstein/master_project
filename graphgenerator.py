@@ -5,6 +5,7 @@ import partitionset as ps
 import moore as mr
 import probabilisticstate as pst
 import yaml
+from numpy import mean, std
 
 '''
 This class contains the methods for creating the final model for the original
@@ -66,7 +67,8 @@ class GraphGenerator():
     applied to the partition set and a minimal graph is returned.
     '''
     def mk1(self, test, alpha, l2=1):
-        reduced_graph = self.apply_moore(test, alpha, l2)
+        p = self.create_initial_partition(self.synch_words[0], alpha, test, l2)
+        reduced_graph = self.apply_moore(p, test, alpha, l2)
         self.reconnect()
         #self.original_graph = reduced_graph
         #reduced_graph = self.renorm()
@@ -122,9 +124,16 @@ class GraphGenerator():
     def mk2_moore(self, test, alpha, l2=1):
         self.original_graph = self.mk2()
         self.reconnect()
+        self.original_graph = self.original_graph.remove_unreachable_states()
         self.synch_words = self.set_synch_words([x.name for x in self.synch_words])
-        reduced_graph = self.apply_moore(test, alpha, l2)
-        self.reconnect()
+        if self.original_graph.states:
+            if not self.synch_words:
+                self.synch_words = [self.original_graph.states[0]]
+            p = self.create_initial_partition(self.synch_words[0], alpha, test, l2)
+            reduced_graph = self.apply_moore(p, test, alpha, l2)
+            self.reconnect()
+        else:
+            return
         #self.original_graph = reduced_graph
         #reduced_graph = self.renorm()
         reduced_graph.save_graph_file(self.save_path + '_mk2_moore.yaml')
@@ -176,6 +185,44 @@ class GraphGenerator():
         reduced_graph.save_graph_file(self.save_path + '_mk3.yaml')
         return reduced_graph
 
+    def mk4(self, graphpath, d, test='chi-squared', alpha = 0.95, stds=1, iters=1, l2=1):
+        path = 'results/' + graphpath + '/probabilities/original.yaml'
+        with open(path,'r') as f:
+            probs = yaml.load(f)[0]
+        prob = probs[d-1]
+        p = self.create_initial_partition(self.original_graph.states[0], alpha, test, l2)
+        for i in range(iters):
+            new_parts = []
+            for part in p:
+                vals = [prob[x] for x in part.name]
+                a = mean(vals)
+                s = std(vals)
+                p_plus = None
+                p_minus = None
+                for st in part.name:
+                    if prob[st] > a + stds*s:
+                        part.remove_from_partition(st)
+                        if p_plus:
+                            p_plus.add_to_partition(self.original_graph.state_named[st])
+                        else:
+                            p_plus = pt.Partition(self.original_graph.state_named[st])
+                    if prob[st] < a - stds*s:
+                        if prob[st] > a + stds*s:
+                            part.remove_from_partition(st)
+                            if p_minus:
+                                p_minus.add_to_partition(self.original_graph.state_named[st])
+                            else:
+                                p_minus = pt.Partition(self.original_graph.state_named[st])
+                if p_plus:
+                    new_parts.append(p_plus)
+                if p_minus:
+                    new_parts.append(p_minus)
+            p += new_parts
+            reduced_graph = self.apply_moore(p, test, alpha, l2)
+            self.reconnect()
+            reduced_graph.save_graph_file(self.save_path + '_mk2_moore.yaml')
+            return reduced_graph
+
     '''
     Name: create_initial_partition
     Inputs:
@@ -225,15 +272,13 @@ class GraphGenerator():
             else:
                 return partitions
 
-    def apply_moore(self, test, alpha,l2=1):
-        self.original_graph = self.original_graph.remove_unreachable_states()
-        p = self.create_initial_partition(self.synch_words[0], alpha, test, l2)
+    def apply_moore(self, p, test, alpha,l2=1):
+        #self.original_graph = self.original_graph.remove_unreachable_states()
         partition_set = ps.PartitionSet(p)
         reduced_classes = mr.moore(partition_set, self.original_graph)
         reduced_graph = reduced_classes.recover_graph(self.original_graph)
         reduced_graph = pg.ProbabilisticGraph(reduced_graph.states, reduced_graph.alphabet)
         reduced_graph.reassign_dest_edges(reduced_graph.states)
-        reduced_graph = reduced_graph.remove_unreachable_states()
         return reduced_graph
 
     def crissis(self, test='chi-squared', alpha='0.95', L2=1):

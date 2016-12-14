@@ -14,30 +14,36 @@ class Partition(State):
         self.name = [] if not state.name else [state.name]
         self.outedges = [] if not state.outedges else [state.outedges]
         self.size = 0 if not state.name else 1
-        
+
     def add_to_partition(self, state):
         '''
         Input: state to be added to the partition
         Output: the current partition will now have a new state
         '''
-        
+
         #Checks to see whether the state is already in the partition:
         if state.name not in self.name:
             self.name.append(state.name)
             #Adds each outedge of the added state to the partition's edges:
             self.outedges.append(state.outedges)
-            self.size += 1           
-            
+            self.size += 1
+
+    def remove_from_partition(self, name):
+        idx = self.name.index(name)
+        if idx >= 0:
+            self.name.remove(self.name[idx])
+            self.outedges.remove(self.outedges[idx])
+
     def update_edges(self, partition):
         '''
         Input: partition to which the edges should be updated.
         Output: the current partition will have its outedges update accordingly.
-        Description: When a partition has a new state added to it, all the 
+        Description: When a partition has a new state added to it, all the
         partitions that had that state in its outedges have to update the
         outedges in order to include the whole new partition at its destination
-        state. 
+        state.
         '''
-        #Checks if the destination state is included in the input partition's 
+        #Checks if the destination state is included in the input partition's
         #name. If it is, outedges is updated: the destination state receives the
         #input partition's name.
         i = 0
