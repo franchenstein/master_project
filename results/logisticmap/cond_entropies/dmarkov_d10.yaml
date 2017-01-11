@@ -1,60 +1,42 @@
 - !!python/object/apply:numpy.core.multiarray.scalar
-  - !!python/object/apply:numpy.dtype
+  - &id001 !!python/object/apply:numpy.dtype
     args: [f8, 0, 1]
     state: !!python/tuple [3, <, null, null, null, -1, -1, 0]
   - !!binary |
-    b6FEmlu69z8=
+    OML2oB269z8=
 - !!python/object/apply:numpy.core.multiarray.scalar
-  - !!python/object/apply:numpy.dtype
-    args: [f8, 0, 1]
-    state: !!python/tuple [3, <, null, null, null, -1, -1, 0]
+  - *id001
   - !!binary |
-    +RY4arN46T8=
+    L/NPyTl46T8=
 - !!python/object/apply:numpy.core.multiarray.scalar
-  - !!python/object/apply:numpy.dtype
-    args: [f8, 0, 1]
-    state: !!python/tuple [3, <, null, null, null, -1, -1, 0]
+  - *id001
   - !!binary |
-    c+dK7A5o5z8=
+    G8LE7L1o5z8=
 - !!python/object/apply:numpy.core.multiarray.scalar
-  - !!python/object/apply:numpy.dtype
-    args: [f8, 0, 1]
-    state: !!python/tuple [3, <, null, null, null, -1, -1, 0]
+  - *id001
   - !!binary |
-    wOC30TQc5j8=
+    cdpx+O8c5j8=
 - !!python/object/apply:numpy.core.multiarray.scalar
-  - !!python/object/apply:numpy.dtype
-    args: [f8, 0, 1]
-    state: !!python/tuple [3, <, null, null, null, -1, -1, 0]
+  - *id001
   - !!binary |
-    grbFb74d4z8=
+    m98DDJoe4z8=
 - !!python/object/apply:numpy.core.multiarray.scalar
-  - !!python/object/apply:numpy.dtype
-    args: [f8, 0, 1]
-    state: !!python/tuple [3, <, null, null, null, -1, -1, 0]
+  - *id001
   - !!binary |
-    mDgO+3ST4j8=
+    Uapi4b2U4j8=
 - !!python/object/apply:numpy.core.multiarray.scalar
-  - !!python/object/apply:numpy.dtype
-    args: [f8, 0, 1]
-    state: !!python/tuple [3, <, null, null, null, -1, -1, 0]
+  - *id001
   - !!binary |
-    KAKzCbJ84D8=
+    HpSk3hV94D8=
 - !!python/object/apply:numpy.core.multiarray.scalar
-  - !!python/object/apply:numpy.dtype
-    args: [f8, 0, 1]
-    state: !!python/tuple [3, <, null, null, null, -1, -1, 0]
+  - *id001
   - !!binary |
-    KD9Jq9lg3z8=
+    /ul4yP1i3z8=
 - !!python/object/apply:numpy.core.multiarray.scalar
-  - !!python/object/apply:numpy.dtype
-    args: [f8, 0, 1]
-    state: !!python/tuple [3, <, null, null, null, -1, -1, 0]
+  - *id001
   - !!binary |
-    kfsI6+L33T8=
+    +YEh/Db63T8=
 - !!python/object/apply:numpy.core.multiarray.scalar
-  - !!python/object/apply:numpy.dtype
-    args: [f8, 0, 1]
-    state: !!python/tuple [3, <, null, null, null, -1, -1, 0]
+  - *id001
   - !!binary |
-    Gn91qgjZ3T8=
+    70KGUwXc3T8=

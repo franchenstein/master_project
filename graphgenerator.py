@@ -1,4 +1,4 @@
-    #!/usr/bin/env
+        #!/usr/bin/env
 import probabilisticgraph as pg
 import partition as pt
 import partitionset as ps
@@ -203,16 +203,16 @@ class GraphGenerator():
                     if prob[st] > a + stds*s:
                         part.remove_from_partition(st)
                         if p_plus:
-                            p_plus.add_to_partition(self.original_graph.state_named[st])
+                            p_plus.add_to_partition(self.original_graph.state_named(st))
                         else:
-                            p_plus = pt.Partition(self.original_graph.state_named[st])
+                            p_plus = pt.Partition(self.original_graph.state_named(st))
                     if prob[st] < a - stds*s:
                         if prob[st] > a + stds*s:
                             part.remove_from_partition(st)
                             if p_minus:
-                                p_minus.add_to_partition(self.original_graph.state_named[st])
+                                p_minus.add_to_partition(self.original_graph.state_named(st))
                             else:
-                                p_minus = pt.Partition(self.original_graph.state_named[st])
+                                p_minus = pt.Partition(self.original_graph.state_named(st))
                 if p_plus:
                     new_parts.append(p_plus)
                 if p_minus:
@@ -220,7 +220,7 @@ class GraphGenerator():
             p += new_parts
             reduced_graph = self.apply_moore(p, test, alpha, l2)
             self.reconnect()
-            reduced_graph.save_graph_file(self.save_path + '_mk2_moore.yaml')
+            reduced_graph.save_graph_file(self.save_path + '_mk4.yaml')
             return reduced_graph
 
     '''
