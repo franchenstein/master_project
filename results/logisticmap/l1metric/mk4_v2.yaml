@@ -1,3 +1,29 @@
-[0.010492030078124989, 0.005319883593750011, 0.016688873046874962, 0.013457847656250063,
-  0.006352925000000038, 0.009424271093750039, 0.0037879562500000435, 0.013761475781250003,
-  0.004324613281250025]
+- !!python/object/apply:numpy.core.multiarray.scalar
+  - &id001 !!python/object/apply:numpy.dtype
+    args: [f8, 0, 1]
+    state: !!python/tuple [3, <, null, null, null, -1, -1, 0]
+  - "\0\0\0\0\0\0\0\0"
+- !!python/object/apply:numpy.core.multiarray.scalar
+  - *id001
+  - "\0\0\0\0\0\0\0\0"
+- !!python/object/apply:numpy.core.multiarray.scalar
+  - *id001
+  - "\0\0\0\0\0\0\0\0"
+- !!python/object/apply:numpy.core.multiarray.scalar
+  - *id001
+  - "\0\0\0\0\0\0\0\0"
+- !!python/object/apply:numpy.core.multiarray.scalar
+  - *id001
+  - "\0\0\0\0\0\0\0\0"
+- !!python/object/apply:numpy.core.multiarray.scalar
+  - *id001
+  - "\0\0\0\0\0\0\0\0"
+- !!python/object/apply:numpy.core.multiarray.scalar
+  - *id001
+  - "\0\0\0\0\0\0\0\0"
+- !!python/object/apply:numpy.core.multiarray.scalar
+  - *id001
+  - "\0\0\0\0\0\0\0\0"
+- !!python/object/apply:numpy.core.multiarray.scalar
+  - *id001
+  - "\0\0\0\0\0\0\0\0"
