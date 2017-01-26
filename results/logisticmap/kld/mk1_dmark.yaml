@@ -3,36 +3,20 @@
     args: [f8, 0, 1]
     state: !!python/tuple [3, <, null, null, null, -1, -1, 0]
   - !!binary |
-    a956IgBYuT8=
+    YhAHu3Nluj8=
 - !!python/object/apply:numpy.core.multiarray.scalar
   - *id001
   - !!binary |
-    581UaXapsD8=
+    nWqxF1pllD8=
 - !!python/object/apply:numpy.core.multiarray.scalar
   - *id001
   - !!binary |
-    aCndrwPvzD4=
+    1z2JxWECej8=
 - !!python/object/apply:numpy.core.multiarray.scalar
   - *id001
   - !!binary |
-    tLvU4KGE0D4=
+    lvhq9FG3cT8=
 - !!python/object/apply:numpy.core.multiarray.scalar
   - *id001
   - !!binary |
-    iAABZWZivj4=
-- !!python/object/apply:numpy.core.multiarray.scalar
-  - *id001
-  - !!binary |
-    lKJK0tfh0T4=
-- !!python/object/apply:numpy.core.multiarray.scalar
-  - *id001
-  - !!binary |
-    0EFaHB25wz4=
-- !!python/object/apply:numpy.core.multiarray.scalar
-  - *id001
-  - !!binary |
-    pHLHOi+C0j4=
-- !!python/object/apply:numpy.core.multiarray.scalar
-  - *id001
-  - !!binary |
-    ZX8g5ZWS1D4=
+    /lPf7MjOWD8=

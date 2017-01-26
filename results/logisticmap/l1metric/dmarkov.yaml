@@ -2,28 +2,37 @@
   - &id001 !!python/object/apply:numpy.dtype
     args: [f8, 0, 1]
     state: !!python/tuple [3, <, null, null, null, -1, -1, 0]
-  - "\0\0\0\0\0\0\0\0"
+  - !!binary |
+    a956IgBYuT8=
 - !!python/object/apply:numpy.core.multiarray.scalar
   - *id001
-  - "\0\0\0\0\0\0\0\0"
+  - !!binary |
+    581UaXapsD8=
 - !!python/object/apply:numpy.core.multiarray.scalar
   - *id001
-  - "\0\0\0\0\0\0\0\0"
+  - !!binary |
+    aCndrwPvzD4=
 - !!python/object/apply:numpy.core.multiarray.scalar
   - *id001
-  - "\0\0\0\0\0\0\0\0"
+  - !!binary |
+    tLvU4KGE0D4=
 - !!python/object/apply:numpy.core.multiarray.scalar
   - *id001
-  - "\0\0\0\0\0\0\0\0"
+  - !!binary |
+    iAABZWZivj4=
 - !!python/object/apply:numpy.core.multiarray.scalar
   - *id001
-  - "\0\0\0\0\0\0\0\0"
+  - !!binary |
+    lKJK0tfh0T4=
 - !!python/object/apply:numpy.core.multiarray.scalar
   - *id001
-  - "\0\0\0\0\0\0\0\0"
+  - !!binary |
+    0EFaHB25wz4=
 - !!python/object/apply:numpy.core.multiarray.scalar
   - *id001
-  - "\0\0\0\0\0\0\0\0"
+  - !!binary |
+    pHLHOi+C0j4=
 - !!python/object/apply:numpy.core.multiarray.scalar
   - *id001
-  - "\0\0\0\0\0\0\0\0"
+  - !!binary |
+    ZX8g5ZWS1D4=
