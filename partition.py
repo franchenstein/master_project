@@ -11,9 +11,9 @@ class Partition(State):
 
     def __init__(self, state):
         #A new partition is initialized with just one state:
-        self.name = [] if not state.name else [state.name]
-        self.outedges = [] if not state.outedges else [state.outedges]
-        self.size = 0 if not state.name else 1
+        self.name = [] if not state else [state.name]
+        self.outedges = [] if not state else [state.outedges]
+        self.size = 0 if not state else 1
 
     def add_to_partition(self, state):
         '''

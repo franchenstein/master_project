@@ -26,10 +26,16 @@ III - A D-Markov termination.
 '''
 class GraphGenerator():
     #Initialization:
-    def __init__(self, original_path, synch_words, save_path, seq_path):
+    def __init__(self, original_path, synch_words, save_path, probs_path):
         self.original_graph = pg.ProbabilisticGraph(path=original_path)
+        self.original_graph = self.original_graph.remove_unreachable_states()
         self.synch_words = self.set_synch_words(synch_words)
         self.save_path = save_path
+        if probs_path:
+            with open(probs_path,'r') as f:
+                self.base_probs = yaml.load(f)[0]
+        else:
+            self.base_probs = None
         #with open(seq_path, 'r') as f:
         #    self.sequence = yaml.load(f)
 
@@ -68,7 +74,7 @@ class GraphGenerator():
     applied to the partition set and a minimal graph is returned.
     '''
     def mk1(self, test, alpha, l2=1):
-        p = self.create_initial_partition(self.synch_words[0], alpha, test, l2)
+        p = self.create_initial_partition(self.original_graph.states, alpha, test, l2)
         reduced_graph = self.apply_moore(p, test, alpha, l2)
         self.reconnect()
         #self.original_graph = reduced_graph
@@ -130,7 +136,7 @@ class GraphGenerator():
         if self.original_graph.states:
             if not self.synch_words:
                 self.synch_words = [self.original_graph.states[0]]
-            p = self.create_initial_partition(self.synch_words[0], alpha, test, l2)
+            p = self.create_initial_partition(self.original_graph.states, alpha, test, l2)
             reduced_graph = self.apply_moore(p, test, alpha, l2)
             self.reconnect()
         else:
@@ -192,9 +198,8 @@ class GraphGenerator():
         with open(path,'r') as f:
             probs = yaml.load(f)[0]
         prob = probs[d-1]
-        p = self.create_initial_partition(self.original_graph.states[0], alpha, test, l2)
+        p = self.create_initial_partition(self.original_graph.states, alpha, test, l2)
         for i in range(iters):
-            new_parts = []
             to_sort = {}
             avgs = {}
             for part in p:
@@ -204,38 +209,30 @@ class GraphGenerator():
                 s = std(vals)
                 to_sort[part] = s
             sortd = sorted(to_sort.items(), key=operator.itemgetter(1))
-            new_parts.extend([x[0] for x in sortd[:-n]])
-            lowest = sortd[-n:]
-            for low in lowest:
-                lowest_std_states = []
-                for nm in low.names:
-                    lowest_std_states.append(self.original_graph.state_named(nm))
-                new_parts = self.create_initial_partition(lowest_std_states,
-                                                          alpha2, test, l2)
-                # part = low[0]
-                # s = low[1]
-                # a = avgs[part]
-                # p_plus = None
-                # p_minus = None
-                # for st in part.name:
-                #     if prob[st] > a + stds*s:
-                #         part.remove_from_partition(st)
-                #         if p_plus:
-                #             p_plus.add_to_partition(self.original_graph.state_named(st))
-                #         else:
-                #             p_plus = pt.Partition(self.original_graph.state_named(st))
-                #     if prob[st] < a - stds*s:
-                #         if prob[st] > a + stds*s:
-                #             part.remove_from_partition(st)
-                #             if p_minus:
-                #                 p_minus.add_to_partition(self.original_graph.state_named(st))
-                #             else:
-                #                 p_minus = pt.Partition(self.original_graph.state_named(st))
-                # if p_plus:
-                #     new_parts.append(p_plus)
-                # if p_minus:
-                #     new_parts.append(p_minus)
-            p += new_parts
+            new_parts = [x[0] for x in sortd[:-n]]
+            lowest = [x for x in sortd[-n:]]
+            #lowest_std_states = []
+            for part, s in lowest:
+            #     for nm in low.name:
+            #         lowest_std_states.append(self.original_graph.state_named(nm))
+            # new_parts.extend(self.create_initial_partition(lowest_std_states, alpha2, test, l2))
+                a = avgs[part]
+                p_plus = pt.Partition(None)
+                p_minus = pt.Partition(None)
+                for st in part.name:
+                    if prob[st] > a + stds*s:
+                        part.remove_from_partition(st)
+                        p_plus.add_to_partition(self.original_graph.state_named(st))
+                    if prob[st] < a - stds*s:
+                        part.remove_from_partition(st)
+                        p_minus.add_to_partition(self.original_graph.state_named(st))
+                if p_plus.size > 0:
+                    new_parts.append(p_plus)
+                if p_minus.size > 0:
+                    new_parts.append(p_minus)
+                if part.size > 0:
+                    new_parts.append(part)
+            p = new_parts
             reduced_graph = self.apply_moore(p, test, alpha, l2)
             self.reconnect()
             reduced_graph.save_graph_file(self.save_path + '_mk4.yaml')
@@ -255,61 +252,65 @@ class GraphGenerator():
     available partitions and add the child to it if the test is succesful, but
     create a new partition for it if is not succesful for any partition.
     '''
-    def create_initial_partition(self, states, alpha, test, l2=1):
-        partition_0 = pt.Partition(states[0])
-        #children = init_state.obtain_children()
+    def create_initial_partition(self, init, alpha, test, l2=1):
+        # partition_0 = pt.Partition(init[0])
+        # partitions = [partition_0]
+        # l2range = range(1, l2+1)
+        # for s in init[1:]:
+        #     fail_count = 0
+        #     for p in partitions:
+        #         fail_count += 1
+        #         for l in l2range:
+        #             pmorph = self.original_graph.state_named(p.name[0]).extended_morph(l)
+        #             result = self.original_graph.compare_morphs(pmorph, s.extended_morph(l), alpha, test)
+        #             if not result[0]:
+        #                 break
+        #         if result[0]:
+        #             p.add_to_partition(s)
+        #             break
+        #         else:
+        #             if fail_count == len(partitions):
+        #                 new_partition = pt.Partition(s)
+        #                 partitions.append(new_partition)
+        # return partitions
+        partition_0 = pt.Partition(init[0])       
+        children = init[0].obtain_children()
         partitions = [partition_0]
         l2range = range(1, l2+1)
-        for s in states:
-            fail_count = 0
-            for p in partitions:
-                failt_count += 1
-                for l in lr2range:
-                    pmorph = self.original_graph.state_named(p.name[0]).extended_morph(l)
-                    result = self.original_graph.compare_morphs(pmorph, s.extended_morph(l), alpha, test)
-                    if not result[0]:
-                        break
-                if result[0]:
-                    p.add_to_partition(s)
-                    break
-                else:
-                    if failt_count == len(partitions):
-                        new_partition = pt.Partition(s)
-                        partitions.append(new_partition)
-        return partitions
-            #     c = children.pop(0)
-            #     if c:
-            #         fail_count = 0
-            #         for p in partitions:
-            #             fail_count += 1
-            #             for l in l2range:
-            #                 pmorph = self.original_graph.state_named(p.name[0]).extended_morph(l)
-            #                 result = self.original_graph.compare_morphs(pmorph, c.extended_morph(l), alpha, test)
-            #                 if not result[0]:
-            #                     break
-            #             if result[0]:
-            #                 p.add_to_partition(c)
-            #                 break
-            #             else:
-            #                 if fail_count == len(partitions):
-            #                     new_partition = pt.Partition(c)
-            #                     partitions.append(new_partition)
-            #         new_states = c.obtain_children()
-            #         for n in new_states:
-            #             not_in_partitions = True
-            #             for p in partitions:
-            #                 if n.name in p.name:
-            #                     not_in_partitions = False
-            #             if not_in_partitions:
-            #                 children.append(n)
-            # else:
-            #     return partitions
+        while True:
+            if children:
+                c = children.pop(0)
+                if c:
+                    fail_count = 0
+                    for p in partitions:
+                        fail_count += 1
+                        for l in l2range:
+                            pmorph = self.original_graph.state_named(p.name[0]).extended_morph(l)
+                            result = self.original_graph.compare_morphs(pmorph, c.extended_morph(l), alpha, test)
+                            if not result[0]:
+                                break
+                        if result[0]:
+                            p.add_to_partition(c)
+                            break
+                        else:
+                            if fail_count == len(partitions):
+                                new_partition = pt.Partition(c)
+                                partitions.append(new_partition)
+                    new_states = c.obtain_children()
+                    for n in new_states:
+                        not_in_partitions = True
+                        for p in partitions:
+                            if n.name in p.name:
+                                not_in_partitions = False
+                        if not_in_partitions:
+                            children.append(n)
+            else:
+                return partitions
 
     def apply_moore(self, p, test, alpha,l2=1):
-        #self.original_graph = self.original_graph.remove_unreachable_states()
         partition_set = ps.PartitionSet(p)
-        reduced_classes = mr.moore(partition_set, self.original_graph)
-        reduced_graph = reduced_classes.recover_graph(self.original_graph)
+        reduced_classes = mr.moore(partition_set, self.original_graph, simple=False)
+        reduced_graph = reduced_classes.recover_graph(self.original_graph, self.base_probs)
         reduced_graph = pg.ProbabilisticGraph(reduced_graph.states, reduced_graph.alphabet)
         reduced_graph.reassign_dest_edges(reduced_graph.states)
         return reduced_graph

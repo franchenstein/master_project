@@ -47,14 +47,18 @@ Description: This function will call the moore_iterations while the current
 partition is different from the partition obtained after a iteration. Once
 they are equal, the reduced partitions are returned.
 '''           
-def moore(initial_partition, graph):
-    current_partition = initial_partition
-    while True:
-        new_partition = moore_iteration(graph, current_partition.partitions)
-        if len(current_partition.partitions) == len(new_partition):
-            return ps.PartitionSet(new_partition)
-        else:
-            current_partition = ps.PartitionSet(new_partition)
+def moore(initial_partition, graph, simple=False):
+    if simple:
+        p = simplemoore(initial_partition, graph)
+        return ps.PartitionSet(p)
+    else:
+        current_partition = initial_partition
+        while True:
+            new_partition = moore_iteration(graph, current_partition.partitions)
+            if len(current_partition.partitions) == len(new_partition):
+                return ps.PartitionSet(new_partition)
+            else:
+                current_partition = ps.PartitionSet(new_partition)
 
 '''
 Name: moore_by_parts
@@ -193,3 +197,49 @@ def intersection(p1, p2):
     else:
         p = pt.Partition(st.State('', []))
     return p
+
+def simplemoore(pset, graph):
+    partition = pset.partitions
+    while True:
+        old_partition = partition
+        s0 = graph.state_named(partition[0].name[0])
+        ed = []
+        for e in s0.outedges:
+            for p in partition:
+                if e[1]:
+                    if e[1].name in p.name:
+                        ed.append([e[0], p])
+                        break
+        p0 = [[[s0], ed]]
+        for p in partition[1:]:
+            for nm in p.name:
+                s = graph.state_named(nm)
+                fail = True
+                for q in p0:
+                    for e in s.outedges:
+                        for d in q[1]:
+                            if e[0] == d[0]:
+                                if e[1]:
+                                    if e[1].name in d[1].name:
+                                        q[0].append(s)
+                                        fail = False
+                                        break
+
+                if fail:
+                    ed = []
+                    for e in s.outedges:
+                        for o in partition:
+                            if e[1]:
+                                if e[1].name in o.name:
+                                    ed.append([e[0], o])
+                    p0.append([[s], ed])
+        partition = []
+        for p in p0:
+            for i in range(len(p[0])):
+                if i == 0:
+                    eq_class = pt.Partition(p[0][i])
+                else:
+                    eq_class.add_to_partition(p[0][i])
+            partition.append(eq_class)
+        if len(partition) == len(old_partition):
+            return partition

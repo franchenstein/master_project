@@ -29,67 +29,58 @@ class PartitionSet:
     '''
 
     def recover_graph(self, g, base_probs=None):
-        states = []
+        new_states = []
         for p in self.partitions:
-            if base_probs:
-                probs = {k:v for k,v in base_probs.iteritems() if k in p.names}
-                total_probs = sum(probs.values())
-            nm = p.names[0]
-            edges = []
+            s = g.state_named(p.name[0])
+            oedge = []
             for a in g.alphabet:
-                if base_probs:
-                    transition = 0
-                    for i in range(len(p.names)):
-                        for e in p.outedges[i]:
-                            if e[0] == a:
-                                tr = e[2]
-                                if i == 0:
-                                    dest = e[1].name
-                                break
-                        transition += probs[p.names[i]]*tr
-                    transition /= total_probs
-                    edges.append([a, dest, transition])
+                t = s.next_state_from_edge(a)
+                if t:
+                    for p in self.partitions:
+                        if t.name in p.name:
+                            dest = p.name[0]
+                            break
+                        else:
+                            dest = ''
                 else:
-                    for e in p.outedges[0]:
-                        if e[0] == a:
-                            dest = e[1].name
-                    edges.append([a, dest])
-            states.append(st.State(nm, edges))
-        h = gr.Graph(states, g.alphabet)
-        for s in h.states:
-            for e in s.outedges:
-                e[1] = h.state_named(e[1])
+                    dest = ''
+                for e in s.outedges:
+                    if e[0] == a:
+                        newedge = []
+                        i = 0
+                        for element in e:
+                            if i == 1:
+                                # The outedges are created pointing just
+                                # to a name, not to a state:
+                                newedge.append(dest)
+                            else:
+                                newedge.append(element)
+                            i += 1
+                        if base_probs:
+                            avg = self.average_probs(base_probs, p, g, a)
+                            newedge.append(avg)
+                        newedge = tuple(newedge)
+                        oedge.append(newedge)
+            u = st.State(s.name, oedge)
+            new_states.append(u)
+        h = gr.Graph(new_states, g.alphabet)
         return h
-        # states = [g.state_named(p.name[0]) for p in self.partitions if g.state_named(p.name[0])]
-        # new_states = []
-        # for s in states:
-        #     oedge = []
-        #     for a in g.alphabet:
-        #         t = s.next_state_from_edge(a)
-        #         if t:
-        #             for p in self.partitions:
-        #                 if t.name in p.name:
-        #                     dest = p.name[0]
-        #                     break
-        #                 else:
-        #                     dest = ''
-        #         else:
-        #             dest = ''
-        #         for e in s.outedges:
-        #             if e[0] == a:
-        #                 newedge = []
-        #                 i = 0
-        #                 for element in e:
-        #                     if i == 1:
-        #                         # The outedges are created pointing just
-        #                         # to a name, not to a state:
-        #                         newedge.append(dest)
-        #                     else:
-        #                         newedge.append(element)
-        #                     i += 1
-        #                 newedge = tuple(newedge)
-        #                 oedge.append(newedge)
-        #     u = st.State(s.name, oedge)
-        #     new_states.append(u)
-        # h = gr.Graph(new_states, g.alphabet)
-        # return h
+    
+    def average_probs(self, base_probs, p, g, a):
+        probs = {}
+        for nm in p.name:
+            lng = len(nm) - 1
+            d = base_probs[lng]
+            probs[nm] = d[nm]
+        total_prob = sum(probs.values())
+        prob_for_edge = []
+        p_outedges = {n:g.state_named(n).outedges for n in p.name}
+        for nm in p.name:
+            outedges = p_outedges[nm]
+            for edge in outedges:
+                if edge[0] == a:
+                    val = edge[2]*probs[nm]
+                    break
+            prob_for_edge.append(val)
+        avg = sum(prob_for_edge)/total_prob
+        return avg
