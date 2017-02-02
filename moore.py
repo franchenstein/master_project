@@ -75,7 +75,7 @@ determined amount of iterations that will be run.
 '''     
 def moore_by_parts(graph, initial_partition, n_iter = -1):
     #By default, it applies the regular moore algorithm
-    if niter == -1:
+    if n_iter == -1:
         current_partition = moore(graph, initial_partition)
     else:
         current_partition = initial_partition
@@ -130,8 +130,8 @@ partition. If it does, the current state is added to the first split. If it
 does not, it is added to the second split.
 '''     
 def splitting(partition, letter, states):
-    p1 = pt.Partition(st.State("", []))
-    p2 = pt.Partition(st.State("", []))
+    p1 = pt.Partition(None)
+    p2 = pt.Partition(None)
     for s in states:
         edge_labels = [edge[0] for edge in s.outedges]
         if letter in edge_labels:
@@ -146,7 +146,8 @@ def splitting(partition, letter, states):
         else:
             p1.add_to_partition(s)
             p2.add_to_partition(s)
-    return [p1, p2]
+    r = [x for x in [p1, p2] if x.size > 0]
+    return r
 
 '''
 Name: coarsest_partition
@@ -164,7 +165,7 @@ def coarsest_partition(partition1, partition2):
     for p1 in partition1:
         for p2 in partition2:
             inter = intersection(p1, p2)
-            if inter.name: #disregards empty intersections
+            if inter.size > 0: #disregards empty intersections
                 if coarse:
                     #to avoid redundancy:
                     names = [el.name for el in coarse]
@@ -195,7 +196,7 @@ def intersection(p1, p2):
         for i in inter:
             p.add_to_partition(st.State(i, []))
     else:
-        p = pt.Partition(st.State('', []))
+        p = pt.Partition(None)
     return p
 
 def simplemoore(pset, graph):
